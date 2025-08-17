@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+
+:root {
+    font-family: "Stara";
+    src:    local("Stara-Medium"),
+            url("./assets//fonts/Stara-Medium.otf");
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    --off-teal: #AFE2DC;
+    --light-off-teal: #E6F9EF;
+    --off-white: #F3FFF3;
+    --off-black: #121312;
+    --dark-green: #00A084;
+    --light-green: #4EDF88;
+    --off-black-06: rgba(18, 19, 18, 0.6);
+
+}
+
+#root, html {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    overflow: scroll;
+    scroll-behavior: smooth;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    flex-direction: column;
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--off-teal);
+}
