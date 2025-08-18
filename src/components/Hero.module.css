@@ -150,3 +150,89 @@
     }
 
 }
+
+.fishing-line {
+    position: absolute;
+    z-index: 3;
+    left: 215px;
+    top: 32px;
+    width: max-content;
+    height: 235px;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    align-items: center;
+
+    .line {
+        width: 1px;
+        background-color: var(--off-white);
+        height: 100%;
+    }
+
+    .cursor-wrapper {
+        flex-shrink: 0;
+        flex-grow: 0;
+        position: relative;
+        width: 20px;
+        height: 4px;
+
+        svg {
+            position: absolute;
+            transform: translate(0, -6px);
+            top: 0px;
+            left: 3px;
+        }
+
+    }
+
+}
+
+.hero-text {
+    z-index: 4;
+    position: absolute;
+    left: 0;
+    top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 6px;
+
+    .wrapper-top {
+        position: relative;
+        display: flex;
+        justify-content: flex-end;
+        width: max-content;
+        border: 2px solid #4CACEC;
+
+        .b1 {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+        }
+        .b2 {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        .b3 {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+        }
+        .b4 {
+            position: absolute;
+            bottom: -5px;
+            left: -5px;
+        }
+    }
+
+    h1 {
+        position: relative;
+        font-size: 42px;
+        font-weight: 400;
+        color: var(--off-black);
+        margin: 0;
+        line-height: 100%;
+    }
+
+}

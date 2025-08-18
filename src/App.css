@@ -110,7 +110,7 @@ header > .middle > .right {
         background-color: var(--light-off-teal);
         color: var(--off-black-06);
         border-radius: 9px;
-        width: 150px;
+        min-width: 120px;
         height: 100%;
         display: flex;
         justify-content: center;
