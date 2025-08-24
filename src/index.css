@@ -40,3 +40,72 @@ body {
     box-sizing: border-box;
     background-color: var(--off-teal);
 }
+
+.crosshair-overlay {
+  /* tunables */
+  --color: rgba(175, 226, 220, 0.3);
+  --line: 1px;     /* thickness of long lines */
+  --mini: 18px;    /* length of small crosshair arms */
+  --miniT: 1.8px;    /* thickness of small crosshair arms */
+
+  --x: 50vw;
+  --y: 50vh;
+
+  position: fixed;
+  inset: 0;
+  pointer-events: none;   /* do not block clicks */
+  z-index: 9999;          /* above content */
+  opacity: 1;
+}
+
+.crosshair-overlay .v {
+  position: absolute;
+  left: var(--x);
+  top: 0;
+  width: var(--line);
+  height: 100%;
+  background: var(--color);
+  transform: translateX(-50%);
+}
+
+.crosshair-overlay .h {
+  position: absolute;
+  top: var(--y);
+  left: 0;
+  height: var(--line);
+  width: 100%;
+  background: var(--color);
+  transform: translateY(-50%);
+}
+
+/* small thick crosshair at the intersection */
+.crosshair-overlay .center {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+}
+
+.crosshair-overlay .center::before,
+.crosshair-overlay .center::after {
+  content: "";
+  position: absolute;
+  background: var(--color);
+  border-radius: 999px;
+}
+
+/* horizontal mini arm */
+.crosshair-overlay .center::before {
+  width: var(--mini);
+  height: var(--miniT);
+  left: calc(-0.5 * var(--mini));
+  top: calc(-0.5 * var(--miniT));
+}
+
+/* vertical mini arm */
+.crosshair-overlay .center::after {
+  width: var(--miniT);
+  height: var(--mini);
+  left: calc(-0.5 * var(--miniT));
+  top: calc(-0.5 * var(--mini));
+}
