@@ -1,16 +1,6 @@
+// src/components/Metric.jsx
 import React from "react";
-import d0 from "/dot_numbers/0.svg";
-import d1 from "/dot_numbers/1.svg";
-import d2 from "/dot_numbers/2.svg";
-import d3 from "/dot_numbers/3.svg";
-import d4 from "/dot_numbers/4.svg";
-import d5 from "/dot_numbers/5.svg";
-import d6 from "/dot_numbers/6.svg";
-import d7 from "/dot_numbers/7.svg";
-import d8 from "/dot_numbers/8.svg";
-import d9 from "/dot_numbers/9.svg";
-
-const dotNumbers = [d0, d1, d2, d3, d4, d5, d6, d7, d8, d9];
+import Digit from "./Digit";
 
 const Metric = ({ name, count }) => {
   return (
@@ -42,17 +32,14 @@ const Metric = ({ name, count }) => {
         style={{
           display: "flex",
           gap: "7px",
+          // Align items to the bottom to ensure they line up correctly
+          alignItems: "flex-end",
         }}
       >
         {String(count)
           .split("")
           .map((digit, index) => (
-            <img
-              key={index}
-              src={dotNumbers[parseInt(digit, 10)]}
-              alt={digit}
-              style={{ height: "100%" }}
-            />
+            <Digit key={index} number={parseInt(digit, 10)} />
           ))}
       </div>
     </div>

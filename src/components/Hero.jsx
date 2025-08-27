@@ -7,8 +7,10 @@ import figma_search from '/icons/figma_search.png'
 import box_anchor from '/box_anchor.svg'
 import cursor from '/icons/cursor.png'
 import { useGSAP } from "@gsap/react";
+import { CustomEase } from "gsap/CustomEase";
 import styles from './Hero.module.css';
 
+gsap.registerPlugin(CustomEase);
 const fonts = ['Abril Fatface', 'Lobster', 'Lora', 'Merriweather', 'Montserrat', 'Oswald', 'Pacifico', 'Roboto Flex', 'Stara']
 
 const Hero = ({linkHovered}) => {
@@ -23,7 +25,18 @@ const Hero = ({linkHovered}) => {
     const fontRefs = useRef([])
     const t1 = useRef(null)
     const d = 0.5
-    const eyeD = window.innerWidth/2
+    let eyeD = 0
+    const rect1Ref = useRef(null);
+    const rect2Ref = useRef(null);
+    const rect3Ref = useRef(null);
+    const rect4Ref = useRef(null);
+
+    if(window.innerWidth<1700){
+        eyeD = window.innerWidth-645
+    }
+    else {
+        eyeD = window.innerWidth/2 + 164
+    }
 
     const style_default = {
         margin: '0',
@@ -59,197 +72,152 @@ const Hero = ({linkHovered}) => {
             }
         });
     };
-
-    const handleMouseMove = (e) => {
-        let x = e.clientX;
-        if (x < eyeD && eyeState === 'Right') {
-            gsap.to(
-                leftIrisRef.current,
-                {
-                    attr: {
-                        d: "M151 238.5C151 242.918 147.418 246.5 143 246.5C138.582 246.5 135 242.918 135 238.5C135 234.082 138.582 230.5 143 230.5C147.418 230.5 151 234.082 151 238.5Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            gsap.to(
-                rightIrisRef.current,
-                {
-                    attr: {
-                        d: "M229.5 246.5C229.5 251.194 225.694 255 221 255C216.306 255 212.5 251.194 212.5 246.5C212.5 241.806 216.306 238 221 238C225.694 238 229.5 241.806 229.5 246.5Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            gsap.to(
-                leftBrowRef.current,
-                {
-                    attr: {
-                        d: "M120.499 209.5C119.791 211.622 118.902 213.379 117.899 214.218C117.69 214.393 117.603 214.691 117.733 214.93L120.135 219.334C120.307 219.649 120.75 219.687 121.016 219.446C126.065 214.893 141.624 221.482 149.499 225.5C140.999 207.5 129.999 205.167 126.499 206C125.332 206.167 121.299 207.1 120.499 209.5Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            gsap.to(
-                rightBrowRef.current,
-                {
-                    attr: {
-                        d: "M192.47 209.449C182.438 209.374 180.054 215.557 180.009 219.903C179.731 223.07 183.469 225.697 185.514 225.412C185.539 225.409 185.564 225.4 185.586 225.386C203.001 214.783 234.438 226.735 248.962 234.516C249.16 234.622 249.341 234.36 249.191 234.194C227.517 210.04 204.864 209.541 192.47 209.449Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            setEyeState('Left');
-            // console.log('Move eye to left')
-        }
-        else if (x > eyeD && eyeState === 'Left') {
-            gsap.to(
-                leftIrisRef.current,
-                {
-                    attr: {
-                        d: "M143 237.5C143 241.918 139.418 245.5 135 245.5C130.582 245.5 127 241.918 127 237.5C127 233.082 130.582 229.5 135 229.5C139.418 229.5 143 233.082 143 237.5Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            gsap.to(
-                rightIrisRef.current,
-                {
-                    attr: {
-                        d: "M221.5 245.5C221.5 250.194 217.694 254 213 254C208.306 254 204.5 250.194 204.5 245.5C204.5 240.806 208.306 237 213 237C217.694 237 221.5 240.806 221.5 245.5Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            gsap.to(
-                leftBrowRef.current,
-                {
-                    attr: {
-                        d: "M120.499 206.5C119.791 208.622 118.902 210.379 117.899 211.218C117.69 211.393 117.603 211.691 117.733 211.93L120.135 216.334C120.307 216.649 120.75 216.687 121.016 216.446C126.065 211.893 141.624 218.482 149.499 222.5C140.999 204.5 129.999 202.167 126.499 203C125.332 203.167 121.299 204.1 120.499 206.5Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            gsap.to(
-                rightBrowRef.current,
-                {
-                    attr: {
-                        d: "M192.47 206.449C182.438 206.374 180.054 212.557 180.009 216.903C179.731 220.07 183.469 222.697 185.514 222.412C185.539 222.409 185.564 222.4 185.586 222.386C203.001 211.783 234.438 223.735 248.962 231.516C249.16 231.622 249.341 231.36 249.191 231.194C227.517 207.04 204.864 206.541 192.47 206.449Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            setEyeState('Right');
-            // console.log('Move eye to right')
-        }
+    // --- 1. Create reusable animation functions to keep the code DRY ---
+    const animateEyesRight = () => {
+        gsap.to(leftIrisRef.current, {
+        attr: { d: "M143 237.5C143 241.918 139.418 245.5 135 245.5C130.582 245.5 127 241.918 127 237.5C127 233.082 130.582 229.5 135 229.5C139.418 229.5 143 233.082 143 237.5Z" },
+        duration: d, ease: "power3.out",
+        });
+        gsap.to(rightIrisRef.current, {
+        attr: { d: "M221.5 245.5C221.5 250.194 217.694 254 213 254C208.306 254 204.5 250.194 204.5 245.5C204.5 240.806 208.306 237 213 237C217.694 237 221.5 240.806 221.5 245.5Z" },
+        duration: d, ease: "power3.out",
+        });
+        // Eyebrow animations can be added here if needed
     };
 
+    const animateEyesLeft = () => {
+        gsap.to(leftIrisRef.current, {
+        attr: { d: "M151 238.5C151 242.918 147.418 246.5 143 246.5C138.582 246.5 135 242.918 135 238.5C135 234.082 138.582 230.5 143 230.5C147.418 230.5 151 234.082 151 238.5Z" },
+        duration: d, ease: "power3.out",
+        });
+        gsap.to(rightIrisRef.current, {
+        attr: { d: "M229.5 246.5C229.5 251.194 225.694 255 221 255C216.306 255 212.5 251.194 212.5 246.5C212.5 241.806 216.306 238 221 238C225.694 238 229.5 241.806 229.5 246.5Z" },
+        duration: d, ease: "power3.out",
+        });
+        // Eyebrow animations can be added here if needed
+    };
+
+    // --- 2. This effect handles the 'linkHovered' override ---
     useEffect(() => {
-        if (!linkHovered) {
-            gsap.to(
-                leftIrisRef.current,
-                {
-                    attr: {
-                        d: "M151 238.5C151 242.918 147.418 246.5 143 246.5C138.582 246.5 135 242.918 135 238.5C135 234.082 138.582 230.5 143 230.5C147.418 230.5 151 234.082 151 238.5Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            gsap.to(
-                rightIrisRef.current,
-                {
-                    attr: {
-                        d: "M229.5 246.5C229.5 251.194 225.694 255 221 255C216.306 255 212.5 251.194 212.5 246.5C212.5 241.806 216.306 238 221 238C225.694 238 229.5 241.806 229.5 246.5Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            gsap.to(
-                leftBrowRef.current,
-                {
-                    attr: {
-                        d: "M120.499 209.5C119.791 211.622 118.902 213.379 117.899 214.218C117.69 214.393 117.603 214.691 117.733 214.93L120.135 219.334C120.307 219.649 120.75 219.687 121.016 219.446C126.065 214.893 141.624 221.482 149.499 225.5C140.999 207.5 129.999 205.167 126.499 206C125.332 206.167 121.299 207.1 120.499 209.5Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            gsap.to(
-                rightBrowRef.current,
-                {
-                    attr: {
-                        d: "M192.47 209.449C182.438 209.374 180.054 215.557 180.009 219.903C179.731 223.07 183.469 225.697 185.514 225.412C185.539 225.409 185.564 225.4 185.586 225.386C203.001 214.783 234.438 226.735 248.962 234.516C249.16 234.622 249.341 234.36 249.191 234.194C227.517 210.04 204.864 209.541 192.47 209.449Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            setEyeState('Left');
-            // console.log('Move eye to left')
+        if (linkHovered) {
+        // When linkHovered is true, force the eyes to the right.
+        animateEyesRight();
         }
-        else {
-            gsap.to(
-                leftIrisRef.current,
-                {
-                    attr: {
-                        d: "M143 237.5C143 241.918 139.418 245.5 135 245.5C130.582 245.5 127 241.918 127 237.5C127 233.082 130.582 229.5 135 229.5C139.418 229.5 143 233.082 143 237.5Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            gsap.to(
-                rightIrisRef.current,
-                {
-                    attr: {
-                        d: "M221.5 245.5C221.5 250.194 217.694 254 213 254C208.306 254 204.5 250.194 204.5 245.5C204.5 240.806 208.306 237 213 237C217.694 237 221.5 240.806 221.5 245.5Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            gsap.to(
-                leftBrowRef.current,
-                {
-                    attr: {
-                        d: "M120.499 206.5C119.791 208.622 118.902 210.379 117.899 211.218C117.69 211.393 117.603 211.691 117.733 211.93L120.135 216.334C120.307 216.649 120.75 216.687 121.016 216.446C126.065 211.893 141.624 218.482 149.499 222.5C140.999 204.5 129.999 202.167 126.499 203C125.332 203.167 121.299 204.1 120.499 206.5Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            gsap.to(
-                rightBrowRef.current,
-                {
-                    attr: {
-                        d: "M192.47 206.449C182.438 206.374 180.054 212.557 180.009 216.903C179.731 220.07 183.469 222.697 185.514 222.412C185.539 222.409 185.564 222.4 185.586 222.386C203.001 211.783 234.438 223.735 248.962 231.516C249.16 231.622 249.341 231.36 249.191 231.194C227.517 207.04 204.864 206.541 192.47 206.449Z",
-                    },
-                    duration: d,
-                    ease: "power3.out"
-                }
-            )
-            setEyeState('Right');
-            // console.log('Move eye to right')
-        }
+        // When linkHovered becomes false, the mousemove listener below will automatically take over.
     }, [linkHovered]);
 
-    // useEffect(() => {
-    //     window.addEventListener('mousemove', handleMouseMove);
 
-    //     return () => {
-    //         window.removeEventListener('mousemove', handleMouseMove);
-    //     };
-    // }, [eyeState]);
+    // --- 3. This effect handles the mouse-following behavior ---
+    useEffect(() => {
+        const handleMouseMove = (e) => {
+        // If the link is hovered, do nothing and let the override effect handle it.
+        if (linkHovered) {
+            return;
+        }
+
+        if (e.clientX < eyeD) {
+            animateEyesLeft();
+        } else {
+            animateEyesRight();
+        }
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+        return () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+        };
+    }, [linkHovered, eyeD]); // Re-bind the listener if linkHovered changes to get the correct value.
+
+    // useEffect(() => {
+    //     if (!linkHovered) {
+    //         gsap.to(
+    //             leftIrisRef.current,
+    //             {
+    //                 attr: {
+    //                     d: "M151 238.5C151 242.918 147.418 246.5 143 246.5C138.582 246.5 135 242.918 135 238.5C135 234.082 138.582 230.5 143 230.5C147.418 230.5 151 234.082 151 238.5Z",
+    //                 },
+    //                 duration: d,
+    //                 ease: "power3.out"
+    //             }
+    //         )
+    //         gsap.to(
+    //             rightIrisRef.current,
+    //             {
+    //                 attr: {
+    //                     d: "M229.5 246.5C229.5 251.194 225.694 255 221 255C216.306 255 212.5 251.194 212.5 246.5C212.5 241.806 216.306 238 221 238C225.694 238 229.5 241.806 229.5 246.5Z",
+    //                 },
+    //                 duration: d,
+    //                 ease: "power3.out"
+    //             }
+    //         )
+    //         gsap.to(
+    //             leftBrowRef.current,
+    //             {
+    //                 attr: {
+    //                     d: "M120.499 209.5C119.791 211.622 118.902 213.379 117.899 214.218C117.69 214.393 117.603 214.691 117.733 214.93L120.135 219.334C120.307 219.649 120.75 219.687 121.016 219.446C126.065 214.893 141.624 221.482 149.499 225.5C140.999 207.5 129.999 205.167 126.499 206C125.332 206.167 121.299 207.1 120.499 209.5Z",
+    //                 },
+    //                 duration: d,
+    //                 ease: "power3.out"
+    //             }
+    //         )
+    //         gsap.to(
+    //             rightBrowRef.current,
+    //             {
+    //                 attr: {
+    //                     d: "M192.47 209.449C182.438 209.374 180.054 215.557 180.009 219.903C179.731 223.07 183.469 225.697 185.514 225.412C185.539 225.409 185.564 225.4 185.586 225.386C203.001 214.783 234.438 226.735 248.962 234.516C249.16 234.622 249.341 234.36 249.191 234.194C227.517 210.04 204.864 209.541 192.47 209.449Z",
+    //                 },
+    //                 duration: d,
+    //                 ease: "power3.out"
+    //             }
+    //         )
+    //         setEyeState('Left');
+    //         // console.log('Move eye to left')
+    //     }
+    //     else {
+    //         gsap.to(
+    //             leftIrisRef.current,
+    //             {
+    //                 attr: {
+    //                     d: "M143 237.5C143 241.918 139.418 245.5 135 245.5C130.582 245.5 127 241.918 127 237.5C127 233.082 130.582 229.5 135 229.5C139.418 229.5 143 233.082 143 237.5Z",
+    //                 },
+    //                 duration: d,
+    //                 ease: "power3.out"
+    //             }
+    //         )
+    //         gsap.to(
+    //             rightIrisRef.current,
+    //             {
+    //                 attr: {
+    //                     d: "M221.5 245.5C221.5 250.194 217.694 254 213 254C208.306 254 204.5 250.194 204.5 245.5C204.5 240.806 208.306 237 213 237C217.694 237 221.5 240.806 221.5 245.5Z",
+    //                 },
+    //                 duration: d,
+    //                 ease: "power3.out"
+    //             }
+    //         )
+    //         gsap.to(
+    //             leftBrowRef.current,
+    //             {
+    //                 attr: {
+    //                     d: "M120.499 206.5C119.791 208.622 118.902 210.379 117.899 211.218C117.69 211.393 117.603 211.691 117.733 211.93L120.135 216.334C120.307 216.649 120.75 216.687 121.016 216.446C126.065 211.893 141.624 218.482 149.499 222.5C140.999 204.5 129.999 202.167 126.499 203C125.332 203.167 121.299 204.1 120.499 206.5Z",
+    //                 },
+    //                 duration: d,
+    //                 ease: "power3.out"
+    //             }
+    //         )
+    //         gsap.to(
+    //             rightBrowRef.current,
+    //             {
+    //                 attr: {
+    //                     d: "M192.47 206.449C182.438 206.374 180.054 212.557 180.009 216.903C179.731 220.07 183.469 222.697 185.514 222.412C185.539 222.409 185.564 222.4 185.586 222.386C203.001 211.783 234.438 223.735 248.962 231.516C249.16 231.622 249.341 231.36 249.191 231.194C227.517 207.04 204.864 206.541 192.47 206.449Z",
+    //                 },
+    //                 duration: d,
+    //                 ease: "power3.out"
+    //             }
+    //         )
+    //         setEyeState('Right');
+    //         // console.log('Move eye to right')
+    //     }
+    // }, [linkHovered]);
 
     useGSAP(() => {
         t1.current = gsap.timeline({
@@ -261,12 +229,45 @@ const Hero = ({linkHovered}) => {
         });
         t1.current.to(fishingLineRef.current, { height: '460px', duration: 5.6, ease: "linear" }, '+=0.7');
         t1.current.to(fishingLineRef.current, { height: '235px', duration: 5.6, ease: "linear" }, '+=0.7');
+
         return () => {
             // Cleanup timeline on unmount
             if (t1.current) {
                 t1.current.kill();
             }
         };
+    }, []);
+
+      useGSAP(() => {
+        CustomEase.create("wave", "M0,0 C0.6,0, 0.1,1.4, 1,1");
+        const rects = [
+        rect4Ref.current,
+        rect3Ref.current,
+        rect2Ref.current,
+        rect1Ref.current,
+        ];
+
+        const t2 = gsap.timeline();
+
+        // 1. Reveal animation (same as before, but added to the timeline)
+        t2.from(rects, {
+        scaleY: 0,
+        transformOrigin: "top",
+        duration: 0.8,
+        stagger: 0.15,
+        ease: "wave",
+        });
+
+        // 2. Looping wave animation (starts after the reveal is complete)
+        t2.to(rects, {
+        scaleY: 1.4, // Animate to 5% taller
+        transformOrigin: "top",
+        duration: 2,
+        stagger: 0.25, // Stagger creates the wave/ripple effect
+        ease: "wave",
+        repeat: -1, // Loop forever
+        yoyo: true, // Animate back and forth
+        }, "-=0.8");
     }, []);
 
     return (
@@ -338,10 +339,30 @@ const Hero = ({linkHovered}) => {
         <path d="M0 0H375V471C375 475.971 370.971 480 366 480H9C4.02943 480 0 475.971 0 471V0Z"/>
         </mask>
         <path d="M0 0H375V471C375 475.971 370.971 480 366 480H9C4.02943 480 0 475.971 0 471V0Z" fill="#00A084"/>
-        <path id="rect-4" d="M0 255H375V480H0V255Z" fill="#009178"/>
-        <path id="rect-3" d="M0 270H375V480H0V270Z" fill="#00826B"/>
-        <path id="rect-2" d="M0 300H375V480H0V300Z" fill="#00735F"/>
-        <path id="rect-1" d="M0 360H375V480H0V360Z" fill="#006352"/>
+        <path
+            ref={rect4Ref}
+            id="rect-4"
+            d="M0 0H375V165H0V0Z"
+            fill="#009178"
+        />
+        <path
+            ref={rect3Ref}
+            id="rect-3"
+            d="M0 0H375V150H0V0Z"
+            fill="#00826B"
+        />
+        <path
+            ref={rect2Ref}
+            id="rect-2"
+            d="M0 0H375V120H0V0Z"
+            fill="#00735F"
+        />
+        <path
+            ref={rect1Ref}
+            id="rect-1"
+            d="M0 0H375V60H0V0Z"
+            fill="#006352"
+        />
         <g id="Face">
         <path id="Vector 281" d="M35.5 422.5L149.5 382.5L276 384.5L404 483H0L8 453C12.8 435 28.3333 425.167 35.5 422.5Z" fill="#121312"/>
         <path id="Neck BG" d="M142.502 423.5C144.902 406.3 152.169 392.667 155.502 388V327.5L292.5 291L290 314C283.6 324.4 280.333 361.333 279.5 378.5C280.3 386.9 288.5 401 292.5 407C297.7 437.4 256.667 470 235.5 482.5H144.5L142.502 466.5C137.702 450.1 140.502 431 142.502 423.5Z" fill="#F3FFF3"/>

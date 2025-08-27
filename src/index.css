@@ -90,7 +90,7 @@ body {
 .crosshair-overlay .center::after {
   content: "";
   position: absolute;
-  background: var(--color);
+  background: var(--off-teal);
   border-radius: 999px;
 }
 
