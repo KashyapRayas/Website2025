@@ -1,5 +1,4 @@
 import React, { forwardRef, useState, useRef, useEffect } from 'react';
-import me from '/me.svg';
 import gsap from "gsap";
 import figma_apply from '/icons/figma_apply.png'
 import figma_cancel from '/icons/figma_cancel.png'
@@ -248,15 +247,6 @@ const Hero = ({linkHovered}) => {
         ];
 
         const t2 = gsap.timeline();
-
-        // 1. Reveal animation (same as before, but added to the timeline)
-        t2.from(rects, {
-        scaleY: 0,
-        transformOrigin: "top",
-        duration: 0.8,
-        stagger: 0.15,
-        ease: "wave",
-        });
 
         // 2. Looping wave animation (starts after the reveal is complete)
         t2.to(rects, {
