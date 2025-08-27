@@ -106,11 +106,12 @@ header > .middle > .left {
         a.active {
             background-color: var(--off-white);
             color: var(--off-black);
+            cursor: url('/Cursor.svg'), auto;
         }
         a:hover {
             background-color: var(--off-white);
             color: var(--off-black);
-            cursor: pointer;
+            cursor: url('/Cursor.svg'), auto;
         }
     }
 }
@@ -145,7 +146,7 @@ header > .middle > .right {
     div:hover {
         background-color: var(--off-white);
         color: var(--off-black);
-        cursor: pointer;
+
         font-weight: 600;
     }
     .cell {
@@ -462,7 +463,7 @@ section > .middle {
     }
     .second-innerwrapper:hover {
         background-color: var(--off-white);
-        cursor: pointer;
+
     }
 
     .third {
@@ -595,7 +596,7 @@ section > .middle {
 
     }
     .project:hover, .project--active {
-        cursor: pointer;
+
         background-color: var(--off-white);
     }
 
@@ -626,8 +627,8 @@ section > .middle {
             border-radius: 9px;
         }
         .about-img-wrapper {
-            min-width: 440px;
-            max-width: 440px;
+            min-width: 404px;
+            max-width: 404px;
             height: 100%;
             background-color: var(--off-white);
             border-radius: 9px;
@@ -1069,7 +1070,7 @@ section > .middle {
     }
     .second:hover {
         background-color: var(--off-white);
-        cursor: pointer;
+
     }
 }
 
@@ -1150,7 +1151,7 @@ footer > .middle > .right {
     }
     .work:hover {
         color: var(--off-white);
-        cursor: pointer;
+
         svg {
             color: var(--off-white);
         }
@@ -1164,6 +1165,7 @@ footer > .middle > .right {
     }
     a:hover {
         color: var(--off-white);
+        cursor: url('/Cursor.svg'), auto;
     }
 }
 

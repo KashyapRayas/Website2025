@@ -17,6 +17,7 @@ import Hero from './components/Hero'
 import projects from './data/projects.json'
 import Crosshair from './components/Crosshair'
 import { ReactLenis, useLenis } from 'lenis/react'
+import PercentageSlider from './components/PercentageSlider/PercentageSlider.jsx'
 
 function App() {
 
@@ -354,7 +355,7 @@ function App() {
                         <div className={"first"}>
                             <img className={"s1"} src={lego_210} alt="" />
                             <div className="about-img-wrapper">
-
+                                <PercentageSlider />
                             </div>
                             <div className={"cell"}></div>
                         </div>
