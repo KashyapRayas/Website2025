@@ -1,0 +1,100 @@
+#CONTACT > .middle > .left {
+    display: flex;
+    flex-direction: column;
+    min-width: 636px;
+    max-width: 636px;
+    height: 100%;
+    background-color: var(--off-white);
+    box-sizing: border-box;
+    padding: 30px;
+    border-radius: 9px;
+}
+
+#CONTACT > .middle > .right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    height: max-content;
+    .heading {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 30px 30px;
+        box-sizing: border-box;
+        background-color: var(--dark-green);
+        border-radius: 9px;
+        gap: 9px;
+        h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--off-white);
+            margin: 0;
+        }
+        svg {
+            color: var(--off-white);
+        }
+
+    }
+    .first {
+        width: 100%;
+        background-color: var(--off-white);
+        padding: 30px 30px 30px 30px;
+        border-radius: 9px;
+        gap: 6px;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        box-sizing: border-box;
+
+        h4 {
+            font-size: 42px;
+            width: 100%;
+            text-wrap: wrap;
+            font-weight: 600;
+            color: var(--off-black);
+            margin: 0;
+            line-height: 120%;
+        }
+        h3 {
+            font-size: 18px;
+            width: 100%;
+            text-wrap: wrap;
+            font-weight: 400;
+            color: var(--off-black-06);
+            margin: 0;
+        }
+        span {
+            font-family: "Stara";
+            color: var(--dark-green);
+            font-weight: 400;
+        }
+    }
+    .second {
+        width: 100%;
+        background-color: var(--light-off-teal);
+        padding: 30px 30px 30px 30px;
+        border-radius: 9px;
+        gap: 0px;
+        display: flex;
+        box-sizing: border-box;
+        transition: all 0.3s ease-in-out;
+        align-items: center;
+        text-decoration: none;
+        h4 {
+            font-size: 24px;
+            margin: 0;
+            color: var(--off-black);
+            font-weight: 600;
+        }
+        span {
+            color: var(--dark-green);
+        }
+
+    }
+    .second:hover {
+        background-color: var(--off-white);
+
+    }
+}

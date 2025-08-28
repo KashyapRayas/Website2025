@@ -67,7 +67,7 @@ const AnimatedDownwardSmiley = ({ isActive = false }) => {
             opacity: 1,
             duration: 0.5,
             ease: "power2.inOut",
-            stagger: 0.04, // Stagger from the start of the sorted array (rightmost)
+            stagger: 0.08, // Stagger from the start of the sorted array (rightmost)
           }
         )
         // EXIT: Animate paths from opacity 1 to 0, right to left.
@@ -77,7 +77,7 @@ const AnimatedDownwardSmiley = ({ isActive = false }) => {
             opacity: 0,
             duration: 0.5,
             ease: "power2.inOut",
-            stagger: 0.04,
+            stagger: 0.08,
           },
           "+=0.5" // Wait for 0.5s after reveal before starting the exit
         );

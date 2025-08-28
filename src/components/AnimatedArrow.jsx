@@ -28,82 +28,91 @@ const ArrowSvg = (props) => (
 );
 
 const AnimatedArrow = ({ isActive = false }) => {
-  const container = useRef(null);
-  const tl = useRef(null);
+    const container = useRef(null);
+    const tl = useRef(null);
+    const sortedPaths = useRef([]);
 
-  useGSAP(
-    () => {
-      tl.current = gsap.timeline({
-        paused: true,
-        // When the timeline starts playing forward, make the container visible.
-        onStart: () => {
-          gsap.set(container.current, { display: "flex" });
+    useGSAP(
+        () => {
+
+            const paths = gsap.utils.toArray("path", container.current);
+            sortedPaths.current = paths.sort((a, b) => {
+                const aY = a.getBoundingClientRect().y;
+                const bY = b.getBoundingClientRect().y;
+                return aY - bY; // Sort descending (rightmost first)
+            });
+
+        tl.current = gsap.timeline({
+            paused: true,
+            // When the timeline starts playing forward, make the container visible.
+            onStart: () => {
+            gsap.set(container.current, { display: "flex" });
+            },
+            // When the timeline finishes reversing, hide the container.
+            onReverseComplete: () => {
+            gsap.set(container.current, { display: "none" });
+            },
+        });
+
+        // Add animations to the timeline
+        tl.current
+            .fromTo(
+            container.current,
+            { width: 0 },
+            { width: "48px", duration: 0.3, ease: "power2.inOut" }
+            )
+            .fromTo(
+            sortedPaths.current,
+            { opacity: 0 },
+            {
+                opacity: 1,
+                duration: 0.3,
+                ease: "power2.out",
+                stagger: 0.04,
+                delay: 0.3
+            },
+            "<"
+            );
         },
-        // When the timeline finishes reversing, hide the container.
-        onReverseComplete: () => {
-          gsap.set(container.current, { display: "none" });
-        },
-      });
+        { scope: container }
+    );
 
-      // Add animations to the timeline
-      tl.current
-        .fromTo(
-          container.current,
-          { width: 0 },
-          { width: "48px", duration: 0.3, ease: "power2.inOut" }
-        )
-        .fromTo(
-          "path",
-          { opacity: 0 },
-          {
-            opacity: 1,
-            duration: 0.3,
-            ease: "power2.out",
-            stagger: { each: 0.03, from: "random" },
-            delay: 0.3
-          },
-          "<"
-        );
-    },
-    { scope: container }
-  );
+    useEffect(() => {
+        if (tl.current) {
+        if (isActive) {
+            tl.current.play();
+        } else {
+            tl.current.reverse();
+        }
+        }
+    }, [isActive]);
 
-  useEffect(() => {
-    if (tl.current) {
-      if (isActive) {
-        tl.current.play();
-      } else {
-        tl.current.reverse();
-      }
-    }
-  }, [isActive]);
+    const containerStyle = {
+        // Start with display: 'none' to match the default inactive state
+        display: "none",
+        width: "48px",
+        height: "30px",
+        backgroundColor: "transparent",
+        borderRadius: "6px",
+        alignItems: "center",
+        justifyContent: "center",
+        border: "none",
+        overflow: "hidden",
+    };
 
-  const containerStyle = {
-    // Start with display: 'none' to match the default inactive state
-    display: "none",
-    width: "48px",
-    height: "30px",
-    backgroundColor: "transparent",
-    borderRadius: "6px",
-    alignItems: "center",
-    justifyContent: "center",
-    border: "none",
-    overflow: "hidden",
-  };
+    const svgStyle = {
+        width: "22px",
+        height: "22px",
+        transform: "rotate(-90deg)",
+        color: "var(--dark-green)",
+        flexShrink: 0,
+    };
 
-  const svgStyle = {
-    width: "22px",
-    height: "22px",
-    transform: "rotate(-90deg)",
-    color: "var(--dark-green)",
-    flexShrink: 0,
-  };
-
-  return (
-    <div ref={container} style={containerStyle}>
-      <ArrowSvg style={svgStyle} />
-    </div>
-  );
+    return (
+        <div ref={container} style={containerStyle}>
+        <ArrowSvg style={svgStyle} />
+        </div>
+    );
 };
 
 export default AnimatedArrow;

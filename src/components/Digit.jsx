@@ -20,18 +20,22 @@ const digitComponents = [D0, D1, D2, D3, D4, D5, D6, D7, D8, D9];
 const Digit = ({ number }) => {
   const container = useRef();
   const DigitSvg = digitComponents[number];
+  const sortedPaths = useRef([]);
 
   useGSAP(
     () => {
-      // Animate all <rect> elements from an invisible state
-      gsap.from("rect", {
+    const rects = gsap.utils.toArray("rect", container.current);
+    sortedPaths.current = rects.sort((a, b) => {
+        const aY = a.getBoundingClientRect().y;
+        const bY = b.getBoundingClientRect().y;
+        return aY - bY; // Sort descending (rightmost first)
+    });
+    // Animate all <rect> elements from an invisible state
+      gsap.from(sortedPaths.current, {
         opacity: 0,
-        duration: 0.6,
+        duration: 0.5,
         ease: "power2.out",
-        stagger: {
-          each: 0.08,
-          from: "random", // "random" makes the reveal look more dynamic
-        },
+        stagger: 0.08
       });
     },
     { scope: container } // Scope the animation to only this component instance
