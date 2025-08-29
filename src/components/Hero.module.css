@@ -135,6 +135,7 @@
             box-sizing: border-box;
             padding: 0px 36px;
             color: #F8F8F8;
+            font-size: 15px;
         }
         .font-wrapper-active {
             display: flex;
@@ -145,6 +146,7 @@
             color: #F8F8F8;
             background-color: #383838;
             cursor: default;
+            font-size: 15px;
         }
 
     }

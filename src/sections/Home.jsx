@@ -10,7 +10,7 @@ import AnimatedDownwardArrow from '../components/AnimatedDownwardArrow'
 import Metric from '../components/metric'
 import Hero from '../components/Hero'
 import projects from '../data/projects.json'
-import star from '/star.svg'
+import AnimatedMan from '../components/AnimatedMan';
 
 const Home = ({linkHovered}) => {
 
@@ -42,6 +42,7 @@ const Home = ({linkHovered}) => {
             <div className={"middle"}>
                 <div className={"right"}>
                     <div className={"first"}>
+                        <AnimatedMan />
                         <h1>Unconventional <span>ideas</span><span>,</span> minimalist <span>execution</span><span>.</span>
                         </h1>
                         <h2>

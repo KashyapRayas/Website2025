@@ -58,7 +58,7 @@ const AnimatedDownwardArrow = ({ isActive = false }) => {
           { opacity: 0 },
           {
             opacity: 1,
-            duration: 0.8,
+            duration: 0.5,
             ease: "power2.inOut",
             stagger: 0.08, // Stagger from the start of the sorted array (rightmost)
           }
@@ -68,7 +68,7 @@ const AnimatedDownwardArrow = ({ isActive = false }) => {
           sortedPaths.current,
           {
             opacity: 0,
-            duration: 0.8,
+            duration: 0.5,
             ease: "power2.inOut",
             stagger: 0.08,
           },

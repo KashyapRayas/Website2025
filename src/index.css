@@ -29,6 +29,10 @@
     cursor: url('/Cursor.svg'), auto;
 }
 
+html {
+    font-size: 3px;
+}
+
 body {
     display: flex;
     justify-content: center;

@@ -8,10 +8,29 @@ import AnimatedDownwardSmiley from '../components/AnimatedDownwardSmiley'
 import checked from '/checked.svg'
 import unchecked from '/unchecked.svg'
 import PercentageSlider from '../components/PercentageSlider/PercentageSlider.jsx'
+import AnimatedLegWiggle from '../components/AnimatedLegWiggle'
+import gsap from 'gsap'
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
 
     const [resumeHovered, setResumeHovered] = useState(false);
+    const cellRef = useRef(null);
+    const legRef = useRef(null);
+
+    useEffect(() => {
+        const trigger = ScrollTrigger.create({
+            trigger: cellRef.current,
+            scroller: document.body, // ReactLenis uses <body> as scroller
+            start: "bottom bottom",        // when cell bottom hits viewport bottom
+            onEnter: () => legRef.current?.play(),
+            once: true,
+        });
+
+        return () => trigger.kill();
+    }, []);
 
     return (
         <section id={"ABOUT"}>
@@ -147,12 +166,14 @@ const About = () => {
                         </div>
                     </div>
                     <div className={"left"}>
-                        <div className={"first"}>
+                        <div className={"first"} ref={cellRef}>
                             <img className={"s1"} src={lego_210} alt="" />
                             <div className={"about-img-wrapper"}>
                                 <PercentageSlider />
                             </div>
-                            <div className={"cell"}></div>
+                            <div className={"cell"}>
+                                <AnimatedLegWiggle ref={legRef} />
+                            </div>
                         </div>
                         <div className={"second"}>
                             <h4>EXPERIENCE</h4>
