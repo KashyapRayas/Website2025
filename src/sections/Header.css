@@ -1,0 +1,121 @@
+header {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: 60px;
+}
+
+header > .middle {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1px;
+    width: 100%;
+}
+
+header > .middle > .left {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    min-width: 636px;
+    max-width: 636px;
+
+    .cell-wrapper {
+        display: flex;
+        justify-content: center;
+        padding: 0 0 1px 0;
+        min-width: 30px;
+        max-width: 30px;
+        height: 100%;
+        box-sizing: border-box;
+        .cell {
+            background-color: var(--off-white);
+            width: 100%;
+            height: 100%;
+            border-radius: 9px;
+        }
+    }
+    .green-rectangle {
+        background-color: #006352;
+        width: 100%;
+        height: 100%;
+    }
+    .links {
+        display: flex;
+        justify-content: center;
+        gap: 1px;
+        background-color: var(--off-teal);
+        width: 231px;
+        box-sizing: border-box;
+        padding: 0 0 1px 0;
+        a {
+            text-decoration: none;
+            background-color: var(--light-off-teal);
+            color: var(--off-black-06);
+            border-radius: 9px;
+            width: 150px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            font-size: 13px;
+            transition: all 0.15s ease-in-out;
+        }
+        a.active {
+            background-color: var(--off-white);
+            color: var(--off-black);
+            cursor: url('/Cursor.svg'), auto;
+        }
+        a:hover {
+            background-color: var(--off-white);
+            color: var(--off-black);
+            cursor: url('/Cursor.svg'), auto;
+        }
+    }
+}
+
+header > .middle > .right {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 1px;
+    padding: 0 0 1px 0;
+    box-sizing: border-box;
+    .nav-link {
+        background-color: var(--light-off-teal);
+        color: var(--off-black-06);
+        border-radius: 9px;
+        min-width: 120px;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 9px;
+        font-size: 13px;
+        font-weight: 400;
+        transition: all 0.15s ease-in-out;
+    }
+    .nav-link.active {
+        background-color: var(--off-white);
+        color: var(--off-black);
+        font-weight: 600;
+    }
+    .nav-link:hover {
+        background-color: var(--off-white);
+        color: var(--off-black);
+
+        font-weight: 600;
+    }
+    .cell {
+        background-color: var(--off-white);
+        width: 100%;
+        height: 100%;
+        border-radius: 9px;
+        min-width: none;
+    }
+}

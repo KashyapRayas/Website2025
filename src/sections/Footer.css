@@ -1,0 +1,108 @@
+footer {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: 140px;
+}
+
+footer > .middle {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    width: 100%;
+    height: 100%;
+    gap: 0px;
+}
+
+footer > .middle > .right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--dark-green);
+    box-sizing: border-box;
+    padding: 24px;
+    width: 100%;
+    height: 100%;
+    border-radius: 9px 0px 0px 9px;
+
+    h3 {
+        font-size: 18px;
+        color: var(--off-teal);
+        font-weight: 400;
+        text-wrap: wrap;
+        margin: 0;
+    }
+
+    .wrapper {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        height: max-content;
+        align-items: end;
+        h3 {
+            font-size: 15px;
+            line-height: 160%;
+            color: var(--off-white);
+        }
+        span {
+            font-weight: 400;
+            color: var(--off-teal);
+        }
+    }
+    .right-links {
+      display: flex;
+      flex-direction: column;
+      align-items: end;
+      gap: 6px;
+    }
+    .work {
+        color: var(--off-teal);
+        border-radius: 9px;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 9px;
+        font-size: 15px;
+        transition: all 0.15s ease-in-out;
+        margin: 0;
+        svg {
+            color: var(--off-teal);
+            width: 18px;
+            rotate: 180deg;
+        }
+    }
+    .work:hover {
+        color: var(--off-white);
+
+        svg {
+            color: var(--off-white);
+        }
+    }
+    a {
+        text-decoration: none;
+        color: var(--off-teal);
+        font-size: 15px;
+        font-weight: 400;
+        transition: all 0.15s ease-in-out;
+    }
+    a:hover {
+        color: var(--off-white);
+        cursor: url('/Cursor.svg'), auto;
+    }
+}
+
+footer > .middle > .left {
+    min-width: 636px;
+    max-width: 636px;
+    height: 100%;
+    position: relative;
+    border-radius: 0px 9px 9px 0px;
+    overflow: hidden;
+    img {
+        position: absolute;
+        height: 140px;
+    }
+}

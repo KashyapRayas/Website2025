@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, forwardRef } from 'react'
 import gsap from 'gsap'
 import { CustomEase } from "gsap/CustomEase";
 import '../App.css'
@@ -12,7 +12,7 @@ import Hero from '../components/Hero'
 import projects from '../data/projects.json'
 import AnimatedMan from '../components/AnimatedMan';
 
-const Home = ({linkHovered}) => {
+const Home = forwardRef(({linkHovered}, ref) => {
 
     const [recentHovered, setRecentHovered] = useState(false);
     const rectRef = useRef(null);
@@ -34,7 +34,7 @@ const Home = ({linkHovered}) => {
     }, [])
 
     return (
-        <section id={"HOME"}>
+        <section id={"HOME"} ref={ref}>
             <div className={"extremes-wrapper-left"}>
                 <div className={"extremes"}></div>
             </div>
@@ -112,6 +112,6 @@ const Home = ({linkHovered}) => {
             </div>
         </section>
     );
-};
+});
 
 export default Home;

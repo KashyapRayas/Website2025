@@ -1,15 +1,15 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, forwardRef } from 'react'
 import '../App.css'
 import './Contact.css'
 import Denji from '../components/Denji'
 import AnimatedArrow from '../components/AnimatedArrow'
 
-const Contact = () => {
+const Contact = forwardRef(({}, ref) => {
 
     const [contactHovered, setContactHovered] = useState(false);
 
     return (
-        <section id={"CONTACT"}>
+        <section id={"CONTACT"} ref={ref}>
             <div className={"extremes-wrapper-left"}>
                 <div className={"extremes"}></div>
             </div>
@@ -43,6 +43,6 @@ const Contact = () => {
             </div>
         </section>
     );
-};
+});
 
 export default Contact;

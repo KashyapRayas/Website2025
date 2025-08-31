@@ -1,0 +1,41 @@
+import { useState } from 'react'
+import '../App.css'
+import './Footer.css'
+import footer from '/footer.svg'
+import AnimatedDownwardArrowSmall from '../components/AnimatedDownwardArrowSmall'
+
+const Footer = () => {
+    const [footerLinkHovered, setFooterLinkHovered] = useState(false);
+    return (
+            <footer>
+                <div className={"extremes-wrapper-left"}>
+                    <div className={"extremes"}></div>
+                </div>
+
+                <div className={"middle"}>
+                    <div className={"right"}>
+                        <h3>Designed with 3L of H2O</h3>
+                        <div className={"wrapper"}>
+                            <h3>KASHYAP RAYAS &copy; {new Date().getFullYear()} <br /> <span>ALL RIGHTS RESERVED</span> </h3>
+                            <div className={"right-links"}>
+                                <div className={"work"} onClick={() => lenis.scrollTo("#WORK", {duration: 1.5})} onMouseEnter={() => setFooterLinkHovered(true)} onMouseLeave={() => setFooterLinkHovered(false)}>
+                                    <AnimatedDownwardArrowSmall isActive={true} isHovered={footerLinkHovered} />
+                                    SCROLL TO WORK
+                                </div>
+                                <a href="http://2022.kashyaprayas.com">2022 WEBSITE</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={"left"}>
+                        <img src={footer} alt="" />
+                    </div>
+                </div>
+
+                <div className={"extremes-wrapper-right"}>
+                    <div className={"extremes"}></div>
+                </div>
+            </footer>
+    );
+};
+
+export default Footer;

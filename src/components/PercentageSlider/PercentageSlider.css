@@ -51,7 +51,7 @@
   margin-top: -8px; /* Center the thumb vertically on the track */
   width: 16px;
   height: 16px;
-  background: var(--light-green);
+  background: var(--dark-green);
   border-radius: 50%;
   border: none;
 }
@@ -60,7 +60,7 @@
 .percentage-slider::-moz-range-thumb {
   width: 16px;
   height: 16px;
-  background: var(--light-green);
+  background: var(--dark-green);
   border-radius: 50%;
   border: none;
 }

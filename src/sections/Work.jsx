@@ -1,14 +1,15 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, forwardRef } from 'react'
 import '../App.css'
+import './Work.css'
 import AnimatedArrow from '../components/AnimatedArrow'
 import projects from '../data/projects.json'
 
-const Work = () => {
+const Work = forwardRef(({}, ref) => {
 
     const [hoveredIndex, setHoveredIndex] = useState(0);
-    
+
     return (
-        <section id={"WORK"}>
+        <section id={"WORK"} ref={ref}>
             <div className={"extremes-wrapper-left"}>
                 <div className={"extremes"}></div>
             </div>
@@ -37,7 +38,19 @@ const Work = () => {
                     )) }
                 </div>
                 <div className={"left"}>
-                    <img src={null} alt="" />
+                    <div className={"img-superwrapper"}>
+                        <div className={"img-wrapper"}>
+                            <img src={null} alt="" />
+                        </div>
+                        <div className={"rounder"}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
+                                <path d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z" fill="#AFE2DC"/>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
+                                <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="#AFE2DC"/>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -46,6 +59,6 @@ const Work = () => {
             </div>
         </section>
     );
-};
+});
 
 export default Work;

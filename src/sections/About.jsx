@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, forwardRef } from 'react'
 import '../App.css'
 import './About.css'
 import lego_210 from '/lego_210.svg'
@@ -14,7 +14,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const About = () => {
+const About = forwardRef(({}, ref) => {
 
     const [resumeHovered, setResumeHovered] = useState(false);
     const cellRef = useRef(null);
@@ -33,7 +33,7 @@ const About = () => {
     }, []);
 
     return (
-        <section id={"ABOUT"}>
+        <section id={"ABOUT"} ref={ref}>
                 <div className={"extremes-wrapper-left"}>
                     <div className={"extremes"}></div>
                 </div>
@@ -232,6 +232,6 @@ const About = () => {
                 </div>
             </section>
     );
-};
+});
 
 export default About;
