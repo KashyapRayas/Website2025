@@ -3,9 +3,10 @@ import React, { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
-import denji from "/denji.svg"; // Make sure this path is correct for your project
+import denji from "/denji.svg"
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Register the GSAP Plugin
+gsap.registerPlugin(ScrollTrigger);
 gsap.registerPlugin(CustomEase);
 
 // --- Define Style Objects Outside the Component for Performance ---
@@ -15,7 +16,7 @@ const firstStyle = {
   width: "100%",
   height: "100%",
   display: "flex",
-  backgroundColor: "#006352", // Assumes --dark-green is in a global stylesheet
+  backgroundColor: "#006352",
   borderRadius: "6px",
   justifyContent: "center",
   alignItems: "end",
@@ -23,7 +24,9 @@ const firstStyle = {
 };
 
 const imgStyle = {
+    position: 'absolute',
     zIndex: 6,
+    bottom: "12px"
 };
 
 const baseRectStyle = {
@@ -65,41 +68,59 @@ const rect5Style = {
 // --- The Component ---
 
 const Denji = () => {
-  const container = useRef(null);
+    const container = useRef(null);
+    const denjiRef = useRef(null)
 
-  useGSAP(
-    () => {
-      // Create the custom "wave" ease for the animation
-      CustomEase.create("wave", "M0,0 C0.6,0, 0.1,1.4, 1,1");
 
-      const rectElements = gsap.utils.toArray(".rect", container.current);
-      const sortedRects = rectElements.sort((a, b) => {
-        const numA = parseInt(a.className.split("-")[1]);
-        const numB = parseInt(b.className.split("-")[1]);
-        return numA - numB;
-      });
+    useGSAP(
+        () => {
+        // Create the custom "wave" ease for the animation
+        CustomEase.create("wave", "M0,0 C0.6,0, 0.3,1.4, 1,1");
 
-      // Create a timeline that loops and yoyos indefinitely
-      const tl = gsap.timeline({
-        repeat: -1,
-        yoyo: true,
-      });
+        const rectElements = gsap.utils.toArray(".rect", container.current);
+        const sortedRects = rectElements.sort((a, b) => {
+            const numA = parseInt(a.className.split("-")[1]);
+            const numB = parseInt(b.className.split("-")[1]);
+            return numA - numB;
+        });
 
-      // Add the looping wave animation directly to the timeline
-      tl.to(sortedRects, {
-        scaleX: 1.2, // Animate the HORIZONTAL scale
-        transformOrigin: "left", // Set the origin to the LEFT edge
-        duration: 2,
-        stagger: 0.2,
-        ease: "wave",
-      });
-    },
-    { scope: container }
-  );
+        // Create a timeline that loops and yoyos indefinitely
+        const tl = gsap.timeline({
+            repeat: -1,
+            yoyo: true,
+        });
+
+        // Add the looping wave animation directly to the timeline
+        tl.to(sortedRects, {
+            scaleX: 1.2, // Animate the HORIZONTAL scale
+            transformOrigin: "left", // Set the origin to the LEFT edge
+            duration: 2,
+            stagger: 0.2,
+            ease: "wave",
+        });
+        },
+        { scope: container }
+    );
+
+    useGSAP(() => {
+        if (denjiRef.current) {
+            gsap.to(denjiRef.current, {
+                y: 90, // Move group up 80px on scroll. Adjust as needed.
+                ease: "none",
+                scrollTrigger: {
+                trigger: denjiRef.current,
+                endTrigger: 'footer',
+                start: "top bottom", // Animation starts when SVG top hits viewport top
+                end: "bottom top", // Animation ends when SVG bottom hits viewport top
+                scrub: 1, // Smoothly ties animation to scrollbar
+                },
+            });
+        }
+    }, []);
 
   return (
     <div style={firstStyle} ref={container}>
-      <img src={denji} alt="" style={imgStyle} />
+      <img src={denji} alt="" style={imgStyle} ref={denjiRef}/>
       <div
         className="rect-1 rect"
         style={{ ...baseRectStyle, ...rect1Style }}

@@ -104,5 +104,20 @@ footer > .middle > .left {
     img {
         position: absolute;
         height: 140px;
+        width: 636px;
+    }
+}
+
+footer > .middle > .small {
+    min-width: 450px;
+    max-width: 450px;
+    overflow: hidden;
+    border-radius: 0px 9px 9px 0px;
+    height: 100%;
+    position: relative;
+    img {
+        position: absolute;
+        height: 140px;
+        width: 636px;
     }
 }

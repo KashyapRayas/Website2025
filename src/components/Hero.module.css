@@ -147,6 +147,7 @@
             background-color: #383838;
             cursor: default;
             font-size: 15px;
+            cursor: url('/Cursor.svg'), auto;
         }
 
     }
@@ -156,10 +157,10 @@
 .fishing-line {
     position: absolute;
     z-index: 3;
-    left: 215px;
-    top: 32px;
+    left: 214.7px;
+    top: 140px;
     width: max-content;
-    height: 235px;
+    height: 127px;
     display: flex;
     flex-direction: column;
     gap: 0px;

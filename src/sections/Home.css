@@ -47,10 +47,17 @@
             padding: 30px;
             box-sizing: border-box;
             .chest-window {
+                position: relative;
+                overflow: hidden;
                 background-color: var(--off-black);
                 border-radius: 6px;
                 width: 375px;
                 height: 100%;
+                svg {
+                    position: absolute;
+                    bottom: 0;
+                    left: 154px;
+                }
             }
         }
 
@@ -62,7 +69,7 @@
             min-width: 150px;
             max-width: 150px;
             height: 150px;
-            background-color: var(--light-off-teal);
+            background-color: var(--off-white);
             border-radius: 9px;
         }
 
@@ -228,7 +235,7 @@
             display: flex;
             flex-direction: column;
             gap: 1px;
-            padding: 0 0 1px 1px;
+            padding: 0px 0px 1px 1px;
             box-sizing: border-box;
             background-color: var(--off-teal);
             width: 100%;
@@ -252,7 +259,7 @@
             width: 300px;
             min-height: 225px;
             max-height: 225px;
-            background-color: var(--dark-green);
+            background-color: var(--off-teal);
             border-radius: 6px;
             border: none;
         }

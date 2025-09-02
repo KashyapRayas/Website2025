@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { ReactLenis, useLenis } from 'lenis/react'
 import '../App.css'
+import { useLocation } from "react-router-dom";
 import Header from '../sections/Header.jsx'
 import Home from '../sections/Home.jsx';
 import Work from '../sections/Work.jsx';
@@ -15,23 +16,30 @@ const Landing = () => {
     const aboutRef = useRef(null)
     const workRef = useRef(null)
     const contactRef = useRef(null)
+    const location = useLocation();
 
-    const lenis = useLenis((lenis) => {
-        // called every scroll
-        // console.log(lenis)
-    })
+    const lenis = useLenis()
 
-    // useEffect(() => {
-    //     if (lenis) {
-    //         lenis.scrollTo(0, { duration: 0 });
-    //     }
-    // }, [lenis]);
+    useEffect(() => {
+        if (location.state?.scrollTo) {
+            const { scrollTo, duration } = location.state;
+            const tryScroll = () => {
+                if (lenis) {
+                lenis.scrollTo(scrollTo, { duration: duration || 1.5 });
+                window.history.replaceState({}, "", scrollTo);
+                } else {
+                requestAnimationFrame(tryScroll);
+                }
+            };
+            tryScroll();
+            }
+    }, [location, lenis]);
 
     return (
         <>
             <ReactLenis root
                 options={{
-                    duration: 1.5,
+                    duration: 3,
                     autoRaf: true
                 }}
             >
@@ -40,7 +48,7 @@ const Landing = () => {
             <Work ref={workRef}/>
             <About ref={aboutRef}/>
             <Contact ref={contactRef}/>
-            <Footer />
+            <Footer lenis={lenis}/>
             </ReactLenis>
         </>
     );

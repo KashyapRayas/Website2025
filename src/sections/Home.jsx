@@ -11,11 +11,17 @@ import Metric from '../components/metric'
 import Hero from '../components/Hero'
 import projects from '../data/projects.json'
 import AnimatedMan from '../components/AnimatedMan';
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Home = forwardRef(({linkHovered}, ref) => {
 
     const [recentHovered, setRecentHovered] = useState(false);
     const rectRef = useRef(null);
+    const heroRef = useRef(null)
+    const parallaxRef = useRef(null)
 
     useEffect(() => {
         if (!rectRef.current) {
@@ -32,6 +38,22 @@ const Home = forwardRef(({linkHovered}, ref) => {
             tween.kill();
         };
     }, [])
+
+    useGSAP(() => {
+        if (parallaxRef.current) {
+        gsap.to(parallaxRef.current, {
+            y: 60, // Move group up 80px on scroll. Adjust as needed.
+            ease: "none",
+            scrollTrigger: {
+            trigger: ref.current,
+            endTrigger: parallaxRef.current,
+            start: "top top", // Animation starts when SVG top hits viewport top
+            end: "top top", // Animation ends when SVG bottom hits viewport top
+            scrub: 1, // Smoothly ties animation to scrollbar
+            },
+        });
+        }
+    }, []);
 
     return (
         <section id={"HOME"} ref={ref}>
@@ -88,7 +110,7 @@ const Home = forwardRef(({linkHovered}, ref) => {
                 <div className={"left"}>
                     <div className={"first"}>
                         <div className={"hero"}>
-                            <Hero linkHovered={linkHovered || recentHovered} />
+                            <Hero linkHovered={linkHovered || recentHovered} ref={heroRef}/>
                         </div>
                         <div className={"cell"}></div>
                     </div>
@@ -97,7 +119,14 @@ const Home = forwardRef(({linkHovered}, ref) => {
                             <AnimatedDownwardArrow isActive={true} />
                         </div>
                         <div className={"s1"}>
-                            <div className={"chest-window"}></div>
+                            <div className={"chest-window"}>
+                                <svg ref={parallaxRef} width="40" height="162" viewBox="0 0 40 162" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M23.5 1C13 23 1.4 138.755 1 161.866" stroke="var(--off-white)" strokeWidth="1.8"/>
+                                <circle cx="34" cy="19" r="6" fill="var(--dark-green)"/>
+                                <circle cx="27" cy="73" r="6" fill="var(--dark-green)"/>
+                                <circle cx="22" cy="125.866" r="6" fill="var(--dark-green)"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
                     <div className={"third"}>

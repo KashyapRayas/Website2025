@@ -48,12 +48,13 @@
 .percentage-slider::-webkit-slider-thumb {
   -webkit-appearance: none; /* Remove default Safari styling */
   appearance: none;
-  margin-top: -8px; /* Center the thumb vertically on the track */
+  margin-top: -6px;
   width: 16px;
   height: 16px;
   background: var(--dark-green);
   border-radius: 50%;
   border: none;
+  cursor: url('/Cursor.svg'), auto;
 }
 
 /* Firefox */
@@ -63,4 +64,5 @@
   background: var(--dark-green);
   border-radius: 50%;
   border: none;
+  cursor: url('/Cursor.svg'), auto;
 }

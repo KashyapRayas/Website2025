@@ -10,6 +10,18 @@
     border-radius: 9px;
 }
 
+#CONTACT > .middle > .small {
+    display: flex;
+    flex-direction: column;
+    min-width: 450px;
+    max-width: 450px;
+    height: 100%;
+    background-color: var(--off-white);
+    box-sizing: border-box;
+    padding: 30px;
+    border-radius: 9px;
+}
+
 #CONTACT > .middle > .right {
     width: 100%;
     display: flex;
@@ -58,7 +70,7 @@
             line-height: 120%;
         }
         h3 {
-            font-size: 18px;
+            font-size: 15px;
             width: 100%;
             text-wrap: wrap;
             font-weight: 400;

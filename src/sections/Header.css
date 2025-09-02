@@ -54,7 +54,7 @@ header > .middle > .left {
         a {
             text-decoration: none;
             background-color: var(--light-off-teal);
-            color: var(--off-black-06);
+            color: var(--dark-green);
             border-radius: 9px;
             width: 150px;
             height: 100%;
@@ -63,7 +63,7 @@ header > .middle > .left {
             align-items: center;
             gap: 9px;
             font-size: 13px;
-            transition: all 0.15s ease-in-out;
+            transition: all 0.3s ease-in-out;
         }
         a.active {
             background-color: var(--off-white);
@@ -88,7 +88,7 @@ header > .middle > .right {
     box-sizing: border-box;
     .nav-link {
         background-color: var(--light-off-teal);
-        color: var(--off-black-06);
+        color: var(--dark-green);
         border-radius: 9px;
         min-width: 120px;
         height: 100%;
@@ -97,8 +97,8 @@ header > .middle > .right {
         align-items: center;
         gap: 9px;
         font-size: 13px;
-        font-weight: 400;
-        transition: all 0.15s ease-in-out;
+        font-weight: 600;
+        transition: all 0.3s ease-in-out;
     }
     .nav-link.active {
         background-color: var(--off-white);

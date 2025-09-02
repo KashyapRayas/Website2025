@@ -1,10 +1,15 @@
 import { useEffect, useState, useRef, forwardRef } from 'react'
 import '../App.css'
 import './Contact.css'
+import gsap from 'gsap'
 import Denji from '../components/Denji'
 import AnimatedArrow from '../components/AnimatedArrow'
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const Contact = forwardRef(({}, ref) => {
+gsap.registerPlugin(ScrollTrigger);
+
+const Contact = forwardRef(({small=false}, ref) => {
 
     const [contactHovered, setContactHovered] = useState(false);
 
@@ -33,8 +38,8 @@ const Contact = forwardRef(({}, ref) => {
                         <AnimatedArrow isActive={contactHovered} />
                     </a>
                 </div>
-                <div className={"left"}>
-                    <Denji />
+                <div className={small? "small": "left"}>
+                    <Denji/>
                 </div>
             </div>
 
