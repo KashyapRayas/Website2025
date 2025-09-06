@@ -13,6 +13,7 @@ import projects from '../data/projects.json'
 import AnimatedMan from '../components/AnimatedMan';
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import HoverGrid from '../components/HoverGrid';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -88,7 +89,7 @@ const Home = forwardRef(({linkHovered}, ref) => {
                         <div className={"second-innerwrapper"} onMouseEnter={() => {setRecentHovered(true);}} onMouseLeave={() => {setRecentHovered(false);}}>
                             <h4>RECENT WORK</h4>
                         <div className={"recent-img-wrapper"}>
-                            <img className={"recent-img"} src={null} alt="" />
+                            <div className={"recent-img"} alt=""></div>
                         </div>
                         <div className={"td"}>
                             <div className={"title"}>
@@ -101,9 +102,9 @@ const Home = forwardRef(({linkHovered}, ref) => {
                         </div>
                     </div>
                     <div className={"third"}>
-                        <div className={"s4"}></div>
-                        <img className={"s3"} src={lego_44} alt="" />
                         <div className={"s2"}></div>
+                        <img className={"s3"} src={lego_44} alt="" />
+                        <div className={"s4"}></div>
                         <div className={"s1"}></div>
                     </div>
                 </div>
@@ -134,6 +135,7 @@ const Home = forwardRef(({linkHovered}, ref) => {
                         <h3>For the past two years, Kashyap has immersed himself in the world of product design, nurturing his dream of becoming a leading design engineer. He is shy and known to daydream from time to time.</h3>
                     </div>
                 </div>
+
             </div>
 
             <div className={"extremes-wrapper-right"}>

@@ -160,7 +160,7 @@
     left: 214.7px;
     top: 140px;
     width: max-content;
-    height: 127px;
+    height: 124px;
     display: flex;
     flex-direction: column;
     gap: 0px;
@@ -181,7 +181,7 @@
 
         svg {
             position: absolute;
-            transform: translate(0, -6px);
+            transform:  translate(0, -2px);
             top: 0px;
             left: 3px;
         }

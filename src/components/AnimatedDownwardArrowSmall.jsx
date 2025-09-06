@@ -58,7 +58,7 @@ const AnimatedDownwardArrow = ({ isActive = false, isHovered = false }) => {
           { opacity: 0 },
           {
             opacity: 1,
-            duration: 0.8,
+            duration: 0.6,
             ease: "power2.inOut",
             stagger: 0.08, // Stagger from the start of the sorted array (rightmost)
           }
@@ -68,7 +68,7 @@ const AnimatedDownwardArrow = ({ isActive = false, isHovered = false }) => {
           sortedPaths.current,
           {
             opacity: 0,
-            duration: 0.8,
+            duration: 0.6,
             ease: "power2.inOut",
             stagger: 0.08,
           },
@@ -113,13 +113,13 @@ const AnimatedDownwardArrow = ({ isActive = false, isHovered = false }) => {
     width: "16px",
     height: "16px",
     transform: "rotate(0deg)",
-    color: "var(--off-white)",
+    color: "var(--off-black-06)",
     flexShrink: 0,
   };
 
   return (
     <div ref={container} style={containerStyle}>
-      <ArrowSvg style={isHovered ? svgStyle : { ...svgStyle, color: "var(--off-teal)" }} />
+      <ArrowSvg style={isHovered ? svgStyle : { ...svgStyle, color: "var(--dark-green)" }} />
     </div>
   );
 };

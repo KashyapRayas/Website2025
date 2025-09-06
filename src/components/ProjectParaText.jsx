@@ -15,7 +15,7 @@ const ProjectParaText = ({ text }) => {
 
     const textStyle = {
         width: "100%",
-        fontSize: "14px",
+        fontSize: "15px",
         fontWeight: "400",
         color: "var(--off-black-06)",
         margin: "0",

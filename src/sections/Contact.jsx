@@ -30,7 +30,7 @@ const Contact = forwardRef(({small=false}, ref) => {
                     <div className={"first"}>
                         <h4><span>[ Unmutes ]</span>
                             <br /> Nothing from my side.</h4>
-                        <h3>I’m always up for a chat, about Chainsaw Man’s nihilist worldview or your next project. You can reach me at ..</h3>
+                        <h3>I’m always up for a chat, about Chainsaw Man’s nihilist worldview or your next project. You can reach me at..</h3>
                     </div>
                     <a href="mailto:kashyap.rayas@gmail.com" className={"second"} onMouseEnter={() => setContactHovered(true)} onMouseLeave={() => setContactHovered(false)}>
                         <AnimatedArrow isActive={!contactHovered} />

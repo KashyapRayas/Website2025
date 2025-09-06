@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { Routes, Route } from "react-router-dom";
 import './App.css'
-import Crosshair from './components/Crosshair'
 
 import Landing from './pages/Landing.jsx'
 import Project from './pages/Project.jsx';

@@ -1,0 +1,41 @@
+/* 5. All styles are moved to a dedicated CSS file */
+.navLink {
+    font-family: 'Stara';
+	background-color: var(--light-off-teal);
+	color: var(--dark-green);
+	border-radius: 9px;
+	min-width: 120px;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 3px;
+	font-size: 13px;
+	font-weight: 600;
+	transition: all 0.3s ease-in-out;
+	cursor: pointer;
+	border: none;
+	padding: 0; /* Add some padding */
+    margin: 0;
+}
+
+.navLink:hover,
+.navLink.active {
+	background-color: var(--off-white);
+	color: var(--off-black);
+	font-weight: 600;
+}
+
+/* Target the span specifically for opacity changes */
+.bracket {
+	opacity: 0;
+	transition: all 0.3s linear;
+	color: var(--dark-green);
+}
+
+.navLink:hover .bracket,
+.navLink.active .bracket {
+	opacity: 1;
+}
+
+/* The .cell class seemed unused in the component's JSX, so it's removed for clarity */

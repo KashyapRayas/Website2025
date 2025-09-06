@@ -47,7 +47,6 @@ const AnimatedDownwardArrow = ({ isActive = false }) => {
       tl.current = gsap.timeline({
         paused: true,
         repeat: -1, // Loop indefinitely
-        repeatDelay: 0.5, // Pause for 0.5s between each full loop
       });
 
       // 3. Add animations to the timeline using the sorted paths array.
@@ -58,9 +57,9 @@ const AnimatedDownwardArrow = ({ isActive = false }) => {
           { opacity: 0 },
           {
             opacity: 1,
-            duration: 0.5,
+            duration: 1,
             ease: "power2.inOut",
-            stagger: 0.08, // Stagger from the start of the sorted array (rightmost)
+            stagger: 0.1, // Stagger from the start of the sorted array (rightmost)
           }
         )
         // EXIT: Animate paths from opacity 1 to 0, right to left.
@@ -68,11 +67,10 @@ const AnimatedDownwardArrow = ({ isActive = false }) => {
           sortedPaths.current,
           {
             opacity: 0,
-            duration: 0.5,
+            duration: 1,
             ease: "power2.inOut",
-            stagger: 0.08,
+            stagger: 0.1,
           },
-          "+=0.5" // Wait for 0.5s after reveal before starting the exit
         );
     },
     { scope: container }

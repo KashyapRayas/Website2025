@@ -70,7 +70,7 @@
             line-height: 120%;
         }
         h3 {
-            font-size: 15px;
+            font-size: 18px;
             width: 100%;
             text-wrap: wrap;
             font-weight: 400;
@@ -78,7 +78,6 @@
             margin: 0;
         }
         span {
-            font-family: "Stara";
             color: var(--dark-green);
             font-weight: 400;
         }

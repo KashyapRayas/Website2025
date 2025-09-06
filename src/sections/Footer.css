@@ -20,16 +20,16 @@ footer > .middle > .right {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: var(--dark-green);
     box-sizing: border-box;
     padding: 24px;
     width: 100%;
     height: 100%;
-    border-radius: 9px 0px 0px 9px;
+    border-radius: 9px;
+    background-color: var(--off-white);
 
     h3 {
         font-size: 18px;
-        color: var(--off-teal);
+        color: var(--off-black-06);
         font-weight: 400;
         text-wrap: wrap;
         margin: 0;
@@ -44,11 +44,12 @@ footer > .middle > .right {
         h3 {
             font-size: 15px;
             line-height: 160%;
-            color: var(--off-white);
+            font-weight: 600;
+            color: var(--off-black);
         }
         span {
             font-weight: 400;
-            color: var(--off-teal);
+            color: var(--off-black-06);
         }
     }
     .right-links {
@@ -58,7 +59,7 @@ footer > .middle > .right {
       gap: 6px;
     }
     .work {
-        color: var(--off-teal);
+        color: var(--dark-green);
         border-radius: 9px;
         height: 100%;
         display: flex;
@@ -69,27 +70,27 @@ footer > .middle > .right {
         transition: all 0.15s ease-in-out;
         margin: 0;
         svg {
-            color: var(--off-teal);
+            color: var(--dark-green);
             width: 18px;
             rotate: 180deg;
         }
     }
     .work:hover {
-        color: var(--off-white);
+        color: var(--off-black-06);
 
         svg {
-            color: var(--off-white);
+            color: var(--off-black-06);
         }
     }
     a {
         text-decoration: none;
-        color: var(--off-teal);
+        color: var(--dark-green);
         font-size: 15px;
         font-weight: 400;
         transition: all 0.15s ease-in-out;
     }
     a:hover {
-        color: var(--off-white);
+        color: var(--off-black-06);
         cursor: url('/Cursor.svg'), auto;
     }
 }

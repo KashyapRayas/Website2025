@@ -1,8 +1,16 @@
 {
     "projects": [
         {
+        "name": "ARTIST HUB",
+        "description": "A platform that helps artists and managers easily connect with and recruit creative talent."
+        },
+        {
         "name": "MOVIE COLAB SUITE",
         "description": "A product suite for filmmakers"
+        },
+        {
+        "name": "NOTHING COMMUNITY CHALLENGE",
+        "description": "My submission for the Nothing Community challenge for Phone 3a"
         },
         {
         "name": "TABLE READ",
@@ -13,20 +21,12 @@
         "description": "A desktop application for film production that streamlines file and version management."
         },
         {
-        "name": "ARTIST HUB",
-        "description": "A platform that helps artists and managers easily connect with and recruit creative talent."
-        },
-        {
         "name": "PROJECTS",
         "description": "A comprehensive platform for film production, task coordination, and review management."
         },
         {
         "name": "SCRIPT VIZ",
         "description": "An AI-powered web app for script breakdown and storyboard visualization"
-        },
-        {
-        "name": "PROJECTS MOBILE",
-        "description": "A mobile companion app for the Movie Colab platform"
         },
         {
         "name": "SIGGRAPH BNMIT",

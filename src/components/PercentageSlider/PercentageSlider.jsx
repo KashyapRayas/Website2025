@@ -28,7 +28,7 @@ const squareStyle = {
 
 const PercentageSlider = () => {
   // State to hold the slider's value. Initialized to 25 to match the image.
-  const [value, setValue] = useState(25);
+  const [value, setValue] = useState(0);
 
   // This function updates the state whenever the slider is moved.
   const handleSliderChange = (event) => {

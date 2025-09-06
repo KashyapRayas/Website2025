@@ -44,7 +44,6 @@
         border-radius: 9px;
         gap: 18px;
         display: flex;
-        justify-content: space-between;
         flex-direction: column;
         box-sizing: border-box;
 
@@ -197,15 +196,14 @@
         box-sizing: border-box;
         background-color: var(--dark-green);
         border-radius: 9px;
-        gap: 9px;
-        h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--off-white);
-            margin: 0;
-        }
-        svg {
-            color: var(--off-white);
+        gap: 6px;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--off-white);
+        margin: 0;
+        span {
+            font-weight: 400;
+            color: var(--off-teal);
         }
 
     }
@@ -339,6 +337,8 @@
                     justify-content: center;
                     width: 22px;
                     height: 22px;
+                    flex-shrink: 0;
+                    flex-grow: 0;
                 }
                 img {
                     width: 9px;
@@ -389,6 +389,8 @@
                     justify-content: center;
                     width: 22px;
                     height: 22px;
+                    flex-shrink: 0;
+                    flex-grow: 0;
                 }
                 img {
                     width: 16px;

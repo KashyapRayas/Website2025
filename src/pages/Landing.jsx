@@ -8,6 +8,7 @@ import Work from '../sections/Work.jsx';
 import About from '../sections/About.jsx';
 import Contact from '../sections/Contact.jsx';
 import Footer from '../sections/Footer.jsx';
+import Crosshair from '../components/Crosshair'
 
 const Landing = () => {
 
@@ -45,11 +46,13 @@ const Landing = () => {
             >
             <Header setLinkHovered={setLinkHovered} lenis={lenis} />
             <Home linkHovered={linkHovered} ref={homeRef}/>
+            {/* <Work ref={workRef}/> */}
             <Work ref={workRef}/>
             <About ref={aboutRef}/>
             <Contact ref={contactRef}/>
             <Footer lenis={lenis}/>
             </ReactLenis>
+            {/* <Crosshair /> */}
         </>
     );
 };

@@ -59,7 +59,7 @@ const AnimatedArrow = ({ isActive = false }) => {
             .fromTo(
             container.current,
             { width: 0 },
-            { width: "48px", duration: 0.3, ease: "power2.inOut" }
+            { width: "36px", duration: 0.3, ease: "power2.inOut" }
             )
             .fromTo(
             sortedPaths.current,
@@ -90,12 +90,12 @@ const AnimatedArrow = ({ isActive = false }) => {
     const containerStyle = {
         // Start with display: 'none' to match the default inactive state
         display: "none",
-        width: "48px",
+        width: "36px",
         height: "30px",
         backgroundColor: "transparent",
         borderRadius: "6px",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "start",
         border: "none",
         overflow: "hidden",
     };
