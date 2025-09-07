@@ -1,7 +1,7 @@
 import { React } from 'react';
 import '../App.css'
 import './Header.css'
-import LinkButton from '../components/LinkButton';
+import LinkButton from '../components/LinkButton/LinkButton';
 
 const Header = ({setLinkHovered, lenis}) => {
     return (

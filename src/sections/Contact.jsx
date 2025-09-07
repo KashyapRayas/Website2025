@@ -1,13 +1,8 @@
 import { useEffect, useState, useRef, forwardRef } from 'react'
 import '../App.css'
 import './Contact.css'
-import gsap from 'gsap'
 import Denji from '../components/Denji'
 import AnimatedArrow from '../components/AnimatedArrow'
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const Contact = forwardRef(({small=false}, ref) => {
 

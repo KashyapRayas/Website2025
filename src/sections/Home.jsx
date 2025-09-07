@@ -8,14 +8,10 @@ import lego_44 from '/lego_44.svg'
 import AnimatedArrow from '../components/AnimatedArrow'
 import AnimatedDownwardArrow from '../components/AnimatedDownwardArrow'
 import Metric from '../components/metric'
-import Hero from '../components/Hero'
+import Hero from '../components/Hero/Hero'
 import projects from '../data/projects.json'
 import AnimatedMan from '../components/AnimatedMan';
 import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import HoverGrid from '../components/HoverGrid';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const Home = forwardRef(({linkHovered}, ref) => {
 
