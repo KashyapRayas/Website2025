@@ -8,24 +8,36 @@ import ProjectImage from '../components/ProjectImage';
 import Contact from '../sections/Contact'
 import Footer from '../sections/Footer'
 import AnimatedArrow from '../components/AnimatedArrow'
-import AnimatedArrowSmall from '../components/AnimatedArrowSmall'
 import star from '/star.svg'
 import { ReactLenis, useLenis } from 'lenis/react';
 
-const Project = () => {
+const Project = ({ isTransitioning, handleBack }) => {
 
     const [hovered, setHovered] = useState(0);
-    const [backHovered, setBackHovered] = useState(0)
     const lenis = useLenis()
-    const { slug } = useParams()
-    const navigate = useNavigate()
 
-    const handleNavigateTo = (id, duration = 2) => {
-        navigate("/", { state: { scrollTo: id, duration } });
+    const initialStyle = {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100vh",
+        overflow: "hidden",
+        backgroundColor: "var(--off-teal)",
+        zIndex: -1
+    };
+
+    const finalStyle = {
+        position: "relative",
+        width: "100%",
+        minHeight: "100%",
+        backgroundColor: "var(--off-teal)",
+        overflow: "visible",
+        zIndex: 1
     };
 
     return (
-        <>
+        <div id="project-content" style={isTransitioning? initialStyle : finalStyle}>
             <ReactLenis root
                 options={{
                     duration: 2,
@@ -50,7 +62,8 @@ const Project = () => {
                     <div className={"left"}>
                         <div className={"sticky-div"}>
                             <div className={"menu"}>
-                                <div className={"nav-link"} onClick={() => handleNavigateTo("#WORK", 2.5)} onMouseEnter={() => setBackHovered(true)} onMouseLeave={() => setBackHovered(false)}>
+                                {/* Assuming handleNavigateTo is defined or removed if not used */}
+                                <div className={"nav-link"} onClick={handleBack}>
                                     BACK
                                 </div>
                                 <div className="cell">
@@ -143,7 +156,7 @@ const Project = () => {
             <Contact small={true}/>
             <Footer small={true} lenis={lenis}/>
             </ReactLenis>
-        </>
+        </div>
     );
 };
 

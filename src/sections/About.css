@@ -119,6 +119,7 @@
             margin: 0;
             color: var(--off-black);
             font-weight: 600;
+            padding: 0 14px 0 0;
         }
         span {
             color: var(--dark-green);

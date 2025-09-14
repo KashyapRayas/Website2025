@@ -38,4 +38,8 @@
 	opacity: 1;
 }
 
-/* The .cell class seemed unused in the component's JSX, so it's removed for clarity */
+@media screen and (max-width: 1200px) {
+    .navLink {
+        min-width: 100px;
+    }
+}

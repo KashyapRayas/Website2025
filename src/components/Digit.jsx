@@ -17,28 +17,30 @@ import D9 from "./digits/D9";
 
 const digitComponents = [D0, D1, D2, D3, D4, D5, D6, D7, D8, D9];
 
-const Digit = ({ number }) => {
+const Digit = ({ number, isLoaded }) => {
   const container = useRef();
   const DigitSvg = digitComponents[number];
   const sortedPaths = useRef([]);
 
   useGSAP(
     () => {
-    const rects = gsap.utils.toArray("rect", container.current);
-    sortedPaths.current = rects.sort((a, b) => {
-        const aY = a.getBoundingClientRect().y;
-        const bY = b.getBoundingClientRect().y;
-        return aY - bY; // Sort descending (rightmost first)
-    });
-    // Animate all <rect> elements from an invisible state
-      gsap.from(sortedPaths.current, {
-        opacity: 0,
-        duration: 0.5,
-        ease: "power2.out",
-        stagger: 0.08
-      });
+        if(isLoaded) {
+            const rects = gsap.utils.toArray("rect", container.current);
+            sortedPaths.current = rects.sort((a, b) => {
+                const aY = a.getBoundingClientRect().y;
+                const bY = b.getBoundingClientRect().y;
+                return aY - bY; // Sort descending (rightmost first)
+            });
+            // Animate all <rect> elements from an invisible state
+            gsap.to(sortedPaths.current, {
+                opacity: 1,
+                duration: 0.5,
+                ease: "power2.out",
+                stagger: 0.08
+            });
+        }
     },
-    { scope: container } // Scope the animation to only this component instance
+    { scope: container, dependencies: [isLoaded] } // Scope the animation to only this component instance
   );
 
   if (!DigitSvg) return null; // Handle cases where the number might be invalid

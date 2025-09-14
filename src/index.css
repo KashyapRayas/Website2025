@@ -28,6 +28,10 @@
     cursor: url('/Cursor.svg'), auto;
 }
 
+#root {
+    position: relative;
+}
+
 html {
     font-size: 3px;
 }
@@ -38,7 +42,6 @@ body {
     align-items: start;
     gap: 0;
     flex-direction: column;
-
     margin: 0;
     padding: 0;
     box-sizing: border-box;

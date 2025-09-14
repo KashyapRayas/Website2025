@@ -1,0 +1,25 @@
+{
+    "content" :
+    [
+        {
+            "type": "img",
+            "url": "./lego_44.svg"
+        },
+        {
+            "type": "bigtext",
+            "text": "some title"
+        },
+        {
+            "type": "para",
+            "text": "some paragraph text"
+        },
+        {
+            "type": "bigtext",
+            "text": "some title"
+        },
+        {
+            "type": "para",
+            "text": "some paragraph text"
+        }
+    ]
+}

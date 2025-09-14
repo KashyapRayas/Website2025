@@ -77,7 +77,7 @@ const AnimatedArrow = ({ isActive = false }) => {
         { scope: container }
     );
 
-    useEffect(() => {
+    useGSAP(() => {
         if (tl.current) {
         if (isActive) {
             tl.current.play();

@@ -12,15 +12,16 @@ import Hero from '../components/Hero/Hero'
 import projects from '../data/projects.json'
 import AnimatedMan from '../components/AnimatedMan';
 import { useGSAP } from "@gsap/react";
+import recent_work_data from "../data/project_data/artist_hub.json"
 
-const Home = forwardRef(({linkHovered}, ref) => {
+const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
 
     const [recentHovered, setRecentHovered] = useState(false);
     const rectRef = useRef(null);
     const heroRef = useRef(null)
     const parallaxRef = useRef(null)
 
-    useEffect(() => {
+    useGSAP(() => {
         if (!rectRef.current) {
             return;
         }
@@ -61,7 +62,7 @@ const Home = forwardRef(({linkHovered}, ref) => {
             <div className={"middle"}>
                 <div className={"right"}>
                     <div className={"first"}>
-                        <AnimatedMan />
+                        <AnimatedMan isLoaded={isLoaded}/>
                         <h1>Unconventional <span>ideas</span><span>,</span> minimalist <span>execution</span><span>.</span>
                         </h1>
                         <h2>
@@ -78,18 +79,18 @@ const Home = forwardRef(({linkHovered}, ref) => {
                     <div className={"second"}>
                         <div className={"metric-superwrapper"}>
                             <div className={"metric-wrapper"}>
-                                <Metric name={"PRODUCTS DESIGNED"} count={10} />
-                                <Metric name={"FEATURES DESIGNED"} count={119} />
+                                <Metric name={"PRODUCTS DESIGNED"} count={10} isLoaded={isLoaded}/>
+                                <Metric name={"FEATURES DESIGNED"} count={119} isLoaded={isLoaded}/>
                             </div>
                         </div>
-                        <div className={"second-innerwrapper"} onMouseEnter={() => {setRecentHovered(true);}} onMouseLeave={() => {setRecentHovered(false);}}>
+                        <div className={"second-innerwrapper"} onMouseEnter={() => {setRecentHovered(true);}} onMouseLeave={() => {setRecentHovered(false); }} onClick={()=>{handleProjectSelect()}} >
                             <h4>RECENT WORK</h4>
                         <div className={"recent-img-wrapper"}>
                             <div className={"recent-img"} alt=""></div>
                         </div>
                         <div className={"td"}>
                             <div className={"title"}>
-                                <AnimatedArrow isActive={!recentHovered} />
+                                <AnimatedArrow isActive={!recentHovered && isLoaded} />
                                 <h3>{projects.projects[0].name}</h3>
                                 <AnimatedArrow isActive={recentHovered} />
                             </div>

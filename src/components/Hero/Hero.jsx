@@ -1,10 +1,9 @@
-import React, { forwardRef, useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import gsap from "gsap";
 import figma_apply from '/icons/figma_apply.png'
 import figma_cancel from '/icons/figma_cancel.png'
 import figma_search from '/icons/figma_search.png'
 import box_anchor from '/box_anchor.svg'
-import cursor from '/icons/cursor.png'
 import { useGSAP } from "@gsap/react";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -16,7 +15,6 @@ const fonts = ['Abril Fatface', 'Lobster', 'Lora', 'Merriweather', 'Montserrat',
 const Hero = ({linkHovered}) => {
 
     const [fontWrapperState, setFontWrapperState] = useState(null)
-    const [eyeState, setEyeState] = useState('Right')
     const leftIrisRef = useRef(null)
     const rightIrisRef = useRef(null)
     const leftBrowRef = useRef(null)
@@ -24,15 +22,15 @@ const Hero = ({linkHovered}) => {
     const fishingLineRef = useRef(null)
     const fontRefs = useRef([])
     const t1 = useRef(null)
-    const d = 0.5
+    const d = 0.8
     let eyeD = 0
-    const rect1Ref = useRef(null);
-    const rect2Ref = useRef(null);
-    const rect3Ref = useRef(null);
-    const rect4Ref = useRef(null);
-    const parallaxGroupRef = useRef(null);
+    const rect1Ref = useRef(null)
+    const rect2Ref = useRef(null)
+    const rect3Ref = useRef(null)
+    const rect4Ref = useRef(null)
+    const parallaxGroupRef = useRef(null)
 
-    if(window.innerWidth<1700){
+    if(window.innerWidth<1700) {
         eyeD = window.innerWidth-645
     }
     else {
@@ -115,7 +113,7 @@ const Hero = ({linkHovered}) => {
     };
 
     // --- 2. This effect handles the 'linkHovered' override ---
-    useEffect(() => {
+    useGSAP(() => {
         if (linkHovered) {
         // When linkHovered is true, force the eyes to the right.
         animateEyesLeft();

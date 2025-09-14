@@ -3,7 +3,7 @@ import React from "react";
 import Digit from "./Digit";
 import HoverGrid from "./HoverGrid";
 
-const Metric = ({ name, count }) => {
+const Metric = ({ name, count, isLoaded }) => {
   return (
     <div
         style={{
@@ -40,7 +40,7 @@ const Metric = ({ name, count }) => {
         {String(count)
             .split("")
             .map((digit, index) => (
-                <Digit key={index} number={parseInt(digit, 10)} />
+                <Digit key={index} number={parseInt(digit, 10)} isLoaded={isLoaded}/>
             ))}
         </div>
     </div>

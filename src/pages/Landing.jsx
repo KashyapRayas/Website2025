@@ -1,7 +1,5 @@
 import { useEffect, useState, useRef } from "react";
 import '../App.css';
-import { useLocation } from "react-router-dom";
-
 import Header from '../sections/Header.jsx';
 import Home from '../sections/Home.jsx';
 import Work from '../sections/Work.jsx';
@@ -15,11 +13,6 @@ const Landing = ({isLoading, onProjectSelect, lenis}) => {
     const aboutRef = useRef(null);
     const workRef = useRef(null);
     const contactRef = useRef(null);
-    const location = useLocation();
-
-    useEffect(() => {
-        console.log(isLoading)
-    }, [isLoading])
 
     const initialStyle = {
         position: "absolute",
@@ -29,25 +22,26 @@ const Landing = ({isLoading, onProjectSelect, lenis}) => {
         height: "100vh",
         overflow: "hidden",
         backgroundColor: "var(--off-teal)",
+        zIndex: -1
     };
 
-    // Define the styles for the final (loaded) state
     const finalStyle = {
         position: "relative",
         width: "100%",
         minHeight: "100%",
         backgroundColor: "var(--off-teal)",
         overflow: "visible",
+        zIndex: 1
     };
 
     return (
         <div id="main-content" style={isLoading ? initialStyle : finalStyle}>
-        <Header setLinkHovered={setLinkHovered} lenis={lenis} />
-        <Home linkHovered={linkHovered} ref={homeRef} />
-        <Work ref={workRef} />
-        <About ref={aboutRef} />
-        <Contact ref={contactRef} />
-        <Footer lenis={lenis} />
+            <Header setLinkHovered={setLinkHovered} lenis={lenis} />
+            <Home linkHovered={linkHovered} isLoaded={!isLoading} handleProjectSelect={onProjectSelect} ref={homeRef}/>
+            <Work ref={workRef} />
+            <About ref={aboutRef} />
+            <Contact ref={contactRef} />
+            <Footer lenis={lenis} />
         </div>
     );
 };
