@@ -1,5 +1,4 @@
-// src/components/PercentageSlider.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import "./PercentageSlider.css"; // Import the CSS for slider-specific styles
 
 // --- Style Objects ---

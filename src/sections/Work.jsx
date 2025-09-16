@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, forwardRef } from 'react'
+import { useState, useRef, forwardRef } from 'react'
 import '../App.css'
 import './Work.css'
 import AnimatedArrow from '../components/AnimatedArrow'
@@ -6,7 +6,7 @@ import projects from '../data/projects.json'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 
-const Work = forwardRef(({}, ref) => {
+const Work = forwardRef(({handleProjectSelect}, ref) => {
 
     const [hoveredIndex, setHoveredIndex] = useState(0);
     const handRef = useRef(null)
@@ -40,7 +40,9 @@ const Work = forwardRef(({}, ref) => {
                     {projects.projects.map((project, index) => (
                     <div className={`project ${hoveredIndex === index ? 'project--active' : ''}`} key={index}
                     onMouseEnter={() => setHoveredIndex(index)}
-                    onMouseLeave={() => setHoveredIndex(0)}>
+                    onMouseLeave={() => setHoveredIndex(0)}
+                    onClick={() => {handleProjectSelect(project)}}
+                    >
                         <div className={"title"}>
                             <AnimatedArrow isActive={hoveredIndex !== index} />
                             <h3>{project.name}</h3>

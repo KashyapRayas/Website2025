@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, forwardRef } from 'react'
+import { useState, forwardRef } from 'react'
 import '../App.css'
 import './Contact.css'
 import Denji from '../components/Denji'

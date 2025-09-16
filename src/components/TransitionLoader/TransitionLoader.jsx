@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import "./TransitionLoader.css";
@@ -17,7 +17,7 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
     };
 
     const animateContentIn = () => {
-        if(direction === "in") {
+        if(direction === "in" || direction === "loop") {
             gsap.set("#project-content", { zIndex: 3 });
             gsap.fromTo(
                 "#project-content",

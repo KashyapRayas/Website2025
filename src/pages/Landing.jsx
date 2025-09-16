@@ -7,7 +7,7 @@ import About from '../sections/About.jsx';
 import Contact from '../sections/Contact.jsx';
 import Footer from '../sections/Footer.jsx';
 
-const Landing = ({isLoading, onProjectSelect, lenis}) => {
+const Landing = ({isLoading, onProjectSelect, lenis, isIncomingTransition}) => {
     const [linkHovered, setLinkHovered] = useState(false);
     const homeRef = useRef(null);
     const aboutRef = useRef(null);
@@ -15,9 +15,7 @@ const Landing = ({isLoading, onProjectSelect, lenis}) => {
     const contactRef = useRef(null);
 
     const initialStyle = {
-        position: "absolute",
-        top: 0,
-        left: 0,
+        position: "relative",
         width: "100%",
         height: "100vh",
         overflow: "hidden",
@@ -34,11 +32,13 @@ const Landing = ({isLoading, onProjectSelect, lenis}) => {
         zIndex: 1
     };
 
+    const currentStyle = isIncomingTransition || isLoading ? initialStyle : finalStyle;
+
     return (
-        <div id="main-content" style={isLoading ? initialStyle : finalStyle}>
+        <div id="main-content" style={currentStyle}>
             <Header setLinkHovered={setLinkHovered} lenis={lenis} />
             <Home linkHovered={linkHovered} isLoaded={!isLoading} handleProjectSelect={onProjectSelect} ref={homeRef}/>
-            <Work ref={workRef} />
+            <Work ref={workRef} handleProjectSelect={onProjectSelect}/>
             <About ref={aboutRef} />
             <Contact ref={contactRef} />
             <Footer lenis={lenis} />

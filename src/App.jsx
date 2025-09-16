@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react"; // Import useCallback
+import { useState, useCallback, useEffect } from "react";
 import './App.css';
-import gsap from 'gsap'
 import { ReactLenis, useLenis } from 'lenis/react';
 import Preloader from './components/Preloader/Preloader.jsx';
 import TransitionLoader from './components/TransitionLoader/TransitionLoader.jsx';
@@ -9,30 +8,44 @@ import Project from './pages/Project.jsx';
 
 function App() {
 
-    const [isInitialLoading, setIsInitialLoading] = useState(true);
+    const [isInitialLoading, setIsInitialLoading] = useState(false);
     const lenis = useLenis();
     const [view, setView] = useState('landing');
     const [isTransitioning, setIsTransitioning] = useState(false);
-    const [transitionDirection, setTransitionDirection] = useState('in');
-    const [selectedProject, setSelectedProject] = useState(null);
+    const [transitionDirection, setTransitionDirection] = useState('out');
+    const [selectedProjectName, setSelectedProjectName] = useState(null);
+    const [projectToLoad, setProjectToLoad] = useState(null)
+    const [corrector, setCorrector] = useState(false)
 
     // Memoize these callback functions to prevent unnecessary re-renders of TransitionLoader
     const handleMidway = useCallback(() => {
         if (transitionDirection === 'in') {
             setView('project');
-        } else {
+        }
+        else if(transitionDirection === 'loop') {
+            setSelectedProjectName(projectToLoad);
+            setView('project');
+            setCorrector(true);
+        }
+        else {
             setView('landing');
         }
     }, [transitionDirection]);
 
     const handleTransitionComplete = useCallback(() => {
         setIsTransitioning(false);
+        setCorrector(false);
     }, []);
 
-
     const handleProjectSelect = (projectData) => {
-        // setSelectedProject(projectData);
+        setSelectedProjectName(projectData.name);
         setTransitionDirection('in');
+        setIsTransitioning(true);
+    };
+
+    const handleNextProjectSelect = (projectData) => {
+        setProjectToLoad(projectData.name);
+        setTransitionDirection('loop');
         setIsTransitioning(true);
     };
 
@@ -64,12 +77,15 @@ function App() {
                 <Landing
                 onProjectSelect={handleProjectSelect}
                 lenis={lenis}
-                isLoading={isInitialLoading || isTransitioning}
-                />}
+                isLoading={isInitialLoading}
+                isIncomingTransition={isTransitioning && transitionDirection === 'out'}
+                />
+                }
                 {view === 'project' && <Project
-                isTransitioning={isTransitioning}
                 handleBack={handleBackToLanding}
-                // projectData={selectedProject}
+                isIncomingTransition={isTransitioning && (transitionDirection === 'in' || corrector)}
+                selectedProjectName={selectedProjectName}
+                onNextProjectSelect={handleNextProjectSelect}
                 />}
             </>
             </ReactLenis>

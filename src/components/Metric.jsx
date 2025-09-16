@@ -1,7 +1,4 @@
-// src/components/Metric.jsx
-import React from "react";
 import Digit from "./Digit";
-import HoverGrid from "./HoverGrid";
 
 const Metric = ({ name, count, isLoaded }) => {
   return (

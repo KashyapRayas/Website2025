@@ -1,20 +1,50 @@
-import { useEffect, useState, useRef } from 'react'
-import { useParams, useNavigate, Link } from "react-router-dom";
-import '../App.css'
-import './Project.css'
+// src/pages/Project.jsx
+import { useState, useEffect } from 'react';
+import '../App.css';
+import './Project.css';
 import ProjectBigText from '../components/ProjectBigText';
 import ProjectParaText from '../components/ProjectParaText';
 import ProjectImage from '../components/ProjectImage';
-import Contact from '../sections/Contact'
-import Footer from '../sections/Footer'
-import AnimatedArrow from '../components/AnimatedArrow'
-import star from '/star.svg'
+import Contact from '../sections/Contact';
+import Footer from '../sections/Footer';
+import AnimatedArrow from '../components/AnimatedArrow';
+import star from '/star.svg'; // Assuming star.svg is in public folder
 import { ReactLenis, useLenis } from 'lenis/react';
 
-const Project = ({ isTransitioning, handleBack }) => {
+// This mapping function will generate the path to the JSON file
+const getProjectDataPath = (projectName) => {
+    if (!projectName) return null;
+    // Convert "ARTIST HUB" to "artist_hub"
+    const filename = projectName.toLowerCase().replace(/\s/g, '_');
+    return `../data/project_data/${filename}.json`;
+};
 
-    const [hovered, setHovered] = useState(0);
-    const lenis = useLenis()
+const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNextProjectSelect }) => {
+    const [projectData, setProjectData] = useState(null); // State to hold loaded project data
+    const [hovered, setHovered] = useState(false); // Changed initial state to false for consistency
+    const lenis = useLenis();
+
+    useEffect(() => {
+        if (selectedProjectName) {
+            const path = getProjectDataPath(selectedProjectName);
+            if (path) {
+                // Dynamic import
+                import(path)
+                    .then(module => {
+                        setProjectData(module.default); // .default for ES Modules JSON import
+                    })
+                    .catch(error => {
+                        console.error(`Failed to load project data for ${selectedProjectName} at ${path}:`, error);
+                        setProjectData(null); // Clear data on error
+                    });
+            } else {
+                console.warn(`Could not determine data path for project: ${selectedProjectName}`);
+                setProjectData(null);
+            }
+        } else {
+            setProjectData(null); // Clear project data if no project is selected
+        }
+    }, [selectedProjectName]); // Re-run effect when selectedProjectName changes
 
     const initialStyle = {
         position: "absolute",
@@ -36,8 +66,24 @@ const Project = ({ isTransitioning, handleBack }) => {
         zIndex: 1
     };
 
+    const currentStyle = isIncomingTransition ? initialStyle : finalStyle;
+
+    // Render a loading state or a message if projectData is not yet loaded
+    if (!projectData) {
+        return (
+            <div id="project-content" style={currentStyle}>
+                <div className="loading-message" style={{textAlign: "center", paddingTop: "50vh"}}>
+                    Loading project details for {selectedProjectName || '...'}
+                </div>
+            </div>
+        );
+    }
+
+    // Destructure data from loaded JSON for easier access
+    const { content, details, nextWorkTitle, nextWorkDescription } = projectData;
+
     return (
-        <div id="project-content" style={isTransitioning? initialStyle : finalStyle}>
+        <div id="project-content" style={currentStyle}>
             <ReactLenis root
                 options={{
                     duration: 2,
@@ -51,26 +97,27 @@ const Project = ({ isTransitioning, handleBack }) => {
 
                 <div className={"middle"}>
                     <div className={"right"}>
-                        <ProjectImage img={null} />
-                        <ProjectBigText text={
-                            "A comprehensive platform for film production, task coordination, and review management."
-                        } />
-                        <ProjectParaText text={
-                            "Projects is a robust project management platform designed specifically for film production teams, streamlining workflows across tasks such as shot and asset version management, artist task scheduling, session management and collaborative review."
-                        } />
+                        {/* Dynamically render content based on the 'content' array */}
+                        {content.map((item, index) => {
+                            if (item.type === 'img') {
+                                return <ProjectImage key={index} img={item.url} />;
+                            } else if (item.type === 'bigtext') {
+                                return <ProjectBigText key={index} text={item.text} />;
+                            } else if (item.type === 'para') {
+                                return <ProjectParaText key={index} text={item.text} />;
+                            }
+                            return null;
+                        })}
                     </div>
                     <div className={"left"}>
                         <div className={"sticky-div"}>
                             <div className={"menu"}>
-                                {/* Assuming handleNavigateTo is defined or removed if not used */}
                                 <div className={"nav-link"} onClick={handleBack}>
                                     BACK
                                 </div>
-                                <div className="cell">
-
-                                </div>
+                                <div className="cell"></div>
                             </div>
-                            <div className={"project-title"}>MOVIE COLAB SUITE</div>
+                            <div className={"project-title"}>{details.projectTitle || selectedProjectName}</div> {/* Use projectTitle from JSON */}
                             <div className={"details-wrapper"}>
                                 <div className={"details-left"}>
                                     <div className={"detail"}>
@@ -80,7 +127,7 @@ const Project = ({ isTransitioning, handleBack }) => {
                                                 <div className={"wrapper"}>
                                                     <img src={star} alt="" />
                                                 </div>
-                                                <h2>2022 - Present</h2>
+                                                <h2>{details.timeline}</h2> {/* Dynamically loaded */}
                                             </div>
                                         </div>
                                     </div>
@@ -91,7 +138,7 @@ const Project = ({ isTransitioning, handleBack }) => {
                                                 <div className={"wrapper"}>
                                                     <img src={star} alt="" />
                                                 </div>
-                                                <h2>Viga ET</h2>
+                                                <h2>{details.company}</h2> {/* Dynamically loaded */}
                                             </div>
                                         </div>
                                     </div>
@@ -99,42 +146,25 @@ const Project = ({ isTransitioning, handleBack }) => {
                                 <div className={"detail"}>
                                     <h3>DELIVERABLES</h3>
                                     <div className={"list"}>
-                                        <div className={"item"}>
-                                            <div className={"wrapper"}>
-                                                <img src={star} alt="" />
+                                        {details.deliverables.map((item, index) => (
+                                            <div className={"item"} key={index}>
+                                                <div className={"wrapper"}>
+                                                    <img src={star} alt="" />
+                                                </div>
+                                                <h2>{item}</h2> {/* Dynamically loaded */}
                                             </div>
-                                            <h2>Illustrations</h2>
-                                        </div>
-                                        <div className={"item"}>
-                                            <div className={"wrapper"}>
-                                                <img src={star} alt="" />
-                                            </div>
-                                            <h2>Wireframes</h2>
-                                        </div>
-                                        <div className={"item"}>
-                                            <div className={"wrapper"}>
-                                                <img src={star} alt="" />
-                                            </div>
-                                            <h2>Prototypes</h2>
-                                        </div>
-                                        <div className={"item"}>
-                                            <div className={"wrapper"}>
-                                                <img src={star} alt="" />
-                                            </div>
-                                            <h2>Email Templates</h2>
-                                        </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
-                            <div className={'project'} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-                                {/* <h3>NEXT WORK</h3> */}
+                            <div className={'project'} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={() => onNextProjectSelect({ name: nextWorkTitle, description: nextWorkDescription })}>
                                 <div className={"title"}>
                                     <AnimatedArrow isActive={!hovered} />
-                                    <h3>TABLE READ</h3>
+                                    <h3>{nextWorkTitle}</h3> {/* Dynamically loaded */}
                                     <AnimatedArrow isActive={hovered} />
                                 </div>
                                 <div className={"description"}>
-                                    <p>An AI-powered web app to simulate table reads for film scripts.</p>
+                                    <p>{nextWorkDescription}</p> {/* Dynamically loaded */}
                                 </div>
                             </div>
                             <div className={"rounder"}>

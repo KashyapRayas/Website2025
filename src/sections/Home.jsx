@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, forwardRef } from 'react'
+import { useState, useRef, forwardRef } from 'react'
 import gsap from 'gsap'
 import { CustomEase } from "gsap/CustomEase";
 import '../App.css'
@@ -12,7 +12,6 @@ import Hero from '../components/Hero/Hero'
 import projects from '../data/projects.json'
 import AnimatedMan from '../components/AnimatedMan';
 import { useGSAP } from "@gsap/react";
-import recent_work_data from "../data/project_data/artist_hub.json"
 
 const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
 
@@ -20,6 +19,7 @@ const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
     const rectRef = useRef(null);
     const heroRef = useRef(null)
     const parallaxRef = useRef(null)
+    const firstProject = projects.projects[0];
 
     useGSAP(() => {
         if (!rectRef.current) {
@@ -83,7 +83,7 @@ const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
                                 <Metric name={"FEATURES DESIGNED"} count={119} isLoaded={isLoaded}/>
                             </div>
                         </div>
-                        <div className={"second-innerwrapper"} onMouseEnter={() => {setRecentHovered(true);}} onMouseLeave={() => {setRecentHovered(false); }} onClick={()=>{handleProjectSelect()}} >
+                        <div className={"second-innerwrapper"} onMouseEnter={() => {setRecentHovered(true);}} onMouseLeave={() => {setRecentHovered(false); }} onClick={()=>{handleProjectSelect(firstProject)}} >
                             <h4>RECENT WORK</h4>
                         <div className={"recent-img-wrapper"}>
                             <div className={"recent-img"} alt=""></div>
@@ -91,10 +91,10 @@ const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
                         <div className={"td"}>
                             <div className={"title"}>
                                 <AnimatedArrow isActive={!recentHovered && isLoaded} />
-                                <h3>{projects.projects[0].name}</h3>
+                                <h3>{firstProject.name}</h3>
                                 <AnimatedArrow isActive={recentHovered} />
                             </div>
-                                <p className={"description"}>{projects.projects[0].description}</p>
+                                <p className={"description"}>{firstProject.description}</p>
                         </div>
                         </div>
                     </div>

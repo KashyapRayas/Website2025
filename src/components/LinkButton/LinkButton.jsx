@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./LinkButton.module.css";
 
 const LinkButton = ({ isActive = false, linkName, linkTo, lenis }) => {

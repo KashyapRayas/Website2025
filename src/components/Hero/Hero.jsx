@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import gsap from "gsap";
 import figma_apply from '/icons/figma_apply.png'
 import figma_cancel from '/icons/figma_cancel.png'
@@ -234,9 +234,7 @@ const Hero = ({linkHovered}) => {
                 </svg>
             </div>
         </div>
-        <div className={styles["font-menu"]}
-                onMouseEnter={() => t1.current && t1.current.pause()}
-                onMouseLeave={() => t1.current && t1.current.resume()}>
+        <div className={styles["font-menu"]}>
             <div className={styles["top"]}>
                 <div className={styles["top-top"]}>
                     Fonts
@@ -255,7 +253,10 @@ const Hero = ({linkHovered}) => {
                     Choose a font with me
                 </div>
             </div>
-            <div className={styles["bot"]}>
+            <div className={styles["bot"]}
+                onMouseEnter={() => t1.current && t1.current.pause()}
+                onMouseLeave={() => t1.current && t1.current.resume()}
+                >
                 {
                     fonts.map((font, index)=>{
                         return(
