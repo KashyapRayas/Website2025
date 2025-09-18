@@ -1,15 +1,22 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, Suspense, lazy } from "react";
 import './App.css';
-import { ReactLenis, useLenis } from 'lenis/react';
-import Preloader from './components/Preloader/Preloader.jsx';
-import TransitionLoader from './components/TransitionLoader/TransitionLoader.jsx';
-import Landing from './pages/Landing.jsx';
+import { ReactLenis } from 'lenis/react';
+
+const Preloader = lazy(() => import('./components/Preloader/Preloader.jsx'));
+const TransitionLoader = lazy(() => import('./components/TransitionLoader/TransitionLoader.jsx'));
+const Landing = lazy(() => import('./pages/Landing.jsx'));
 import Project from './pages/Project.jsx';
+
+const preloadLanding = () => {
+    import('./pages/Landing.jsx');
+}
+const preloadProject = () => {
+    import('./pages/Project.jsx');
+}
 
 function App() {
 
-    const [isInitialLoading, setIsInitialLoading] = useState(false);
-    const lenis = useLenis();
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [view, setView] = useState('landing');
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [transitionDirection, setTransitionDirection] = useState('out');
@@ -22,7 +29,7 @@ function App() {
         if (transitionDirection === 'in') {
             setView('project');
         }
-        else if(transitionDirection === 'loop') {
+        else if (transitionDirection === 'loop') {
             setSelectedProjectName(projectToLoad);
             setView('project');
             setCorrector(true);
@@ -30,7 +37,7 @@ function App() {
         else {
             setView('landing');
         }
-    }, [transitionDirection]);
+    }, [transitionDirection, projectToLoad]);
 
     const handleTransitionComplete = useCallback(() => {
         setIsTransitioning(false);
@@ -38,18 +45,21 @@ function App() {
     }, []);
 
     const handleProjectSelect = (projectData) => {
+        preloadProject();
         setSelectedProjectName(projectData.name);
         setTransitionDirection('in');
         setIsTransitioning(true);
     };
 
     const handleNextProjectSelect = (projectData) => {
+        preloadProject();
         setProjectToLoad(projectData.name);
         setTransitionDirection('loop');
         setIsTransitioning(true);
     };
 
     const handleBackToLanding = useCallback(() => {
+        preloadLanding();
         setTransitionDirection('out');
         setIsTransitioning(true);
     }, []);
@@ -64,19 +74,27 @@ function App() {
                     autoRaf: true
                 }}
             >
-            {isInitialLoading && (
-                <Preloader onComplete={() => setIsInitialLoading(false)} />
-            )}
-            {isTransitioning && <TransitionLoader
-                                direction={transitionDirection}
-                                onMidway={handleMidway}
-                                onComplete={handleTransitionComplete}
-                                 />}
-            <>
+
+            <Suspense fallback={null}>
+                {isInitialLoading && (
+                    <Preloader onComplete={() => setIsInitialLoading(false)} />
+                )}
+            </Suspense>
+
+            <Suspense fallback={null}>
+                {isTransitioning && (
+                    <TransitionLoader
+                        direction={transitionDirection}
+                        onMidway={handleMidway}
+                        onComplete={handleTransitionComplete}
+                    />
+                )}
+            </Suspense>
+
+            <Suspense fallback={null}>
                 {view === 'landing' &&
                 <Landing
                 onProjectSelect={handleProjectSelect}
-                lenis={lenis}
                 isLoading={isInitialLoading}
                 isIncomingTransition={isTransitioning && transitionDirection === 'out'}
                 />
@@ -87,7 +105,7 @@ function App() {
                 selectedProjectName={selectedProjectName}
                 onNextProjectSelect={handleNextProjectSelect}
                 />}
-            </>
+            </Suspense>
             </ReactLenis>
         </>
     );

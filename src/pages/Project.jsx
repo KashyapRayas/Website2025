@@ -1,5 +1,4 @@
-// src/pages/Project.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import '../App.css';
 import './Project.css';
 import ProjectBigText from '../components/ProjectBigText';
@@ -8,8 +7,8 @@ import ProjectImage from '../components/ProjectImage';
 import Contact from '../sections/Contact';
 import Footer from '../sections/Footer';
 import AnimatedArrow from '../components/AnimatedArrow';
-import star from '/star.svg'; // Assuming star.svg is in public folder
-import { ReactLenis, useLenis } from 'lenis/react';
+import star from '/star.svg';
+import { useLenis } from 'lenis/react';
 
 // This mapping function will generate the path to the JSON file
 const getProjectDataPath = (projectName) => {
@@ -19,34 +18,14 @@ const getProjectDataPath = (projectName) => {
     return `../data/project_data/${filename}.json`;
 };
 
+const projectModules = import.meta.glob('../data/project_data/*.json');
+
 const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNextProjectSelect }) => {
-    const [projectData, setProjectData] = useState(null); // State to hold loaded project data
-    const [hovered, setHovered] = useState(false); // Changed initial state to false for consistency
+    const [projectData, setProjectData] = useState(null);
+    const [hovered, setHovered] = useState(false);
     const lenis = useLenis();
 
-    useEffect(() => {
-        if (selectedProjectName) {
-            const path = getProjectDataPath(selectedProjectName);
-            if (path) {
-                // Dynamic import
-                import(path)
-                    .then(module => {
-                        setProjectData(module.default); // .default for ES Modules JSON import
-                    })
-                    .catch(error => {
-                        console.error(`Failed to load project data for ${selectedProjectName} at ${path}:`, error);
-                        setProjectData(null); // Clear data on error
-                    });
-            } else {
-                console.warn(`Could not determine data path for project: ${selectedProjectName}`);
-                setProjectData(null);
-            }
-        } else {
-            setProjectData(null); // Clear project data if no project is selected
-        }
-    }, [selectedProjectName]); // Re-run effect when selectedProjectName changes
-
-    const initialStyle = {
+    const initialStyle = useMemo(() => ({
         position: "absolute",
         top: 0,
         left: 0,
@@ -55,20 +34,90 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
         overflow: "hidden",
         backgroundColor: "var(--off-teal)",
         zIndex: -1
-    };
+    }), []);
 
-    const finalStyle = {
+    const finalStyle = useMemo(() => ({
         position: "relative",
         width: "100%",
         minHeight: "100%",
         backgroundColor: "var(--off-teal)",
         overflow: "visible",
         zIndex: 1
-    };
+    }), []);
 
     const currentStyle = isIncomingTransition ? initialStyle : finalStyle;
 
-    // Render a loading state or a message if projectData is not yet loaded
+    useEffect(() => {
+        let cancelled = false;
+        const load = async () => {
+            if (!selectedProjectName) {
+                setProjectData(null);
+                return;
+            }
+            const path = getProjectDataPath(selectedProjectName);
+            if (!path) {
+                console.warn(
+                    `Could not determine data path for project: ${selectedProjectName}`
+                );
+                setProjectData(null);
+                return;
+            }
+            const key = path; // matches the keys created by import.meta.glob
+            const loader = projectModules[key];
+            if (!loader) {
+                console.error(
+                    `No module found for project data at ${key}. Make sure the file exists and matches the glob.`
+                );
+                setProjectData(null);
+                return;
+            }
+            try {
+                const mod = await loader();
+                if (!cancelled) {
+                    setProjectData(mod.default || mod);
+                }
+            } catch (error) {
+                if (!cancelled) {
+                    console.error(
+                        `Failed to load project data for ${selectedProjectName} at ${key}:`,
+                        error
+                    );
+                    setProjectData(null);
+                }
+            }
+        };
+        load();
+        return () => {
+            cancelled = true;
+        };
+    }, [selectedProjectName]);
+
+    // Prefetch next project's JSON and images as soon as we know them
+    useEffect(() => {
+        if (!projectData?.nextWorkTitle) return;
+        const nextFile = projectData.nextWorkTitle
+            .toLowerCase()
+            .replace(/\s/g, '_');
+        const nextKey = `../data/project_data/${nextFile}.json`;
+        const nextLoader = projectModules[nextKey];
+        if (!nextLoader) return;
+        nextLoader()
+            .then((mod) => {
+                const nextData = mod.default || mod;
+                // Preload any images referenced in nextData.content
+                if (Array.isArray(nextData.content)) {
+                    nextData.content
+                        .filter((i) => i.type === 'img' && i.url)
+                        .forEach((i) => {
+                            const img = new Image();
+                            img.loading = 'eager';
+                            img.src = i.url;
+                        });
+                }
+            })
+            .catch(() => {});
+    }, [projectData]);
+
     if (!projectData) {
         return (
             <div id="project-content" style={currentStyle}>
@@ -84,12 +133,6 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
 
     return (
         <div id="project-content" style={currentStyle}>
-            <ReactLenis root
-                options={{
-                    duration: 2,
-                    autoRaf: true
-                }}
-            >
             <section id={"PROJECT"}>
                 <div className={"extremes-wrapper-left"}>
                     <div className={"extremes"}></div>
@@ -185,7 +228,6 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
             </section>
             <Contact small={true}/>
             <Footer small={true} lenis={lenis}/>
-            </ReactLenis>
         </div>
     );
 };

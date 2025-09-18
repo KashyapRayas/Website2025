@@ -1,3 +1,4 @@
+import React, { memo } from 'react';
 
 const ProjectImage = ({ src, alt }) => {
   const containerStyle = {
@@ -7,24 +8,24 @@ const ProjectImage = ({ src, alt }) => {
     borderRadius: "9px",
     backgroundColor: "var(--off-white)",
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "start"
   };
 
   const imgStyle = {
-    width: "100%",        // responsive
-    maxWidth: "600px",    // cap at 600px
-    aspectRatio: "4 / 3", // maintain 4:3 ratio
-    height: "auto",       // let browser calculate height
+    width: "100%",
+    // maxWidth: "800px",
+    aspectRatio: "4 / 3",
+    height: "auto",
     borderRadius: "6px",
     backgroundColor: "var(--light-off-teal)",
-    objectFit: "cover"    // ensures image fills the box
+    objectFit: "cover"
   };
 
   return (
     <div style={containerStyle}>
-      <img src={src} alt={alt} style={imgStyle} />
+      <img src={src} alt={alt} style={imgStyle} loading='lazy' decoding='async'/>
     </div>
   );
 };
 
-export default ProjectImage;
+export default memo(ProjectImage);

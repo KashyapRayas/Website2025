@@ -1,18 +1,20 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import '../App.css';
 import Header from '../sections/Header.jsx';
 import Home from '../sections/Home.jsx';
+import { useLenis } from 'lenis/react';
 import Work from '../sections/Work.jsx';
 import About from '../sections/About.jsx';
 import Contact from '../sections/Contact.jsx';
 import Footer from '../sections/Footer.jsx';
 
-const Landing = ({isLoading, onProjectSelect, lenis, isIncomingTransition}) => {
+const Landing = ({isLoading, onProjectSelect, isIncomingTransition}) => {
     const [linkHovered, setLinkHovered] = useState(false);
     const homeRef = useRef(null);
     const aboutRef = useRef(null);
     const workRef = useRef(null);
     const contactRef = useRef(null);
+    const lenis = useLenis();
 
     const initialStyle = {
         position: "relative",
