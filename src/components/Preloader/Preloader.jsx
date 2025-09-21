@@ -42,7 +42,7 @@ const Preloader = ({ onComplete }) => {
         tl.to(".counter-text", { display: "none" });
 		tl.from(".quote-text.top", { yPercent: 140, duration: 0.6, ease: "power2.out" });
 		tl.from(".quote-text.bottom", { yPercent: -140, duration: 0.6, ease: "power2.out" }, "+=1");
-		tl.to(".quote-text.top", { yPercent: 140, duration: 0.6, ease: "power2.in" }, "+=1.5");
+		tl.to(".quote-text.top", { yPercent: 140, duration: 0.6, ease: "power2.in" }, "+=1");
 		tl.to(".quote-text.bottom", { yPercent: -140, duration: 0.6, ease: "power2.in" });
 		tl.to(".quote-line", { display: "none", duration: 0.1 });
 

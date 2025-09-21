@@ -16,6 +16,7 @@ import { useGSAP } from "@gsap/react";
 const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
 
     const [recentHovered, setRecentHovered] = useState(false);
+    const [recentSelected, setRecentSelected] = useState(false);
     const rectRef = useRef(null);
     const heroRef = useRef(null)
     const parallaxRef = useRef(null)
@@ -77,25 +78,33 @@ const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
                         </div>
                     </div>
                     <div className={"second"}>
+                        <svg className={'home-rounder-1'} xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
+                            <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="#AFE2DC"/>
+                        </svg>
+                        <svg className={'home-rounder-2'} xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
+                            <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="#AFE2DC"/>
+                        </svg>
                         <div className={"metric-superwrapper"}>
                             <div className={"metric-wrapper"}>
                                 <Metric name={"PRODUCTS DESIGNED"} count={10} isLoaded={isLoaded}/>
                                 <Metric name={"FEATURES DESIGNED"} count={119} isLoaded={isLoaded}/>
                             </div>
                         </div>
-                        <div className={"second-innerwrapper"} onMouseEnter={() => {setRecentHovered(true);}} onMouseLeave={() => {setRecentHovered(false); }} onClick={()=>{handleProjectSelect(firstProject)}} >
+                        <div className={`second-innerwrapper ${recentSelected ? "second-innerwrapper-selected" : ""}`} onMouseEnter={() => {setRecentHovered(true);}} onMouseLeave={() => {setRecentHovered(false); }} onClick={()=>{handleProjectSelect(firstProject); setRecentSelected(true);}} >
                             <h4>RECENT WORK</h4>
-                        <div className={"recent-img-wrapper"}>
-                            <div className={"recent-img"} alt=""></div>
-                        </div>
-                        <div className={"td"}>
-                            <div className={"title"}>
-                                <AnimatedArrow isActive={!recentHovered && isLoaded} />
-                                <h3>{firstProject.name}</h3>
-                                <AnimatedArrow isActive={recentHovered} />
+                            <div className={"recent-img-wrapper"}>
+                                <div className={"recent-img"} alt="">
+                                    <img className={"img"} src={firstProject.img} alt={firstProject.name} />
+                                </div>
                             </div>
-                                <p className={"description"}>{firstProject.description}</p>
-                        </div>
+                            <div className={"td"}>
+                                <div className={"title"}>
+                                    <AnimatedArrow isActive={!recentHovered && isLoaded} />
+                                    <h3>{firstProject.name}</h3>
+                                    <AnimatedArrow isActive={recentHovered} />
+                                </div>
+                                    <p className={"description"}>{firstProject.description}</p>
+                            </div>
                         </div>
                     </div>
                     <div className={"third"}>

@@ -9,7 +9,12 @@ import { useGSAP } from '@gsap/react'
 const Work = forwardRef(({handleProjectSelect}, ref) => {
 
     const [hoveredIndex, setHoveredIndex] = useState(0);
+    const [selectedIndex, setSelectedIndex] = useState(null);
     const handRef = useRef(null)
+    const imgRef = useRef(null)
+
+    const activeIndex =
+    hoveredIndex !== 0 ? hoveredIndex : selectedIndex ?? 0
 
     useGSAP(() => {
         if (handRef.current) {
@@ -17,14 +22,42 @@ const Work = forwardRef(({handleProjectSelect}, ref) => {
             y: 40,
             ease: "none",
             scrollTrigger: {
-            trigger: '#WORK', // The SVG is the trigger
-            start: "top bottom", // Animation starts when SVG top hits viewport top
-            end: "top top", // Animation ends when SVG bottom hits viewport top
-            scrub: 1, // Smoothly ties animation to scrollbar
+            trigger: '#WORK',
+            start: "top bottom",
+            end: "top top",
+            scrub: 1,
             },
         });
         }
     }, []);
+
+    useGSAP(() => {
+        if (!imgRef.current) return
+
+        const newSrc =
+        projects.projects[activeIndex]?.img || '/project_imgs/placeholder.png'
+        const newAlt =
+        projects.projects[activeIndex]?.name || 'Placeholder'
+
+        if (imgRef.current.src.includes(newSrc)) return
+
+        const tl = gsap.timeline()
+        tl.to(imgRef.current, {
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.out',
+        onComplete: () => {
+            imgRef.current.src = newSrc
+            imgRef.current.alt = newAlt
+        },
+        }).to(imgRef.current, {
+        opacity: 1,
+        duration: 0.3,
+        ease: 'power2.in',
+        })
+
+        return () => tl.kill()
+    }, [activeIndex])
 
     return (
         <section id={"WORK"} ref={ref}>
@@ -38,10 +71,10 @@ const Work = forwardRef(({handleProjectSelect}, ref) => {
                         <span>{"<"}</span>WORK<span>{"/>"}</span>
                     </div>
                     {projects.projects.map((project, index) => (
-                    <div className={`project ${hoveredIndex === index ? 'project--active' : ''}`} key={index}
+                    <div className={`project ${hoveredIndex === index || selectedIndex === index ? 'project--active' : ''}`} key={index}
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(0)}
-                    onClick={() => {handleProjectSelect(project)}}
+                    onClick={() => {setSelectedIndex(index); handleProjectSelect(project)}}
                     >
                         <div className={"title"}>
                             <AnimatedArrow isActive={hoveredIndex !== index} />
@@ -78,8 +111,13 @@ const Work = forwardRef(({handleProjectSelect}, ref) => {
                             </div>
                             <div className={"cell-small"}></div>
                         </div>
-                        <div className={"img-wrapper"}>
-                            <div className={"work-img"} alt=""></div>
+                        <div className="img-wrapper">
+                            <div className="work-img-wrapper">
+                            <img
+                                ref={imgRef}
+                                className="work-img"
+                            />
+                            </div>
                         </div>
                         <div className={"rounder"}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">

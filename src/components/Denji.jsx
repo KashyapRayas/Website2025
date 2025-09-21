@@ -9,8 +9,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 gsap.registerPlugin(CustomEase);
 
-// --- Define Style Objects Outside the Component for Performance ---
-
 const firstStyle = {
   position: "relative",
   width: "100%",
@@ -28,7 +26,7 @@ const firstStyle = {
 const imgStyle = {
     position: 'relative',
     zIndex: 6,
-    bottom: "12px",
+    bottom: "30px",
     height: "100%"
 };
 
@@ -68,7 +66,6 @@ const Denji = () => {
     const container = useRef(null);
     const denjiRef = useRef(null)
 
-
     useGSAP(
         () => {
         // Create the custom "wave" ease for the animation
@@ -101,23 +98,24 @@ const Denji = () => {
 
     useGSAP(() => {
         if (denjiRef.current) {
-            gsap.to(denjiRef.current, {
-                y: 90, // Move group up 80px on scroll. Adjust as needed.
+            gsap.to("#denji", {
+                y: 60, // Move group up 60px on scroll. Adjust as needed.
                 ease: "none",
                 scrollTrigger: {
-                trigger: denjiRef.current,
+                trigger: "#denji",
                 endTrigger: 'footer',
                 start: "top bottom", // Animation starts when SVG top hits viewport top
-                end: "bottom top", // Animation ends when SVG bottom hits viewport top
+                end: "bottom bottom", // Animation ends when SVG bottom hits viewport top
                 scrub: 1, // Smoothly ties animation to scrollbar
                 },
             });
         }
+        return () => { ScrollTrigger.getAll().forEach(st => st.kill()); }
     }, []);
 
   return (
     <div style={firstStyle} ref={container}>
-      <img src={denji} alt="" style={imgStyle} ref={denjiRef}/>
+      <img src={denji} alt="" style={imgStyle} ref={denjiRef} id="denji"/>
       <div
         className="rect-1 rect"
         style={{ ...baseRectStyle, ...rect1Style }}

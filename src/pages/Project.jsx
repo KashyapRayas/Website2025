@@ -4,6 +4,7 @@ import './Project.css';
 import ProjectBigText from '../components/ProjectBigText';
 import ProjectParaText from '../components/ProjectParaText';
 import ProjectImage from '../components/ProjectImage';
+import ProjectHeadingParaText from '../components/ProjectHeadingParaText';
 import Contact from '../sections/Contact';
 import Footer from '../sections/Footer';
 import AnimatedArrow from '../components/AnimatedArrow';
@@ -46,6 +47,10 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
     }), []);
 
     const currentStyle = isIncomingTransition ? initialStyle : finalStyle;
+
+    useEffect(() => {
+
+    }, [])
 
     useEffect(() => {
         let cancelled = false;
@@ -139,28 +144,15 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                 </div>
 
                 <div className={"middle"}>
-                    <div className={"right"}>
-                        {/* Dynamically render content based on the 'content' array */}
-                        {content.map((item, index) => {
-                            if (item.type === 'img') {
-                                return <ProjectImage key={index} img={item.url} />;
-                            } else if (item.type === 'bigtext') {
-                                return <ProjectBigText key={index} text={item.text} />;
-                            } else if (item.type === 'para') {
-                                return <ProjectParaText key={index} text={item.text} />;
-                            }
-                            return null;
-                        })}
-                    </div>
-                    <div className={"left"}>
+                                        <div className={"left"}>
                         <div className={"sticky-div"}>
                             <div className={"menu"}>
                                 <div className={"nav-link"} onClick={handleBack}>
                                     BACK
                                 </div>
-                                <div className="cell"></div>
+                                {details.projectLink? <div className={"nav-link website"} onClick={() => window.open(details.projectLink, "_blank")}>GO TO WEBSITE</div> : <div className="cell"></div>}
                             </div>
-                            <div className={"project-title"}>{details.projectTitle || selectedProjectName}</div> {/* Use projectTitle from JSON */}
+                            <div className={"project-title"}>{details.projectTitle || selectedProjectName}</div>
                             <div className={"details-wrapper"}>
                                 <div className={"details-left"}>
                                     <div className={"detail"}>
@@ -170,7 +162,7 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                                                 <div className={"wrapper"}>
                                                     <img src={star} alt="" />
                                                 </div>
-                                                <h2>{details.timeline}</h2> {/* Dynamically loaded */}
+                                                <h2>{details.timeline}</h2>
                                             </div>
                                         </div>
                                     </div>
@@ -181,7 +173,7 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                                                 <div className={"wrapper"}>
                                                     <img src={star} alt="" />
                                                 </div>
-                                                <h2>{details.company}</h2> {/* Dynamically loaded */}
+                                                <h2>{details.company}</h2>
                                             </div>
                                         </div>
                                     </div>
@@ -194,20 +186,20 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                                                 <div className={"wrapper"}>
                                                     <img src={star} alt="" />
                                                 </div>
-                                                <h2>{item}</h2> {/* Dynamically loaded */}
+                                                <h2>{item}</h2>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             </div>
-                            <div className={'project'} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={() => onNextProjectSelect({ name: nextWorkTitle, description: nextWorkDescription })}>
+                            <div className={`project`} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={() => {onNextProjectSelect({ name: nextWorkTitle, description: nextWorkDescription })}}>
                                 <div className={"title"}>
                                     <AnimatedArrow isActive={!hovered} />
-                                    <h3>{nextWorkTitle}</h3> {/* Dynamically loaded */}
+                                    <h3>{nextWorkTitle}</h3>
                                     <AnimatedArrow isActive={hovered} />
                                 </div>
                                 <div className={"description"}>
-                                    <p>{nextWorkDescription}</p> {/* Dynamically loaded */}
+                                    <p>{nextWorkDescription}</p>
                                 </div>
                             </div>
                             <div className={"rounder"}>
@@ -220,14 +212,29 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                             </div>
                         </div>
                     </div>
+                    <div className={"right"}>
+                        {/* Dynamically render content based on the 'content' array */}
+                        {content.map((item, index) => {
+                            if (item.type === 'img') {
+                                return <ProjectImage key={index} src={item.url} alt={`Project image ${index}`} caption={item.caption} />;
+                            } else if (item.type === 'bigtext') {
+                                return <ProjectBigText key={index} text={item.text} />;
+                            } else if (item.type === 'para') {
+                                return <ProjectParaText key={index} text={item.text} />;
+                            } else if (item.type === 'headingpara') {
+                                return <ProjectHeadingParaText key={index} heading={item.heading} para={item.para} headingcolor={item.headingcolor} />;
+                            }
+                            return null;
+                        })}
+                    </div>
                 </div>
 
                 <div className={"extremes-wrapper-right"}>
                     <div className={"extremes"}></div>
                 </div>
             </section>
-            <Contact small={true}/>
-            <Footer small={true} lenis={lenis}/>
+            <Contact/>
+            <Footer inProject={true} lenis={lenis}/>
         </div>
     );
 };

@@ -23,3 +23,24 @@
     align-items: center;
 	position: relative;
 }
+
+.wrapper {
+    width: 100%;
+    height: max-content;
+    display: flex;
+    overflow: hidden;
+    justify-content: center;
+}
+
+#boop {
+    font-size: 42px;
+    color: var(--off-white);
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+    transform: translateY(110%) scale(0.8);
+}
+
+#boop span {
+    opacity: 0;
+}

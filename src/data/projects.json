@@ -1,36 +1,39 @@
 {
     "projects": [
         {
-        "name": "ARTIST HUB",
-        "description": "A platform that helps artists and managers easily connect with and recruit creative talent."
+        "name": "TABLE READ",
+        "description": "An AI-powered web app to simulate table reads for film scripts.",
+        "img": "/project_imgs/tr_1.png"
         },
         {
         "name": "MOVIE COLAB SUITE",
-        "description": "A product suite for filmmakers"
+        "description": "A product suite for filmmakers",
+        "img": null
         },
         {
         "name": "NOTHING COMMUNITY CHALLENGE",
-        "description": "My submission for the Nothing Community challenge for Phone 3a"
-        },
-        {
-        "name": "TABLE READ",
-        "description": "An AI-powered web app to simulate table reads for film scripts."
+        "description": "My submission for the Nothing Community challenge for Phone 3a",
+        "img": null
         },
         {
         "name": "SYNC SPACE",
-        "description": "A desktop application for film production that streamlines file and version management."
+        "description": "A desktop application for film production that streamlines file and version management.",
+        "img": null
         },
         {
         "name": "PROJECTS",
-        "description": "A comprehensive platform for film production, task coordination, and review management."
+        "description": "A comprehensive platform for film production, task coordination, and review management.",
+        "img": null
         },
         {
         "name": "SCRIPT VIZ",
-        "description": "An AI-powered web app for script breakdown and storyboard visualization"
+        "description": "An AI-powered web app for script breakdown and storyboard visualization",
+        "img": null
         },
         {
         "name": "SIGGRAPH BNMIT",
-        "description": "An innovative computer graphics club dedicated to nurturing students passionate about graphics and design."
+        "description": "An innovative computer graphics club dedicated to nurturing students passionate about graphics and design.",
+        "img": null
         }
     ]
 }

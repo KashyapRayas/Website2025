@@ -18,7 +18,8 @@ const ProjectParaText = ({ text }) => {
         fontWeight: "400",
         color: "var(--off-black-06)",
         margin: "0",
-        textWrap: "wrap"
+        textWrap: "wrap",
+        lineHeight: "1.6"
     }
 
     return (

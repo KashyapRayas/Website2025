@@ -17,6 +17,7 @@ const ProjectBigText = ({ text }) => {
         fontSize: "36px",
         fontWeight: "600",
         color: "var(--off-black)",
+        fontFamily: "'Lora', serif",
         margin: "0",
         textWrap: "wrap"
     }

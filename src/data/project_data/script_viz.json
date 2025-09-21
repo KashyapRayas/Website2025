@@ -1,0 +1,39 @@
+{
+    "content" :
+    [
+        {
+            "type": "img",
+            "url": "/lego_44.svg"
+        },
+        {
+            "type": "bigtext",
+            "text": "An AI-powered web app for script breakdown and storyboard visualization"
+        },
+        {
+            "type": "para",
+            "text": "Script Viz was one of the first products I worked on when I joined Viga. I had joined as a UI/UX Intern, working under an existing UX Designer at Viga. The color theme and main screens of Script Viz were already designed and implemented by the time I joined, so my job was to further improve the branding & user experience of the product."
+        },
+        {
+            "type": "headingpara",
+            "heading": "Branding",
+            "para": "I designed the logo for Script Viz and mascot illustrations to accompany the branding. I was inspired by Duolingo’s approach to mascot branding and tried something similar for Script Viz."
+        },
+        {
+            "type": "img",
+            "url": "/lego_44.svg"
+        }
+    ],
+    "details": {
+        "timeline": "2023 - 2024",
+        "company": "Viga ET",
+        "deliverables": [
+            "Branding",
+            "Illustrations",
+            "Wireframes",
+            "Email Templates"
+        ],
+        "projectTitle": "SCRIPT VIZ"
+    },
+    "nextWorkTitle": "TABLE READ",
+    "nextWorkDescription": "An AI-powered web app to simulate table reads for film scripts."
+}

@@ -1,67 +1,73 @@
-import { useState, useCallback, Suspense, lazy } from "react";
-import './App.css';
-import { ReactLenis } from 'lenis/react';
+import { useState, useCallback, Suspense, lazy } from "react"
+import './App.css'
+import { ReactLenis, useLenis } from 'lenis/react'
 
-const Preloader = lazy(() => import('./components/Preloader/Preloader.jsx'));
-const TransitionLoader = lazy(() => import('./components/TransitionLoader/TransitionLoader.jsx'));
-const Landing = lazy(() => import('./pages/Landing.jsx'));
-import Project from './pages/Project.jsx';
+const Preloader = lazy(() => import('./components/Preloader/Preloader.jsx'))
+const TransitionLoader = lazy(() => import('./components/TransitionLoader/TransitionLoader.jsx'))
+const Landing = lazy(() => import('./pages/Landing.jsx'))
+import Project from './pages/Project.jsx'
 
 const preloadLanding = () => {
-    import('./pages/Landing.jsx');
+    import('./pages/Landing.jsx')
 }
+
 const preloadProject = () => {
-    import('./pages/Project.jsx');
+    import('./pages/Project.jsx')
 }
 
 function App() {
 
-    const [isInitialLoading, setIsInitialLoading] = useState(true);
-    const [view, setView] = useState('landing');
-    const [isTransitioning, setIsTransitioning] = useState(false);
-    const [transitionDirection, setTransitionDirection] = useState('out');
-    const [selectedProjectName, setSelectedProjectName] = useState(null);
+    const [isInitialLoading, setIsInitialLoading] = useState(false)
+    const [view, setView] = useState('landing')
+    const [isTransitioning, setIsTransitioning] = useState(false)
+    const [transitionDirection, setTransitionDirection] = useState('out')
+    const [selectedProjectName, setSelectedProjectName] = useState(null)
     const [projectToLoad, setProjectToLoad] = useState(null)
     const [corrector, setCorrector] = useState(false)
+    const lenis = useLenis()
 
-    // Memoize these callback functions to prevent unnecessary re-renders of TransitionLoader
     const handleMidway = useCallback(() => {
         if (transitionDirection === 'in') {
-            setView('project');
+            setView('project')
         }
         else if (transitionDirection === 'loop') {
-            setSelectedProjectName(projectToLoad);
-            setView('project');
-            setCorrector(true);
+            setSelectedProjectName(projectToLoad)
+            setView('project')
+            setCorrector(true)
         }
         else {
-            setView('landing');
+            setView('landing')
         }
     }, [transitionDirection, projectToLoad]);
 
     const handleTransitionComplete = useCallback(() => {
-        setIsTransitioning(false);
-        setCorrector(false);
-    }, []);
+        setIsTransitioning(false)
+        setCorrector(false)
+        if (transitionDirection === "out") {
+            setTimeout(() => {
+                lenis.scrollTo("#WORK", { duration: 2 });
+            }, 500);
+        }
+    }, [transitionDirection, lenis]);
 
     const handleProjectSelect = (projectData) => {
-        preloadProject();
-        setSelectedProjectName(projectData.name);
-        setTransitionDirection('in');
-        setIsTransitioning(true);
+        preloadProject()
+        setSelectedProjectName(projectData.name)
+        setTransitionDirection('in')
+        setIsTransitioning(true)
     };
 
     const handleNextProjectSelect = (projectData) => {
-        preloadProject();
-        setProjectToLoad(projectData.name);
-        setTransitionDirection('loop');
-        setIsTransitioning(true);
+        preloadProject()
+        setProjectToLoad(projectData.name)
+        setTransitionDirection('loop')
+        setIsTransitioning(true)
     };
 
     const handleBackToLanding = useCallback(() => {
-        preloadLanding();
-        setTransitionDirection('out');
-        setIsTransitioning(true);
+        preloadLanding()
+        setTransitionDirection('out')
+        setIsTransitioning(true)
     }, []);
 
 
@@ -111,4 +117,4 @@ function App() {
     );
 }
 
-export default App;
+export default App

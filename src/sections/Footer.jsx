@@ -4,7 +4,7 @@ import './Footer.css'
 import footer from '/footer.svg'
 import AnimatedDownwardArrowSmall from '../components/AnimatedDownwardArrowSmall'
 
-const Footer = ({lenis, small=false}) => {
+const Footer = ({inProject=false, lenis}) => {
     const [footerLinkHovered, setFooterLinkHovered] = useState(false);
 
     const handleScrollTo = (type) => {
@@ -28,16 +28,16 @@ const Footer = ({lenis, small=false}) => {
                             <h3>KASHYAP RAYAS &copy; {new Date().getFullYear()} <br /> <span>ALL RIGHTS RESERVED</span> </h3>
                             <div className={"right-links"}>
                                 <div className={"work"}
-                                onClick={() => handleScrollTo(small)}
+                                onClick={() => handleScrollTo(inProject)}
                                 onMouseEnter={() => setFooterLinkHovered(true)} onMouseLeave={() => setFooterLinkHovered(false)}>
                                     <AnimatedDownwardArrowSmall isActive={true} isHovered={footerLinkHovered} />
-                                    {small? "SCROLL TO TOP" : "SCROLL TO WORK"}
+                                    {inProject? "SCROLL TO TOP" : "SCROLL TO WORK"}
                                 </div>
                                 <a href="http://2022.kashyaprayas.com">2022 WEBSITE</a>
                             </div>
                         </div>
                     </div>
-                    <div className={small? "small": "left"}>
+                    <div className={"left"}>
                         <img src={footer} alt="" />
                     </div>
                 </div>
