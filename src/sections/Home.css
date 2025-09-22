@@ -285,6 +285,8 @@
                 object-fit: cover;
                 object-position: center;
                 image-rendering: pixelated;
+                opacity: 0.75;
+                transition: all 0.3s ease-in-out;
             }
         }
         .td {
@@ -318,6 +320,10 @@
     }
     .second-innerwrapper:hover, .second-innerwrapper-selected {
         background-color: var(--off-white) !important;
+    }
+
+    .second-innerwrapper:hover > .recent-img-wrapper > .recent-img > .img, .second-innerwrapper-selected > .recent-img-wrapper > .recent-img > .img {
+        opacity: 1;
     }
 
     .third {

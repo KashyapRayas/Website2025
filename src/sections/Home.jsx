@@ -79,10 +79,10 @@ const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
                     </div>
                     <div className={"second"}>
                         <svg className={'home-rounder-1'} xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
-                            <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="#AFE2DC"/>
+                            <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="var(--off-teal)"/>
                         </svg>
                         <svg className={'home-rounder-2'} xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
-                            <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="#AFE2DC"/>
+                            <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="var(--off-teal)"/>
                         </svg>
                         <div className={"metric-superwrapper"}>
                             <div className={"metric-wrapper"}>
@@ -117,13 +117,13 @@ const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
                 <div className={"left"}>
                     <div className={"first"}>
                         <div className={"hero"}>
-                            <Hero linkHovered={linkHovered || recentHovered} ref={heroRef}/>
+                            <Hero ref={heroRef}/>
                         </div>
                         <div className={"cell"}></div>
                     </div>
                     <div className={"second"}>
                         <div className={"s2"}>
-                            <AnimatedDownwardArrow isActive={true} />
+                            <AnimatedDownwardArrow isLoaded={isLoaded} isActive={true} />
                         </div>
                         <div className={"s1"}>
                             <div className={"chest-window"}>

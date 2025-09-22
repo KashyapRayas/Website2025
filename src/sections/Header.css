@@ -107,7 +107,7 @@ header > .middle > .right {
     }
     .nav-link:hover {
         background-color: var(--off-white);
-        color: var(--off-black);
+        color: var(--off-black-06);
 
         font-weight: 600;
     }

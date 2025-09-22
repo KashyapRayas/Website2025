@@ -204,10 +204,10 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                             </div>
                             <div className={"rounder"}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
-                                    <path d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z" fill="#AFE2DC"/>
+                                    <path d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z" fill="var(--off-teal)"/>
                                 </svg>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
-                                    <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="#AFE2DC"/>
+                                    <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="var(--off-teal)"/>
                                 </svg>
                             </div>
                         </div>

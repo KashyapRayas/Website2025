@@ -1,5 +1,5 @@
 
-const ProjectHeadingParaText = ({ heading, para, headingcolor="var(--dark-green)" }) => {
+const ProjectHeadingParaText = ({ heading, para, headingcolor="var(--off-black)" }) => {
 
     const containerStyle = {
         width: "100%",
@@ -24,6 +24,10 @@ const ProjectHeadingParaText = ({ heading, para, headingcolor="var(--dark-green)
         textWrap: "wrap"
     }
 
+    const spanStyle = {
+        color: "var(--dark-green)"
+    }
+
     const paraStyle = {
         width: "100%",
         fontSize: "15px",
@@ -36,7 +40,7 @@ const ProjectHeadingParaText = ({ heading, para, headingcolor="var(--dark-green)
 
     return (
         <div style={containerStyle}>
-            <h3 style={headingStyle}>{heading}.</h3>
+            <h3 style={headingStyle}>{heading}<span style={spanStyle}>.</span></h3>
             <h3 style={paraStyle}>{para}</h3>
         </div>
     );

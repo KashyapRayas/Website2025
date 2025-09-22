@@ -69,7 +69,7 @@
             }
             .nav-link:hover {
                 background-color: var(--off-white);
-                color: var(--off-black);
+                color: var(--off-black-06);
             }
             .cell {
                 background-color: var(--off-white);

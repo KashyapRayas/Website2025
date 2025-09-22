@@ -9,13 +9,19 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    --off-teal: #AFE2DC;
-    --light-off-teal: #E6F9EF;
-    --off-white: #F3FFF3;
+    /* --off-teal: #AFE2DC; */
+    /* --light-off-teal: #E6F9EF; */
+    /* --off-white: #F3FFF3; */
     --off-black: #121312;
     --dark-green: #00A084;
     --light-green: #4EDF88;
-    --off-black-06: rgba(18, 19, 18, 0.6);
+
+    /* new colors */
+    --off-teal: #c2e9e7;
+    --light-off-teal: #ECF8F5;
+    --off-white: #FBFFFD;
+
+    --off-black-06: rgba(39, 66, 66, 0.6);
 
 }
 

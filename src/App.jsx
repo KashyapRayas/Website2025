@@ -17,7 +17,7 @@ const preloadProject = () => {
 
 function App() {
 
-    const [isInitialLoading, setIsInitialLoading] = useState(false)
+    const [isInitialLoading, setIsInitialLoading] = useState(true)
     const [view, setView] = useState('landing')
     const [isTransitioning, setIsTransitioning] = useState(false)
     const [transitionDirection, setTransitionDirection] = useState('out')
