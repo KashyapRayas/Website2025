@@ -54,14 +54,14 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
             opacity: 0,
             duration: 0.2,
             ease: "power2.out",
-            delay: 0.5,
+            delay: 0.3,
             })
             .to("#boop", {
             y: "-110%",
             duration: 0.5,
             ease: "power2.in",
-            delay: 0.3,
-            })
+            delay: 0,
+            }, "-=0.2")
             .fromTo(
             target,
             { clipPath: "inset(50% 50% 50% 50% round 9px)" },

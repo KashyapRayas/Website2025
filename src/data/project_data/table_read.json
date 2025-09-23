@@ -31,23 +31,23 @@
         },
         {
             "type": "img",
+            "url": "/project_imgs/tr_4.png",
+            "caption": "The final product, designed while vibing to music"
+        },
+        {
+            "type": "img",
             "url": "/project_imgs/tr_3.png",
             "caption": ""
         },
         {
-            "type": "headingpara",
-            "heading": "Iterations",
-            "para": "At the SIGGRAPH conference in Denver, we provided beta access to users, including scriptwriters and directors. They appreciated the product and offered valuable feedback on enhancing workflows. One key suggestion was to incorporate voice cloning and expand customization options for managing and exploring voices. We took this feedback to heart and implemented those changes."
-        },
-        {
-            "type": "img",
-            "url": "/project_imgs/tr_4.png",
-            "caption": "Before"
-        },
-        {
             "type": "img",
             "url": "/project_imgs/tr_5.png",
-            "caption": "After"
+            "caption": ""
+        },
+        {
+            "type": "img",
+            "url": "/project_imgs/tr_6.png",
+            "caption": ""
         }
     ],
     "details": {

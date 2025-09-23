@@ -285,7 +285,7 @@
                 object-fit: cover;
                 object-position: center;
                 image-rendering: pixelated;
-                opacity: 0.75;
+                opacity: 0.9;
                 transition: all 0.3s ease-in-out;
             }
         }

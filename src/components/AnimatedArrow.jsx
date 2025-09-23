@@ -3,7 +3,6 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
-// The SVG is its own component that accepts props (like style).
 const ArrowSvg = (props) => (
   <svg
     width="43"
@@ -11,7 +10,7 @@ const ArrowSvg = (props) => (
     viewBox="0 0 43 42"
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
-    {...props} // Spread any passed-in props, like style
+    {...props}
   >
     <path d="M19 2C19 0.89543 19.8954 0 21 0H23C24.1046 0 25 0.895431 25 2V4C25 5.10457 24.1046 6 23 6H21C19.8954 6 19 5.10457 19 4V2Z" />
     <path d="M19 8C19 6.89543 19.8954 6 21 6H23C24.1046 6 25 6.89543 25 8V10C25 11.1046 24.1046 12 23 12H21C19.8954 12 19 11.1046 19 10V8Z" />
@@ -59,7 +58,7 @@ const AnimatedArrow = ({ isActive = false }) => {
             .fromTo(
             container.current,
             { width: 0 },
-            { width: "36px", duration: 0.3, ease: "power2.inOut" }
+            { width: "36px", duration: 0.3, ease: "power2.inOut"}
             )
             .fromTo(
             sortedPaths.current,
@@ -80,9 +79,9 @@ const AnimatedArrow = ({ isActive = false }) => {
     useGSAP(() => {
         if (tl.current) {
         if (isActive) {
-            tl.current.play();
+            tl.current.timeScale(1).play();
         } else {
-            tl.current.reverse();
+            tl.current.timeScale(2).reverse();
         }
         }
     }, [isActive]);

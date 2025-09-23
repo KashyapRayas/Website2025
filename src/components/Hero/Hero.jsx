@@ -138,6 +138,15 @@ const Hero = ({isLoaded}) => {
         }
     }, [fontMenuHovered])
 
+    useEffect(()=> {
+        if(isLoaded) {
+            animateEyesRight()
+        }
+        else {
+            animateEyesLeft()
+        }
+    }, [isLoaded])
+
     useGSAP(() => {
         t1.current = gsap.timeline({
             paused: false,

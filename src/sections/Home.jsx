@@ -117,7 +117,7 @@ const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
                 <div className={"left"}>
                     <div className={"first"}>
                         <div className={"hero"}>
-                            <Hero ref={heroRef}/>
+                            <Hero ref={heroRef} isLoaded={isLoaded}/>
                         </div>
                         <div className={"cell"}></div>
                     </div>
