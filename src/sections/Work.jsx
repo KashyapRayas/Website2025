@@ -6,6 +6,8 @@ import projects from '../data/projects.json'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 
+const BASE_PATH = "/Website2025"
+
 const Work = forwardRef(({handleProjectSelect}, ref) => {
 
     const [hoveredIndex, setHoveredIndex] = useState(0);
@@ -35,7 +37,7 @@ const Work = forwardRef(({handleProjectSelect}, ref) => {
         if (!imgRef.current) return
 
         const newSrc =
-        projects.projects[activeIndex]?.img || '/project_imgs/placeholder.png'
+        projects.projects[activeIndex]?.img || BASE_PATH + '/project_imgs/placeholder.png'
         const newAlt =
         projects.projects[activeIndex]?.name || 'Placeholder'
 
@@ -47,7 +49,7 @@ const Work = forwardRef(({handleProjectSelect}, ref) => {
         duration: 0.3,
         ease: 'power2.out',
         onComplete: () => {
-            imgRef.current.src = newSrc
+            imgRef.current.src = BASE_PATH + newSrc
             imgRef.current.alt = newAlt
         },
         }).to(imgRef.current, {

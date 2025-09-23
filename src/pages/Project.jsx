@@ -11,6 +11,8 @@ import AnimatedArrow from '../components/AnimatedArrow';
 import star from '/star.svg';
 import { useLenis } from 'lenis/react';
 
+const BASE_PATH = '/Website2025';
+
 // This mapping function will generate the path to the JSON file
 const getProjectDataPath = (projectName) => {
     if (!projectName) return null;
@@ -116,7 +118,7 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                         .forEach((i) => {
                             const img = new Image();
                             img.loading = 'eager';
-                            img.src = i.url;
+                            img.src = BASE_PATH +  i.url;
                         });
                 }
             })
@@ -216,7 +218,7 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                         {/* Dynamically render content based on the 'content' array */}
                         {content.map((item, index) => {
                             if (item.type === 'img') {
-                                return <ProjectImage key={index} src={item.url} alt={`Project image ${index}`} caption={item.caption} />;
+                                return <ProjectImage key={index} src={BASE_PATH + item.url} alt={`Project image ${index}`} caption={item.caption} />;
                             } else if (item.type === 'bigtext') {
                                 return <ProjectBigText key={index} text={item.text} />;
                             } else if (item.type === 'para') {

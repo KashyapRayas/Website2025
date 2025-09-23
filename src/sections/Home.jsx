@@ -13,6 +13,8 @@ import projects from '../data/projects.json'
 import AnimatedMan from '../components/AnimatedMan';
 import { useGSAP } from "@gsap/react";
 
+const BASE_PATH = "/Website2025"
+
 const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
 
     const [recentHovered, setRecentHovered] = useState(false);
@@ -94,7 +96,7 @@ const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
                             <h4>RECENT WORK</h4>
                             <div className={"recent-img-wrapper"}>
                                 <div className={"recent-img"} alt="">
-                                    <img className={"img"} src={firstProject.img} alt={firstProject.name} />
+                                    <img className={"img"} src={BASE_PATH + firstProject.img} alt={firstProject.name} />
                                 </div>
                             </div>
                             <div className={"td"}>
