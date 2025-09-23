@@ -1,10 +1,10 @@
-import { useState, useCallback, Suspense, lazy } from "react"
+import { useState, useCallback} from "react"
 import './App.css'
 import { ReactLenis, useLenis } from 'lenis/react'
 
-const Preloader = lazy(() => import('./components/Preloader/Preloader.jsx'))
-const TransitionLoader = lazy(() => import('./components/TransitionLoader/TransitionLoader.jsx'))
-const Landing = lazy(() => import('./pages/Landing.jsx'))
+import Preloader from './components/Preloader/Preloader.jsx'
+import TransitionLoader from './components/TransitionLoader/TransitionLoader.jsx'
+import Landing from './pages/Landing.jsx'
 import Project from './pages/Project.jsx'
 
 const preloadLanding = () => {
@@ -73,6 +73,9 @@ function App() {
 
     return (
         <>
+            {isInitialLoading && (
+                    <Preloader onComplete={() => setIsInitialLoading(false)} />
+            )}
             <ReactLenis
                 root
                 options={{
@@ -81,37 +84,27 @@ function App() {
                 }}
             >
 
-            <Suspense fallback={null}>
-                {isInitialLoading && (
-                    <Preloader onComplete={() => setIsInitialLoading(false)} />
-                )}
-            </Suspense>
-
-            <Suspense fallback={null}>
-                {isTransitioning && (
-                    <TransitionLoader
-                        direction={transitionDirection}
-                        onMidway={handleMidway}
-                        onComplete={handleTransitionComplete}
-                    />
-                )}
-            </Suspense>
-
-            <Suspense fallback={null}>
-                {view === 'landing' &&
-                <Landing
-                onProjectSelect={handleProjectSelect}
-                isLoading={isInitialLoading}
-                isIncomingTransition={isTransitioning && transitionDirection === 'out'}
+            {isTransitioning && (
+                <TransitionLoader
+                    direction={transitionDirection}
+                    onMidway={handleMidway}
+                    onComplete={handleTransitionComplete}
                 />
-                }
-                {view === 'project' && <Project
-                handleBack={handleBackToLanding}
-                isIncomingTransition={isTransitioning && (transitionDirection === 'in' || corrector)}
-                selectedProjectName={selectedProjectName}
-                onNextProjectSelect={handleNextProjectSelect}
-                />}
-            </Suspense>
+            )}
+
+            {view === 'landing' &&
+            <Landing
+            onProjectSelect={handleProjectSelect}
+            isLoading={isInitialLoading}
+            isIncomingTransition={isTransitioning && transitionDirection === 'out'}
+            />
+            }
+            {view === 'project' && <Project
+            handleBack={handleBackToLanding}
+            isIncomingTransition={isTransitioning && (transitionDirection === 'in' || corrector)}
+            selectedProjectName={selectedProjectName}
+            onNextProjectSelect={handleNextProjectSelect}
+            />}
             </ReactLenis>
         </>
     );
