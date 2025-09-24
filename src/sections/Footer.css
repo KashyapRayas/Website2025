@@ -74,6 +74,7 @@ footer > .middle > .right {
             width: 18px;
             rotate: 180deg;
         }
+        cursor: pointer;
     }
     .work:hover {
         color: var(--off-black-06);
@@ -88,10 +89,10 @@ footer > .middle > .right {
         font-size: 15px;
         font-weight: 400;
         transition: all 0.15s ease-in-out;
+        cursor: pointer;
     }
     a:hover {
         color: var(--off-black-06);
-        cursor: url('/Cursor.svg'), auto;
     }
 }
 

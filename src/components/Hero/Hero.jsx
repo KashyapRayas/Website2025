@@ -464,7 +464,7 @@ const Hero = ({isLoaded}) => {
                 </g>
                 <path
                 d="M0 -1H375V1H0V-1ZM375 480H0H375ZM0 480V0V480ZM375 0V480V0Z"
-                fill="#00A084"
+                fill="var(--dark-green)"
                 mask="url(#path-1-outside-1_1470_10701)"
                 />
             </g>

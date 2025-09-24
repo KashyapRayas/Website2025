@@ -32,7 +32,7 @@ const ProjectHeadingParaText = ({ heading, para, headingcolor="var(--off-black)"
         width: "100%",
         fontSize: "15px",
         fontWeight: "500",
-        color: "var(--off-black-06)",
+        color: "var(--off-black)",
         margin: "0",
         textWrap: "wrap",
         lineHeight: "1.6"

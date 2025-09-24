@@ -1,6 +1,10 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
 
-const ProjectImage = ({ src, alt, caption="" }) => {
+const ProjectImage = ({ src, alt, caption = "" }) => {
+  const [open, setOpen] = useState(false);
+
   const containerStyle = {
     width: "100%",
     padding: "30px",
@@ -16,12 +20,12 @@ const ProjectImage = ({ src, alt, caption="" }) => {
 
   const imgStyle = {
     width: "100%",
-    // maxWidth: "800px",
     aspectRatio: "16 / 9",
     height: "auto",
     borderRadius: "6px",
     backgroundColor: "var(--light-off-teal)",
-    objectFit: "cover"
+    objectFit: "cover",
+    cursor: "pointer"
   };
 
   const captionStyle = {
@@ -36,8 +40,46 @@ const ProjectImage = ({ src, alt, caption="" }) => {
 
   return (
     <div style={containerStyle}>
-        <img src={src} alt={alt} style={imgStyle} loading='lazy' decoding='async'/>
+        <style>
+        {`
+          .yarl__button:hover {
+            background-color: var(--light-off-teal) !important;
+            transition: all 0.2s ease !important;
+          }
+        `}
+        </style>
+        <img
+            src={src}
+            alt={alt}
+            style={imgStyle}
+            loading='lazy'
+            decoding='async'
+            onClick={() => setOpen(true)}
+        />
         {caption !== "" && <h3 style={captionStyle}>{caption}</h3>}
+
+      <Lightbox
+        open={open}
+        close={() => setOpen(false)}
+        slides={[{ src }]}
+        render={{
+            buttonPrev: () => null,
+            buttonNext: () => null,
+        }}
+        styles={{
+            container: { backgroundColor: "var(--off-white)" },
+            button : {
+                backgroundColor: "var(--off-white)",
+                color: "var(--dark-green)",
+                filter: "none",
+                borderRadius: "6px",
+                border: "2px solid var(--off-teal)"
+            },
+            slide: {
+                padding: "18px"
+            }
+        }}
+      />
     </div>
   );
 };

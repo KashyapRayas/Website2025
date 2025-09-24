@@ -22,7 +22,7 @@ const Landing = ({isLoading, onProjectSelect, isIncomingTransition}) => {
         height: "100vh",
         overflow: "hidden",
         backgroundColor: "var(--off-teal)",
-        zIndex: -1
+        zIndex: 0
     };
 
     const finalStyle = {

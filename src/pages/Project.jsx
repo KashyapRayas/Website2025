@@ -36,7 +36,7 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
         height: "100vh",
         overflow: "hidden",
         backgroundColor: "var(--off-teal)",
-        zIndex: -1
+        zIndex: 0
     }), []);
 
     const finalStyle = useMemo(() => ({

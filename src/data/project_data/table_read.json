@@ -31,23 +31,37 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_4.png",
+            "url": "/project_imgs/tr_3.png",
             "caption": "The final product, designed while vibing to music"
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_3.png",
-            "caption": ""
+            "url": "/project_imgs/tr_4.png",
+            "caption": "One of my favourite sign up pages I've designed"
+        },
+        {
+            "type": "para",
+            "text": "Here are some modals I created, each showcasing an optional feature that stays close to the main workflow. Utilizing modals for specific product features streamlines navigation by minimizing layout shifts and eliminating the need for additional pages."
         },
         {
             "type": "img",
             "url": "/project_imgs/tr_5.png",
-            "caption": ""
+            "caption": "A modal for voice cloning"
         },
         {
             "type": "img",
             "url": "/project_imgs/tr_6.png",
-            "caption": ""
+            "caption": "I do like how simple this looks"
+        },
+        {
+            "type": "img",
+            "url": "/project_imgs/tr_7.png",
+            "caption": "A simple dialogue edit with AI suggestions"
+        },
+        {
+            "type": "img",
+            "url": "/project_imgs/tr_8.png",
+            "caption": "Loaders that reference some famous quotes from films and series"
         }
     ],
     "details": {

@@ -64,16 +64,15 @@ header > .middle > .left {
             gap: 9px;
             font-size: 13px;
             transition: all 0.3s ease-in-out;
+            cursor: pointer;
         }
         a.active {
             background-color: var(--off-white);
             color: var(--off-black);
-            cursor: url('/Cursor.svg'), auto;
         }
         a:hover {
             background-color: var(--off-white);
             color: var(--off-black);
-            cursor: url('/Cursor.svg'), auto;
         }
     }
 }
@@ -99,6 +98,7 @@ header > .middle > .right {
         font-size: 13px;
         font-weight: 600;
         transition: all 0.3s ease-in-out;
+        cursor: pointer;
     }
     .nav-link.active {
         background-color: var(--off-white);

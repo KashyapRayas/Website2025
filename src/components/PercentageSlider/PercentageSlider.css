@@ -54,7 +54,7 @@
   background: var(--dark-green);
   border-radius: 50%;
   border: none;
-  cursor: url('/Cursor.svg'), auto;
+  cursor: pointer;
 }
 
 /* Firefox */
@@ -64,5 +64,5 @@
   background: var(--dark-green);
   border-radius: 50%;
   border: none;
-  cursor: url('/Cursor.svg'), auto;
+  cursor: pointer;
 }
