@@ -79,7 +79,7 @@ function App() {
             <ReactLenis
                 root
                 options={{
-                    duration: 3,
+                    duration: 5,
                     autoRaf: true
                 }}
             >

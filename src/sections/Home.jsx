@@ -1,4 +1,4 @@
-import { useState, useRef, forwardRef } from 'react'
+import { useState, useRef, forwardRef, useMemo, useCallback } from 'react'
 import gsap from 'gsap'
 import { CustomEase } from "gsap/CustomEase";
 import '../App.css'
@@ -22,39 +22,45 @@ const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
     const rectRef = useRef(null);
     const heroRef = useRef(null)
     const parallaxRef = useRef(null)
-    const firstProject = projects.projects[0];
+
+    const firstProject = useMemo(() => projects.projects[0], []);
 
     useGSAP(() => {
-        if (!rectRef.current) {
-            return;
-        }
-        CustomEase.create("wave", "M0,0 C0.6,0, 0.3,1.4, 1,1")
+        if (!rectRef.current) return;
+        CustomEase.create("wave", "M0,0 C0.6,0, 0.3,1.4, 1,1");
+
         const tween = gsap.to(rectRef.current, {
-            rotate: "360deg",
-            duration: 3,
-            ease: "wave",
-            repeat: -1,
-        })
-        return () => {
-            tween.kill();
-        };
-    }, [])
+        rotate: "360deg",
+        duration: 3,
+        ease: "wave",
+        repeat: -1,
+        });
+
+        return () => tween.kill();
+    }, []);
 
     useGSAP(() => {
-        if (parallaxRef.current) {
+        if (!parallaxRef.current || !ref.current) return;
+
         gsap.to(parallaxRef.current, {
             y: 60, // Move group up 80px on scroll. Adjust as needed.
             ease: "none",
             scrollTrigger: {
-            trigger: ref.current,
-            endTrigger: parallaxRef.current,
-            start: "top top", // Animation starts when SVG top hits viewport top
-            end: "top top", // Animation ends when SVG bottom hits viewport top
-            scrub: 1, // Smoothly ties animation to scrollbar
+                trigger: ref.current,
+                endTrigger: parallaxRef.current,
+                start: "top top", // Animation starts when SVG top hits viewport top
+                end: "top top", // Animation ends when SVG bottom hits viewport top
+                scrub: 1, // Smoothly ties animation to scrollbar
             },
         });
-        }
     }, []);
+
+    const handleRecentEnter = useCallback(() => setRecentHovered(true), []);
+    const handleRecentLeave = useCallback(() => setRecentHovered(false), []);
+    const handleRecentClick = useCallback(() => {
+        handleProjectSelect(firstProject);
+        setRecentSelected(true);
+    }, [handleProjectSelect, firstProject]);
 
     return (
         <section id={"HOME"} ref={ref}>
@@ -92,7 +98,12 @@ const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
                                 <Metric name={"FEATURES DESIGNED"} count={119} isLoaded={isLoaded}/>
                             </div>
                         </div>
-                        <div className={`second-innerwrapper ${recentSelected ? "second-innerwrapper-selected" : ""}`} onMouseEnter={() => {setRecentHovered(true);}} onMouseLeave={() => {setRecentHovered(false); }} onClick={()=>{handleProjectSelect(firstProject); setRecentSelected(true);}} >
+                        <div
+                            className={`second-innerwrapper ${recentSelected ? "second-innerwrapper-selected" : ""}`}
+                            onMouseEnter={handleRecentEnter}
+                            onMouseLeave={handleRecentLeave}
+                            onClick={handleRecentClick}
+                            >
                             <h4>RECENT WORK</h4>
                             <div className={"recent-img-wrapper"}>
                                 <div className={"recent-img"} alt="">
