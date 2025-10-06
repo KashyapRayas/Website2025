@@ -13,6 +13,10 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const [hoveredIndex, setHoveredIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(null);
 
+    gsap.config({
+        force3D: true
+    })
+
   const handRef = useRef(null);
   const imgRef = useRef(null);
 
@@ -120,7 +124,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
         {/* --- LEFT SIDE: Preview Area --- */}
         <div className="left">
           <div className="img-superwrapper">
-            {/* Floating hand SVG */}
+            <div className="hand-wrapper">
             <svg
               className="hand"
               ref={handRef}
@@ -166,6 +170,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                 </clipPath>
               </defs>
             </svg>
+            </div>
 
             {/* Decorative blocks */}
             <div className="first">

@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
 import '../App.css';
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 import Header from '../sections/Header.jsx';
 import Home from '../sections/Home.jsx';
 import { useLenis } from 'lenis/react';
@@ -8,7 +10,7 @@ import About from '../sections/About.jsx';
 import Contact from '../sections/Contact.jsx';
 import Footer from '../sections/Footer.jsx';
 
-const Landing = ({isLoading, onProjectSelect, isIncomingTransition}) => {
+const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, isPreloaderDone}) => {
     const [linkHovered, setLinkHovered] = useState(false);
     const homeRef = useRef(null);
     const aboutRef = useRef(null);
@@ -22,8 +24,24 @@ const Landing = ({isLoading, onProjectSelect, isIncomingTransition}) => {
         height: "100vh",
         overflow: "hidden",
         backgroundColor: "var(--off-teal)",
-        zIndex: 0
+        zIndex: 1,
+        clipPath: "inset(50% 50% 50% 50% round 9px)"
     };
+
+    useGSAP(()=>{
+        if (isLoaded && !isPreloaderDone) {
+            gsap.fromTo(
+                '#main-content',
+                { clipPath: "inset(50% 50% 50% 50% round 9px)" },
+                {
+                    clipPath: "inset(0% 0% 0% 0% round 0px)",
+                    duration: 2,
+                    ease: "expo.inOut",
+                    delay: 0.3
+                }
+            );
+        }
+    }, [isLoaded, isPreloaderDone])
 
     const finalStyle = {
         position: "relative",
@@ -34,12 +52,12 @@ const Landing = ({isLoading, onProjectSelect, isIncomingTransition}) => {
         zIndex: 1
     };
 
-    const currentStyle = isIncomingTransition || isLoading ? initialStyle : finalStyle;
+    const currentStyle = isIncomingTransition || !isPreloaderDone ? initialStyle : finalStyle;
 
     return (
         <div id="main-content" style={currentStyle}>
             <Header setLinkHovered={setLinkHovered} lenis={lenis} />
-            <Home linkHovered={linkHovered} isLoaded={!isLoading} handleProjectSelect={onProjectSelect} ref={homeRef}/>
+            <Home linkHovered={linkHovered} isLoaded={isPreloaderDone} handleProjectSelect={onProjectSelect} ref={homeRef}/>
             <Work ref={workRef} handleProjectSelect={onProjectSelect}/>
             <About ref={aboutRef} />
             <Contact ref={contactRef} />

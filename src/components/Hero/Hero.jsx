@@ -6,7 +6,7 @@ import {
   useMemo,
   forwardRef,
 } from "react";
-import gsap from "gsap";
+import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -42,6 +42,10 @@ const fonts = Object.freeze([
 ]);
 
 const Hero = ({ isLoaded }) => {
+
+    gsap.config({
+        force3D: true
+    })
   // Font state
   const [fontWrapperState, setFontWrapperState] = useState("Stara");
   const fontStateRef = useRef("Stara"); // avoids stale closures

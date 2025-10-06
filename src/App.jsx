@@ -1,4 +1,5 @@
-import { useState, useCallback} from "react"
+// App.jsx (No changes needed)
+import { useState, useCallback, useEffect} from "react"
 import './App.css'
 import { ReactLenis, useLenis } from 'lenis/react'
 
@@ -7,24 +8,21 @@ import TransitionLoader from './components/TransitionLoader/TransitionLoader.jsx
 import Landing from './pages/Landing.jsx'
 import Project from './pages/Project.jsx'
 
-const preloadLanding = () => {
-    import('./pages/Landing.jsx')
-}
-
-const preloadProject = () => {
-    import('./pages/Project.jsx')
-}
+// Keeping these for potential dynamic loading later, but initial preload is handled by useAssetPreloader
+const preloadLanding = () => import('./pages/Landing.jsx')
+const preloadProject = () => import('./pages/Project.jsx')
 
 function App() {
-
-    const [isInitialLoading, setIsInitialLoading] = useState(true)
+    // Start with isInitialLoading true to ensure Preloader is shown
+    const [isAssetLoaded, setIsAssetLoad] = useState(false)
+    const [isPreloaderDone, setIsPreloaderDone] = useState(false)
     const [view, setView] = useState('landing')
     const [isTransitioning, setIsTransitioning] = useState(false)
     const [transitionDirection, setTransitionDirection] = useState('out')
     const [selectedProjectName, setSelectedProjectName] = useState(null)
     const [projectToLoad, setProjectToLoad] = useState(null)
     const [corrector, setCorrector] = useState(false)
-    const lenis = useLenis()
+    const lenis = useLenis() // useLenis must be called within <ReactLenis>
 
     const handleMidway = useCallback(() => {
         if (transitionDirection === 'in') {
@@ -45,7 +43,8 @@ function App() {
         setCorrector(false)
         if (transitionDirection === "out") {
             setTimeout(() => {
-                lenis.scrollTo("#WORK", { duration: 2 });
+                // Safely scroll, lenis might not be mounted immediately if transitions are fast
+                lenis?.scrollTo("#WORK", { duration: 2 });
             }, 500);
         }
     }, [transitionDirection, lenis]);
@@ -70,41 +69,53 @@ function App() {
         setIsTransitioning(true)
     }, []);
 
+    // Callback for when Preloader finishes its full animation sequence
+    const handlePreloaderComplete = useCallback(() => {
+        setIsPreloaderDone(true)
+    }, []);
+
+    useEffect(()=> {
+        console.log(isAssetLoaded)
+    }, [isAssetLoaded])
 
     return (
         <>
-            {isInitialLoading && (
-                    <Preloader onComplete={() => setIsInitialLoading(false)} />
+            {/* Show Preloader component only when initial loading is true */}
+            {!isPreloaderDone && (
+                <Preloader onComplete={handlePreloaderComplete} onMidway={()=>setIsAssetLoad(true)}/>
             )}
+
             <ReactLenis
                 root
                 options={{
-                    duration: 5,
+                    duration: 3,
                     autoRaf: true
                 }}
             >
+                {isTransitioning && (
+                    <TransitionLoader
+                        direction={transitionDirection}
+                        onMidway={handleMidway}
+                        onComplete={handleTransitionComplete}
+                    />
+                )}
 
-            {isTransitioning && (
-                <TransitionLoader
-                    direction={transitionDirection}
-                    onMidway={handleMidway}
-                    onComplete={handleTransitionComplete}
-                />
-            )}
-
-            {view === 'landing' &&
-            <Landing
-            onProjectSelect={handleProjectSelect}
-            isLoading={isInitialLoading}
-            isIncomingTransition={isTransitioning && transitionDirection === 'out'}
-            />
-            }
-            {view === 'project' && <Project
-            handleBack={handleBackToLanding}
-            isIncomingTransition={isTransitioning && (transitionDirection === 'in' || corrector)}
-            selectedProjectName={selectedProjectName}
-            onNextProjectSelect={handleNextProjectSelect}
-            />}
+                {isAssetLoaded && view === 'landing' &&
+                    <Landing
+                        onProjectSelect={handleProjectSelect}
+                        isLoaded={isAssetLoaded}
+                        isPreloaderDone={isPreloaderDone}
+                        isIncomingTransition={isTransitioning && transitionDirection === 'out'}
+                    />
+                }
+                {view === 'project' &&
+                    <Project
+                        handleBack={handleBackToLanding}
+                        isIncomingTransition={isTransitioning && (transitionDirection === 'in' || corrector)}
+                        selectedProjectName={selectedProjectName}
+                        onNextProjectSelect={handleNextProjectSelect}
+                    />
+                }
             </ReactLenis>
         </>
     );

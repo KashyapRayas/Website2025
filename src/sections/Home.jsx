@@ -15,7 +15,7 @@ import { useGSAP } from "@gsap/react";
 
 const BASE_PATH = "/Website2025"
 
-const Home = forwardRef(({linkHovered, isLoaded, handleProjectSelect}, ref) => {
+const Home = forwardRef(({isLoaded, handleProjectSelect}, ref) => {
 
     const [recentHovered, setRecentHovered] = useState(false);
     const [recentSelected, setRecentSelected] = useState(false);

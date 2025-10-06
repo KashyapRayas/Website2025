@@ -11,12 +11,8 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
     const words = ["Boop", "Beep", "Bebop", "Blip"];
     const [word, setWord] = useState("Boop");
 
-
-
     useGSAP(() => {
         gsap.set("#transition-loader", { display: "flex", zIndex: 2 });
-
-
 
         const completeAnimation = () => {
         gsap.set("#transition-loader", { display: "none" });
@@ -24,55 +20,54 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
         };
 
         const animateContentIn = () => {
-        // Kill old timeline if exists
-        if (contentTlRef.current) {
-            contentTlRef.current.kill();
-            contentTlRef.current = null;
-        }
-
-        const randomWord = gsap.utils.random(words, true);
-        setWord(randomWord);
-
-        const isIn = direction === "in" || direction === "loop";
-        const target = isIn ? "#project-content" : "#main-content";
-
-        gsap.set(target, { zIndex: 3 });
-
-        const tl = gsap.timeline({ onComplete: completeAnimation });
-
-        tl.to("#boop", {
-            y: "0%",
-            duration: 0.5,
-            ease: "power5.out",
-            })
-            .to("#boop span", {
-            opacity: 1,
-            duration: 0.2,
-            ease: "power2.in",
-            }, "<0.4")
-            .to("#boop span", {
-            opacity: 0,
-            duration: 0.2,
-            ease: "power2.out",
-            delay: 0.3,
-            })
-            .to("#boop", {
-            y: "-110%",
-            duration: 0.5,
-            ease: "power2.in",
-            delay: 0,
-            }, "-=0.2")
-            .fromTo(
-            target,
-            { clipPath: "inset(50% 50% 50% 50% round 9px)" },
-            {
-                clipPath: "inset(0% 0% 0% 0% round 0px)",
-                duration: 2,
-                ease: "expo.inOut",
+            // Kill old timeline if exists
+            if (contentTlRef.current) {
+                contentTlRef.current.kill();
+                contentTlRef.current = null;
             }
-            );
 
-        contentTlRef.current = tl;
+            const randomWord = gsap.utils.random(words, true);
+            setWord(randomWord);
+
+            const isIn = direction === "in" || direction === "loop";
+            const target = isIn ? "#project-content" : "#main-content";
+
+            gsap.set(target, { zIndex: 3 });
+
+            const tl = gsap.timeline({ onComplete: completeAnimation });
+
+            tl.to("#boop", {
+                y: "0%",
+                duration: 0.5,
+                ease: "power5.out",
+                })
+                .to("#boop span", {
+                opacity: 1,
+                duration: 0.2,
+                ease: "power2.in",
+                }, "<0.4")
+                .to("#boop span", {
+                opacity: 0,
+                duration: 0.2,
+                ease: "power2.out",
+                delay: 0.3,
+                })
+                .to("#boop", {
+                y: "-110%",
+                duration: 0.5,
+                ease: "power2.in",
+                delay: 0,
+                }, "-=0.2")
+                .fromTo(
+                target,
+                { clipPath: "inset(50% 50% 50% 50% round 9px)" },
+                {
+                    clipPath: "inset(0% 0% 0% 0% round 0px)",
+                    duration: 2,
+                    ease: "expo.inOut",
+                }
+                );
+            contentTlRef.current = tl;
         };
 
         const midwayAnimation = () => {
@@ -90,7 +85,7 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
 
         // Initial transition loader timeline
         const tl = gsap.timeline({
-        onComplete: midwayAnimation,
+            onComplete: midwayAnimation,
         });
 
         if (direction === "in") {
