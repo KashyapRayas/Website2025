@@ -35,7 +35,6 @@ const WavingMan = () => (
 
 const AnimatedMan = ({isLoaded}) => {
     const container = useRef(null);
-    const [leftpx, setLeftpx] = useState(window.innerWidth < 1200 ? 342 : 392)
 
     useGSAP(() => {
         if(isLoaded) {
@@ -75,25 +74,8 @@ const AnimatedMan = ({isLoaded}) => {
 
     }, { scope: container, dependencies: [isLoaded] });
 
-    useGSAP(() => {
-        const handleResize = () => {
-            setLeftpx(window.innerWidth < 1200 ? 342 : 392);
-        };
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    const containerStyle = {
-        position: "absolute",
-        width: 36,
-        height: 48,
-        left: leftpx,
-        bottom: -12,
-        zIndex: 5
-    }
-
     return (
-        <div ref={container} style={containerStyle}>
+        <div ref={container}>
             <WavingMan />
         </div>
     );

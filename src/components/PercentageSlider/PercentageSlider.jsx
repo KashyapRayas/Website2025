@@ -5,7 +5,7 @@ import "./PercentageSlider.css"; // Import the CSS for slider-specific styles
 // Defining styles outside the component prevents them from being recreated on every render.
 const containerStyle = {
   width: "100%",
-  height: "100%",
+  height: "max-content",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -14,8 +14,9 @@ const containerStyle = {
 };
 
 const squareStyle = {
-  width: "345px",
-  height: "345px",
+  width: "100%",
+  height: "100%",
+  aspectRatio: "1 / 1",
   backgroundColor: "var(--dark-green)", // Dark gray-green from the image
   borderRadius: "6px",
   display: "flex",

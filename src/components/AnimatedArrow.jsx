@@ -90,6 +90,7 @@ const AnimatedArrow = ({ isActive = false }) => {
         // Start with display: 'none' to match the default inactive state
         display: "none",
         width: "36px",
+        flex: "0 0 36px",
         height: "30px",
         backgroundColor: "transparent",
         borderRadius: "6px",
@@ -102,6 +103,7 @@ const AnimatedArrow = ({ isActive = false }) => {
     const svgStyle = {
         width: "22px",
         height: "22px",
+        flex: "0 0 22px",
         transform: "rotate(-90deg)",
         color: "var(--dark-green)",
         flexShrink: 0,

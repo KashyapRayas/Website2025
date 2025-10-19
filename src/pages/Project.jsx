@@ -146,7 +146,7 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                 </div>
 
                 <div className={"middle"}>
-                                        <div className={"left"}>
+                    <div className={"left"}>
                         <div className={"sticky-div"}>
                             <div className={"menu"}>
                                 <div className={"nav-link"} onClick={handleBack}>
@@ -228,6 +228,16 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                             }
                             return null;
                         })}
+                        <div className={`project`} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={() => {onNextProjectSelect({ name: nextWorkTitle, description: nextWorkDescription })}}>
+                            <div className={"title"}>
+                                <AnimatedArrow isActive={!hovered} />
+                                <h3>{nextWorkTitle}</h3>
+                                <AnimatedArrow isActive={hovered} />
+                            </div>
+                            <div className={"description"}>
+                                <p>{nextWorkDescription}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

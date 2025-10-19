@@ -1,9 +1,11 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import '../App.css';
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Header from '../sections/Header.jsx';
+import HeaderMobile from '../sections/HeaderMobile.jsx';
 import Home from '../sections/Home.jsx';
+import HomeMobile from '../sections/HomeMobile.jsx';
 import { useLenis } from 'lenis/react';
 import Work from '../sections/Work.jsx';
 import About from '../sections/About.jsx';
@@ -17,6 +19,34 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, isPreloaderDo
     const workRef = useRef(null);
     const contactRef = useRef(null);
     const lenis = useLenis();
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const resizeTimeoutRef = useRef(null);
+    const lastWidthRef = useRef(window.innerWidth);
+
+    // Separate effect for handling resize with debounce
+    useEffect(() => {
+        const handleResize = () => {
+            clearTimeout(resizeTimeoutRef.current);
+
+            resizeTimeoutRef.current = setTimeout(() => {
+                const currentWidth = window.innerWidth;
+                const wasMobile = isMobile;
+                const isMobileNow = currentWidth < 768;
+
+                // Only update state if mobile status actually changed
+                if (wasMobile !== isMobileNow) {
+                    setIsMobile(isMobileNow);
+                    lastWidthRef.current = currentWidth;
+                }
+            }, 250); // Debounce for 250ms to avoid address bar triggering reload
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            clearTimeout(resizeTimeoutRef.current);
+        };
+    }, [isMobile]);
 
     const initialStyle = {
         position: "relative",
@@ -53,11 +83,13 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, isPreloaderDo
     };
 
     const currentStyle = isIncomingTransition || !isPreloaderDone ? initialStyle : finalStyle;
+    const HomeComponent = isMobile ? HomeMobile : Home;
+    const HeaderComponent = isMobile ? HeaderMobile : Header;
 
     return (
         <div id="main-content" style={currentStyle}>
-            <Header setLinkHovered={setLinkHovered} lenis={lenis} />
-            <Home linkHovered={linkHovered} isLoaded={isPreloaderDone} handleProjectSelect={onProjectSelect} ref={homeRef}/>
+            <HeaderComponent setLinkHovered={setLinkHovered} lenis={lenis} />
+            <HomeComponent linkHovered={linkHovered} isLoaded={isPreloaderDone} handleProjectSelect={onProjectSelect} ref={homeRef}/>
             <Work ref={workRef} handleProjectSelect={onProjectSelect}/>
             <About ref={aboutRef} />
             <Contact ref={contactRef} />

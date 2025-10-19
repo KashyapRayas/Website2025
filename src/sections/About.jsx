@@ -149,31 +149,33 @@ const About = forwardRef((_, ref) => {
             </h3>
           </div>
 
-          {/* Enjoy + Goals */}
-          <div className="third">
-            <div className="third-left">
-              <h4>THINGS I CURRENTLY ENJOY</h4>
-              <div className="list">
-                {currentEnjoy.map((item, i) => (
-                  <ListItem key={i} icon={star} text={item.text} span={item.span} />
-                ))}
-              </div>
-            </div>
+            <a
+                href="mailto:kashyap.rayas@gmail.com"
+                className="resume"
+                onMouseEnter={handleEnter}
+                onMouseLeave={handleLeave}
+            >
+                <AnimatedArrow isActive={!resumeHovered} />
+                <h4>
+                DOWNLOAD <span>RESUME</span>
+                </h4>
+                <AnimatedArrow isActive={resumeHovered} />
+            </a>
 
-            <div className="third-right">
-              <h4>THINGS I HOPE TO COMPLETE</h4>
-              <div className="list">
-                {goals.map((item, i) => (
-                  <ListItem
-                    key={i}
-                    icon={item.checked ? checked : unchecked}
-                    text={item.text}
-                    span={item.span}
-                  />
-                ))}
-              </div>
+            <div className="third-wrapper-new">
+                    <div className="third">
+                        <h4>ABOUT WEBSITE</h4>
+                        <h3>
+                            This website is an abstract extension of myself, a space shaped
+                            by the things I love and enjoy. Its modular, cell-like elements
+                            reflect my logical and structured side, while they drift within
+                            a chaotic, creative pool of green.
+                        </h3>
+                    </div>
+                    <div className="s2">
+                        <AnimatedDownwardSmiley isActive={true} />
+                    </div>
             </div>
-          </div>
         </div>
 
         {/* --- LEFT SIDE --- */}
@@ -188,40 +190,36 @@ const About = forwardRef((_, ref) => {
             </div>
           </div>
 
-          <div className="second">
+            <div className="third-new">
+                <div className="third-left">
+                    <h4>THINGS I CURRENTLY ENJOY</h4>
+                    <div className="list">
+                    {currentEnjoy.map((item, i) => (
+                        <ListItem key={i} icon={star} text={item.text} span={item.span} />
+                    ))}
+                    </div>
+                </div>
+                <div className="third-right">
+                    <h4>THINGS I HOPE TO COMPLETE</h4>
+                    <div className="list">
+                    {goals.map((item, i) => (
+                        <ListItem
+                        key={i}
+                        icon={item.checked ? checked : unchecked}
+                        text={item.text}
+                        span={item.span}
+                        />
+                    ))}
+                    </div>
+                </div>
+            </div>
+
+          {/* <div className="second">
             <h4>EXPERIENCE</h4>
             {experiences.map((exp, i) => (
               <ExperienceBlock key={i} company={exp.company} experiences={exp.roles} />
             ))}
-          </div>
-
-          <a
-            href="mailto:kashyap.rayas@gmail.com"
-            className="resume"
-            onMouseEnter={handleEnter}
-            onMouseLeave={handleLeave}
-          >
-            <AnimatedArrow isActive={!resumeHovered} />
-            <h4>
-              DOWNLOAD <span>RESUME</span>
-            </h4>
-            <AnimatedArrow isActive={resumeHovered} />
-          </a>
-
-          <div className="third-wrapper">
-            <div className="s2">
-              <AnimatedDownwardSmiley isActive={true} />
-            </div>
-            <div className="third">
-              <h4>ABOUT WEBSITE</h4>
-              <h3>
-                This website is an abstract extension of myself, a space shaped
-                by the things I love and enjoy. Its modular, cell-like elements
-                reflect my logical and structured side, while they drift within
-                a chaotic, creative pool of green.
-              </h3>
-            </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

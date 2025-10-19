@@ -39,8 +39,9 @@ header > .middle > .left {
         }
     }
     .green-rectangle {
+        position: relative;
         background-color: #006352;
-        width: 100%;
+width: 100%;
         height: 100%;
     }
     .links {
@@ -48,7 +49,9 @@ header > .middle > .left {
         justify-content: center;
         gap: 1px;
         background-color: var(--off-teal);
-        width: 231px;
+        min-width: 231px;
+        max-width: 231px;
+        height: 100%;
         box-sizing: border-box;
         padding: 0 0 1px 0;
         a {
@@ -56,7 +59,7 @@ header > .middle > .left {
             background-color: var(--light-off-teal);
             color: var(--dark-green);
             border-radius: 9px;
-            width: 150px;
+            width: 100%;
             height: 100%;
             display: flex;
             justify-content: center;

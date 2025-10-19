@@ -98,7 +98,7 @@ const AnimatedLegWiggle = forwardRef((props, ref) => {
         position: "absolute",
         width: 36,
         height: 48,
-        right: 100,
+        left: 0,
         bottom: -13,
         zIndex: 5,
         transform: "scaleX(-1)"

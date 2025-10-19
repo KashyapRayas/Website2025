@@ -157,7 +157,7 @@
 
         .title {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0px;
             h3 {
                 margin: 0;
@@ -165,6 +165,8 @@
                 font-weight: 700;
                 font-size: 24px;
                 color: var(--off-black);
+                min-width: 0;
+                word-break: break-word;
             }
         }
         .description {
@@ -184,4 +186,10 @@
         background-color: var(--off-white);
     }
 
+}
+
+@media (max-width: 760px) {
+    #WORK > .middle > .left {
+        display: none;
+    }
 }

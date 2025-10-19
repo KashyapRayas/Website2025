@@ -14,8 +14,8 @@ const preloadProject = () => import('./pages/Project.jsx')
 
 function App() {
     // Start with isInitialLoading true to ensure Preloader is shown
-    const [isAssetLoaded, setIsAssetLoad] = useState(false)
-    const [isPreloaderDone, setIsPreloaderDone] = useState(false)
+    const [isAssetLoaded, setIsAssetLoad] = useState(false) //change
+    const [isPreloaderDone, setIsPreloaderDone] = useState(false)  //change
     const [view, setView] = useState('landing')
     const [isTransitioning, setIsTransitioning] = useState(false)
     const [transitionDirection, setTransitionDirection] = useState('out')

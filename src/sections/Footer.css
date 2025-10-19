@@ -104,8 +104,38 @@ footer > .middle > .left {
     border-radius: 0px 9px 9px 0px;
     overflow: hidden;
     img {
-        position: absolute;
         height: 140px;
-        width: 636px;
+        width: 100%;
     }
+}
+
+@media screen and (max-width: 760px) {
+
+    footer {
+        height: max-content;
+    }
+
+    footer > .middle {
+        flex-direction: column;
+    }
+
+    footer > .middle > .left {
+        display: none;
+    }
+
+    footer > .middle > .right {
+        justify-content: flex-start;
+        gap: 30px;
+    }
+
+    footer > .middle > .right > .wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 30px;
+    }
+
+    footer > .middle > .right > .wrapper > .right-links {
+        align-items: start;
+    }
+
 }

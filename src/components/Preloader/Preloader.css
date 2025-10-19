@@ -55,6 +55,8 @@
 	overflow: hidden; /* Hides the text as it slides in/out */
 	font-size: 24px;
 	font-weight: 400;
+    text-wrap: wrap;
+    min-width: 0;
     width: max-content;
     height: max-content;
     color: var(--off-black);

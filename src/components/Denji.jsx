@@ -1,5 +1,4 @@
-// src/components/Denji.jsx
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
@@ -8,7 +7,6 @@ import denji from "/denji.svg";
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
-// --- STYLES ---
 const containerStyle = {
   position: "relative",
   width: "100%",
@@ -19,15 +17,8 @@ const containerStyle = {
   justifyContent: "center",
   alignItems: "end",
   overflow: "hidden",
-  paddingTop: "18px",
+  padding: "18px 18px 0 18px",
   boxSizing: "border-box",
-};
-
-const imgStyle = {
-  position: "relative",
-  zIndex: 6,
-  bottom: "-60px",
-  height: "100%",
 };
 
 const baseRectStyle = {
@@ -43,10 +34,29 @@ const rectConfigs = [
   { zIndex: 2, backgroundColor: "#009178", height: "165px" },
 ];
 
-// --- COMPONENT ---
 const Denji = () => {
   const container = useRef(null);
   const denjiRef = useRef(null);
+  const scrollTriggerRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Detect mobile
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Conditional imgStyle based on device type
+  const imgStyle = {
+    position: "relative",
+    zIndex: 6,
+    bottom: "-60px",
+    ...(isMobile ? { width: "100%" } : { height: "100%" }),
+  };
 
   // Wave animation
   useGSAP(
@@ -68,22 +78,46 @@ const Denji = () => {
 
   // Scroll animation
   useGSAP(() => {
-    if (!denjiRef.current) return;
+    if (!denjiRef.current || !container.current) {
+      console.log("Denji ref not found");
+      return;
+    }
 
-    gsap.to(denjiRef.current, {
+    // Get the section element for trigger
+    const section = container.current.closest("section");
+
+    if (!section) {
+      console.log("Section not found");
+      return;
+    }
+
+    scrollTriggerRef.current = gsap.to(denjiRef.current, {
       y: -60,
       ease: "none",
       scrollTrigger: {
-        trigger: denjiRef.current,
-        endTrigger: "footer",
-        start: "top bottom",
-        end: "bottom bottom",
+        trigger: section,
+        start: "top center",
+        end: "bottom center",
         scrub: 1,
+        markers: false,
       },
-    });
+    }).scrollTrigger;
 
-    // Cleanup
-    return () => ScrollTrigger.getAll().forEach((st) => st.kill());
+    return () => {
+      if (scrollTriggerRef.current) {
+        scrollTriggerRef.current.kill();
+      }
+    };
+  }, []);
+
+  // Refresh ScrollTrigger on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.refresh());
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (

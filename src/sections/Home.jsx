@@ -1,8 +1,7 @@
 import { useState, useRef, forwardRef, useMemo, useCallback } from 'react'
 import gsap from 'gsap'
 import { CustomEase } from "gsap/CustomEase";
-import '../App.css'
-import './Home.css'
+import styles from './Home.module.css'
 import Clock from '../components/Clock'
 import lego_44 from '/lego_44.svg'
 import AnimatedArrow from '../components/AnimatedArrow'
@@ -43,14 +42,14 @@ const Home = forwardRef(({isLoaded, handleProjectSelect}, ref) => {
         if (!parallaxRef.current || !ref.current) return;
 
         gsap.to(parallaxRef.current, {
-            y: 60, // Move group up 80px on scroll. Adjust as needed.
+            y: 60,
             ease: "none",
             scrollTrigger: {
                 trigger: ref.current,
                 endTrigger: parallaxRef.current,
-                start: "top top", // Animation starts when SVG top hits viewport top
-                end: "top top", // Animation ends when SVG bottom hits viewport top
-                scrub: 1, // Smoothly ties animation to scrollbar
+                start: "top top",
+                end: "top top",
+                scrub: 1,
             },
         });
     }, []);
@@ -63,21 +62,23 @@ const Home = forwardRef(({isLoaded, handleProjectSelect}, ref) => {
     }, [handleProjectSelect, firstProject]);
 
     return (
-        <section id={"HOME"} ref={ref}>
-            <div className={"extremes-wrapper-left"}>
-                <div className={"extremes"}></div>
+        <section id={"HOME"} ref={ref} className={styles.home}>
+            <div className={styles.extremesWrapperLeft}>
+                <div className={styles.extremes}></div>
             </div>
 
-            <div className={"middle"}>
-                <div className={"right"}>
-                    <div className={"first"}>
-                        <AnimatedMan isLoaded={isLoaded}/>
+            <div className={styles.middle}>
+                <div className={styles.right}>
+                    <div className={styles.first}>
+                        <div className={styles.manWrapper}>
+                            <AnimatedMan isLoaded={isLoaded} />
+                        </div>
                         <h1>Unconventional <span>ideas</span><span>,</span> minimalist <span>execution</span><span>.</span>
                         </h1>
                         <h2>
-                            Hello! I’m <span> Kashyap Rayas.</span> I architect 0-1 products that are intuitive for users and straightforward for developers.
+                            Hello! I'm <span> Kashyap Rayas.</span> I architect 0-1 products that are intuitive for users and straightforward for developers.
                         </h2>
-                        <div className={"time"}>
+                        <div className={styles.time}>
                             <svg ref={rectRef} width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M3.70596 1.00568C4.02063 0.331439 4.97937 0.33144 5.29404 1.00568L6.17762 2.89892C6.26466 3.08542 6.41458 3.23534 6.60108 3.32238L8.49432 4.20596C9.16856 4.52063 9.16856 5.47937 8.49432 5.79404L6.60108 6.67762C6.41458 6.76466 6.26466 6.91458 6.17762 7.10108L5.29404 8.99432C4.97937 9.66856 4.02063 9.66856 3.70595 8.99432L2.82238 7.10108C2.73534 6.91458 2.58542 6.76466 2.39892 6.67762L0.505681 5.79404C-0.168561 5.47937 -0.16856 4.52063 0.505682 4.20595L2.39892 3.32238C2.58542 3.23534 2.73534 3.08542 2.82238 2.89892L3.70596 1.00568Z" fill="currentColor"/>
                             </svg>
@@ -85,80 +86,131 @@ const Home = forwardRef(({isLoaded, handleProjectSelect}, ref) => {
                             <h3>GMT +0530</h3>
                         </div>
                     </div>
-                    <div className={"second"}>
-                        <svg className={'home-rounder-1'} xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
+                    <div className={styles.second}>
+                        <svg
+                            className={styles.homeRounder1}
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="9"
+                            height="9"
+                            viewBox="0 0 9 9"
+                            fill="none"
+                        >
                             <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="var(--off-teal)"/>
                         </svg>
-                        <svg className={'home-rounder-2'} xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
+                        <svg
+                            className={styles.homeRounder2}
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="9"
+                            height="9"
+                            viewBox="0 0 9 9"
+                            fill="none"
+                        >
                             <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="var(--off-teal)"/>
                         </svg>
-                        <div className={"metric-superwrapper"}>
-                            <div className={"metric-wrapper"}>
-                                <Metric name={"PRODUCTS DESIGNED"} count={10} isLoaded={isLoaded}/>
-                                <Metric name={"FEATURES DESIGNED"} count={119} isLoaded={isLoaded}/>
+                        <div className={styles.metricSuperwrapper}>
+                            <div className={styles.metricWrapper}>
+                                <Metric
+                                    name={"PRODUCTS DESIGNED"}
+                                    count={10}
+                                    isLoaded={isLoaded}
+                                />
+                                <Metric
+                                    name={"FEATURES DESIGNED"}
+                                    count={119}
+                                    isLoaded={isLoaded}
+                                />
                             </div>
                         </div>
                         <div
-                            className={`second-innerwrapper ${recentSelected ? "second-innerwrapper-selected" : ""}`}
+                            className={`${styles.secondInnerwrapper} ${
+                              recentSelected ? styles.secondInnerwrapperSelected : ""
+                            }`}
                             onMouseEnter={handleRecentEnter}
                             onMouseLeave={handleRecentLeave}
                             onClick={handleRecentClick}
-                            >
+                        >
                             <h4>RECENT WORK</h4>
-                            <div className={"recent-img-wrapper"}>
-                                <div className={"recent-img"} alt="">
-                                    <img className={"img"} src={BASE_PATH + firstProject.img} alt={firstProject.name} />
+                            <div className={styles.recentImgWrapper}>
+                                <div className={styles.recentImg}>
+                                    <img
+                                        className={styles.img}
+                                        src={BASE_PATH + firstProject.img}
+                                        alt={firstProject.name}
+                                    />
                                 </div>
                             </div>
-                            <div className={"td"}>
-                                <div className={"title"}>
-                                    <AnimatedArrow isActive={!recentHovered && isLoaded} />
+                            <div className={styles.td}>
+                                <div className={styles.title}>
+                                    <AnimatedArrow
+                                        isActive={!recentHovered && isLoaded}
+                                    />
                                     <h3>{firstProject.name}</h3>
                                     <AnimatedArrow isActive={recentHovered} />
                                 </div>
-                                    <p className={"description"}>{firstProject.description}</p>
+                                <p className={styles.description}>
+                                    {firstProject.description}
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div className={"third"}>
-                        <div className={"s2"}></div>
-                        <img className={"s3"} src={lego_44} alt="" />
-                        <div className={"s4"}></div>
-                        <div className={"s1"}></div>
+                    <div className={styles.third}>
+                        <div className={styles.s2}></div>
+                        <img className={styles.s3} src={lego_44} alt="" />
+                        <div className={styles.s4}></div>
+                        <div className={styles.s1}></div>
                     </div>
                 </div>
-                <div className={"left"}>
-                    <div className={"first"}>
-                        <div className={"hero"}>
+                <div className={styles.left}>
+                    <div className={styles.first}>
+                        <div className={styles.hero}>
                             <Hero ref={heroRef} isLoaded={isLoaded}/>
                         </div>
-                        <div className={"cell"}></div>
+                        <div className={styles.cell}></div>
                     </div>
-                    <div className={"second"}>
-                        <div className={"s2"}>
-                            <AnimatedDownwardArrow isLoaded={isLoaded} isActive={true} />
+                    <div className={styles.second}>
+                        <div className={styles.s2}>
+                            <AnimatedDownwardArrow
+                                isLoaded={isLoaded}
+                                isActive={true}
+                            />
                         </div>
-                        <div className={"s1"}>
-                            <div className={"chest-window"}>
-                                <svg ref={parallaxRef} width="40" height="162" viewBox="0 0 40 162" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M23.5 1C13 23 1.4 138.755 1 161.866" stroke="var(--off-white)" strokeWidth="1.8"/>
-                                <circle cx="34" cy="19" r="6" fill="var(--dark-green)"/>
-                                <circle cx="27" cy="73" r="6" fill="var(--dark-green)"/>
-                                <circle cx="22" cy="125.866" r="6" fill="var(--dark-green)"/>
+                        <div className={styles.s1}>
+                            <div className={styles.chestWindow}>
+                                <svg
+                                    ref={parallaxRef}
+                                    width="40"
+                                    height="162"
+                                    viewBox="0 0 40 162"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M23.5 1C13 23 1.4 138.755 1 161.866"
+                                        stroke="var(--off-white)"
+                                        strokeWidth="1.8"
+                                    />
+                                    <circle cx="34" cy="19" r="6" fill="var(--dark-green)"/>
+                                    <circle cx="27" cy="73" r="6" fill="var(--dark-green)"/>
+                                    <circle cx="22" cy="125.866" r="6" fill="var(--dark-green)"/>
                                 </svg>
                             </div>
                         </div>
                     </div>
-                    <div className={"third"}>
+                    <div className={styles.third}>
                         <h4>NARRATOR'S NOTE</h4>
-                        <h3>For the past two years, Kashyap has immersed himself in the world of product design, nurturing his dream of becoming a leading design engineer. He is shy and known to daydream from time to time.</h3>
+                        <h3>
+                            For the past two years, Kashyap has immersed himself
+                            in the world of product design, nurturing his dream of
+                            becoming a leading design engineer. He is shy and known
+                            to daydream from time to time.
+                        </h3>
                     </div>
                 </div>
 
             </div>
 
-            <div className={"extremes-wrapper-right"}>
-                <div className={"extremes"}></div>
+            <div className={styles.extremesWrapperRight}>
+                <div className={styles.extremes}></div>
             </div>
         </section>
     );

@@ -1,5 +1,6 @@
 import React, { memo, useState } from 'react';
 import Lightbox from 'yet-another-react-lightbox';
+import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import 'yet-another-react-lightbox/styles.css';
 
 const ProjectImage = ({ src, alt, caption = "" }) => {
@@ -62,10 +63,14 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
         open={open}
         close={() => setOpen(false)}
         slides={[{ src }]}
+        plugins={[Zoom]}
         render={{
             buttonPrev: () => null,
             buttonNext: () => null,
         }}
+        zoom={{
+            maxZoomPixelRatio: 3,
+          }}
         styles={{
             container: { backgroundColor: "var(--off-white)" },
             button : {
@@ -73,7 +78,8 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
                 color: "var(--dark-green)",
                 filter: "none",
                 borderRadius: "6px",
-                border: "2px solid var(--off-teal)"
+                border: "1px solid var(--off-teal)",
+                margin: "0px 6px"
             },
             slide: {
                 padding: "18px"
