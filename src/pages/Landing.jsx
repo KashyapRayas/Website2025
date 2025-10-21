@@ -19,7 +19,7 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, isPreloaderDo
     const workRef = useRef(null);
     const contactRef = useRef(null);
     const lenis = useLenis();
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 1201);
     const resizeTimeoutRef = useRef(null);
     const lastWidthRef = useRef(window.innerWidth);
 
@@ -31,7 +31,7 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, isPreloaderDo
             resizeTimeoutRef.current = setTimeout(() => {
                 const currentWidth = window.innerWidth;
                 const wasMobile = isMobile;
-                const isMobileNow = currentWidth < 768;
+                const isMobileNow = currentWidth < 1201;
 
                 // Only update state if mobile status actually changed
                 if (wasMobile !== isMobileNow) {
@@ -50,8 +50,8 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, isPreloaderDo
 
     const initialStyle = {
         position: "relative",
-        width: "100%",
-        height: "100vh",
+        width: "100dvw",
+        height: "100dvh",
         overflow: "hidden",
         backgroundColor: "var(--off-teal)",
         zIndex: 1,

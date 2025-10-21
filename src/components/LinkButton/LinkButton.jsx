@@ -1,10 +1,16 @@
 import styles from "./LinkButton.module.css";
 
-const LinkButton = ({ isActive = false, linkName, linkTo, lenis }) => {
+const LinkButton = ({ isActive = false, linkName, linkTo = "", lenis, onClick }) => {
 	const handleClick = () => {
-		if(lenis) {
+		// Handle lenis scroll if linkTo is provided
+		if(lenis && linkTo !== "") {
             lenis.scrollTo(linkTo, {duration: 2})
         }
+
+        // Call the onClick callback if provided
+		if (onClick) {
+			onClick();
+		}
 	};
 
 	// Build the className string conditionally

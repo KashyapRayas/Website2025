@@ -18,6 +18,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     })
 
   const handRef = useRef(null);
+  const handShadowRef = useRef(null);
   const imgRef = useRef(null);
 
   // --- Find active project ---
@@ -42,6 +43,20 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     });
   }, []);
 
+useGSAP(() => {
+    if (!handShadowRef.current) return;
+    gsap.to(handShadowRef.current, {
+      y: 40,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#WORK",
+        start: "top bottom",
+        end: "top top",
+        scrub: 1,
+      },
+    });
+  }, []);
+
   // --- Project image fade + swap ---
   useGSAP(() => {
     if (!imgRef.current) return;
@@ -54,6 +69,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     if (imgRef.current.dataset.src === newSrc) return; // prevent duplicate animations
 
     const tl = gsap.timeline();
+
     tl.to(imgRef.current, {
       opacity: 0,
       duration: 0.3,
@@ -181,6 +197,11 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
             {/* Dynamic Project Image */}
             <div className="img-wrapper">
+                <div className="hand-shadow-wrapper">
+                    <svg ref={handShadowRef} className="hand-shadow" width="99" height="89" viewBox="0 0 99 89" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.275817 5.01798L2 -23H21.5L99 9.5V34C94.6 47.2 84.8333 44.1667 80 42.5C75 52.5 65.6667 51 61.5 50.5L58.5437 70.8983C57.2706 79.683 51.7037 88.169 42.854 88.8578C35.5028 89.43 30.7414 86.7896 28 83.5C11.5 88 5 75.1667 5 69.5L0.372915 13.975C0.12463 10.9956 0.0921794 8.00208 0.275817 5.01798Z" fill="var(--off-black)" fillOpacity="0.3"/>
+                    </svg>
+                </div>
               <div className="work-img-wrapper">
                 <img ref={imgRef} className="work-img" />
               </div>

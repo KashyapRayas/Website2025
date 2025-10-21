@@ -440,30 +440,4 @@ section > .middle {
     .middle {
         max-width: 1600px;
     }
-    .extremesWrapperLeft, .extremesWrapperRight {
-        width: 100%;
-    }
-}
-
-@media screen and (max-width: 1280px) {
-  .secondInnerwrapper .recentImgWrapper {
-    padding-top: 48.5px;
-  }
-
-  .secondInnerwrapper .recentImgWrapper .recentImg {
-    width: 250px;
-  }
-
-  .metricSuperwrapper {
-    width: calc(100% - 311px);
-    margin-left: 311px;
-  }
-
-  .homeRounder1 {
-    left: calc(311px - 9px);
-  }
-
-  .right .first .manWrapper {
-    left: 342px;
-  }
 }

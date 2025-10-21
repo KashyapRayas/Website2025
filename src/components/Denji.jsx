@@ -76,7 +76,7 @@ const Denji = () => {
     { scope: container }
   );
 
-  // Scroll animation
+  // Scroll animation - with proper cleanup
   useGSAP(() => {
     if (!denjiRef.current || !container.current) {
       console.log("Denji ref not found");
@@ -91,33 +91,64 @@ const Denji = () => {
       return;
     }
 
+    // Kill any existing scroll triggers for this element
+    ScrollTrigger.getAll().forEach((trigger) => {
+      if (trigger.trigger === section || trigger.target === denjiRef.current) {
+        trigger.kill();
+      }
+    });
+
+    // Create new scroll trigger
     scrollTriggerRef.current = gsap.to(denjiRef.current, {
       y: -60,
       ease: "none",
       scrollTrigger: {
         trigger: section,
-        start: "top center",
-        end: "bottom center",
+        start: "top bottom",
+        endTrigger: 'footer',
+        end: "bottom bottom",
         scrub: 1,
         markers: false,
+        onUpdate: (self) => {
+          // Ensure the trigger stays active
+          self.refresh();
+        },
       },
     }).scrollTrigger;
 
     return () => {
+      // Proper cleanup
       if (scrollTriggerRef.current) {
         scrollTriggerRef.current.kill();
+        scrollTriggerRef.current = null;
       }
     };
   }, []);
 
-  // Refresh ScrollTrigger on window resize
+  // Refresh ScrollTrigger on mount and window resize
   useEffect(() => {
+    // Refresh immediately on mount
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
+
     const handleResize = () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.refresh());
     };
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Cleanup all ScrollTriggers related to this component on unmount
+  useEffect(() => {
+    return () => {
+      if (scrollTriggerRef.current) {
+        scrollTriggerRef.current.kill();
+      }
+      // Also refresh remaining triggers to update their positions
+      ScrollTrigger.refresh();
+    };
   }, []);
 
   return (

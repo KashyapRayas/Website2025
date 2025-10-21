@@ -53,9 +53,14 @@ section > .middle {
     }
 }
 
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 1200px) {
+    section > .middle, header > .middle, footer > .middle {
+        max-width: 500px;
+    }
     .extremes-wrapper-left, .extremes-wrapper-right {
-        display: none;
+        display: block;
+        width: 100%;
+        min-width: 9px;
     }
 }
 

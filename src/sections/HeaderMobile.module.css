@@ -15,4 +15,71 @@ header > .middle {
     gap: 1px;
     width: 100%;
     padding-bottom: 1px;
+    max-width: 500px;
+}
+
+.menu-active {
+    position: fixed;
+    opacity: 1;
+    width: 100%;
+    height: 100dvh;
+    top: 0;
+    background-color: var(--off-teal);
+    z-index: 1000;
+    display: flex;
+    justify-content: start;
+    gap: 1px;
+    flex-direction: column;
+    transition: 0.3s all ease-in-out;
+    pointer-events: all;
+}
+
+.menu-inactive {
+    position: fixed;
+    opacity: 0;
+    width: 100%;
+    height: 100dvh;
+    top: 0;
+    background-color: var(--off-teal);
+    z-index: 1000;
+    display: flex;
+    justify-content: start;
+    gap: 1px;
+    flex-direction: column;
+    pointer-events: none;
+    transition: 0.3s all ease-in-out;
+}
+
+.links {
+    display: flex;
+    justify-content: center;
+    gap: 1px;
+    background-color: var(--off-teal);
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0 0 1px 0;
+    a {
+        text-decoration: none;
+        background-color: var(--light-off-teal);
+        color: var(--dark-green);
+        border-radius: 9px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 9px;
+        font-size: 13px;
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+    }
+    a.active {
+        background-color: var(--off-white);
+        color: var(--off-black);
+    }
+    a:hover {
+        background-color: var(--off-white);
+        color: var(--off-black);
+    }
 }

@@ -32,8 +32,8 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
         position: "absolute",
         top: 0,
         left: 0,
-        width: "100%",
-        height: "100vh",
+        width: "100dvw",
+        height: "100dvh",
         overflow: "hidden",
         backgroundColor: "var(--off-teal)",
         zIndex: 0
@@ -228,6 +228,12 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                             }
                             return null;
                         })}
+                        <div className={"menu"}>
+                            <div className={"nav-link"} onClick={handleBack}>
+                                BACK
+                            </div>
+                            {details.projectLink? <div className={"nav-link website"} onClick={() => window.open(details.projectLink, "_blank")}>GO TO WEBSITE</div> : <div className="cell"></div>}
+                        </div>
                         <div className={`project`} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={() => {onNextProjectSelect({ name: nextWorkTitle, description: nextWorkDescription })}}>
                             <div className={"title"}>
                                 <AnimatedArrow isActive={!hovered} />

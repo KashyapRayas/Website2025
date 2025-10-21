@@ -109,7 +109,7 @@ footer > .middle > .left {
     }
 }
 
-@media screen and (max-width: 760px) {
+@media screen and (max-width: 1200px) {
 
     footer {
         height: max-content;

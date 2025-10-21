@@ -49,6 +49,7 @@ section {
     align-items: flex-start;
     gap: 1px;
     overflow: hidden;
+    max-width: 500px;
 }
 
 .left {

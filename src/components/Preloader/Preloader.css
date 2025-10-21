@@ -1,7 +1,7 @@
 #preloader {
 	position: fixed;
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
 	inset: 0;
 	z-index: 0;
 	background-color: var(--off-white);
@@ -61,7 +61,6 @@
     height: max-content;
     color: var(--off-black);
     padding: 16px;
-
     span:nth-child(1) {
         font-weight: 600;
         font-family: 'Lora';
@@ -69,5 +68,35 @@
     span:nth-child(2) {
         font-weight: 600;
         color: var(--dark-green);
+    }
+}
+
+.mobile-info {
+    display: none;
+    width: 100%;
+    position: absolute;
+    font-size: 15px;
+    color: var(--off-black-06);
+    text-align: center;
+    top: 30px;
+    left: 0px;
+    text-wrap: wrap;
+    padding: 0 30px;
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 1200px) {
+    .mobile-info {
+        display: block;
+    }
+}
+
+@media screen and (max-height: 400px) and (orientation: landscape) {
+    .quote-line {
+        font-size: 21px;
+        padding: 12px;
+    }
+    .counter-wrapper {
+        font-size: 24px;
     }
 }

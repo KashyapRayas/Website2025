@@ -63,8 +63,8 @@ const Home = forwardRef(({isLoaded, handleProjectSelect}, ref) => {
 
     return (
         <section id={"HOME"} ref={ref} className={styles.home}>
-            <div className={styles.extremesWrapperLeft}>
-                <div className={styles.extremes}></div>
+            <div className={"extremes-wrapper-left"}>
+                <div className={"extremes"}></div>
             </div>
 
             <div className={styles.middle}>
@@ -209,8 +209,8 @@ const Home = forwardRef(({isLoaded, handleProjectSelect}, ref) => {
 
             </div>
 
-            <div className={styles.extremesWrapperRight}>
-                <div className={styles.extremes}></div>
+            <div className={"extremes-wrapper-right"}>
+                <div className={"extremes"}></div>
             </div>
         </section>
     );

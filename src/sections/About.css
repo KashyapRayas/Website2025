@@ -487,13 +487,7 @@
     }
 }
 
-@media screen and (max-width: 1280px) {
-    #ABOUT > .middle > .right > .first > h3 {
-        font-size: 36px;
-    }
-}
-
-@media screen and (max-width: 760px) {
+@media screen and (max-width: 1200px) {
 
     #ABOUT > .middle {
         flex-direction: column;

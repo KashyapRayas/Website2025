@@ -14,12 +14,12 @@ const Preloader = ({ onComplete, onMidway }) => {
     const thirdTimeline = useRef(null);
     const counterTextRef = useRef(null);
     const animatedCounterValue = useRef({ value: 0 });
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 1201);
 
     // Handle window resize to detect mobile
     useEffect(() => {
         const handleResize = () => {
-            setIsMobile(window.innerWidth < 768);
+            setIsMobile(window.innerWidth < 1201);
         };
 
         window.addEventListener('resize', handleResize);
@@ -43,8 +43,8 @@ const Preloader = ({ onComplete, onMidway }) => {
         tl3.to(
             ".preloader-box",
             {
-                width: "100%",
-                height: "100%",
+                width: "100dvw",
+                height: "100dvh",
                 borderRadius: 0,
                 duration: 2,
                 ease: "expo.inOut",
@@ -66,10 +66,10 @@ const Preloader = ({ onComplete, onMidway }) => {
         tl2.to(counterTextRef.current, { yPercent: -205, duration: 0.6, ease: "power2.in" });
         tl2.set(counterTextRef.current, { display: "none" });
 
-        tl2.from(".quote-text.top", { yPercent: 140, duration: 0.6, ease: "power2.out" }, "<0");
-        tl2.from(".quote-text.bottom", { yPercent: -140, duration: 0.6, ease: "power2.out" }, "+=1");
-        tl2.to(".quote-text.top", { yPercent: 140, duration: 0.6, ease: "power2.in" }, "+=1");
-        tl2.to(".quote-text.bottom", { yPercent: -140, duration: 0.6, ease: "power2.in" });
+        tl2.from(".quote-text.top", { yPercent: 155, duration: 0.6, ease: "power2.out" }, "<0");
+        tl2.from(".quote-text.bottom", { yPercent: -155, duration: 0.6, ease: "power2.out" }, "+=1");
+        tl2.to(".quote-text.top", { yPercent: 155, duration: 0.6, ease: "power2.in" }, "+=1");
+        tl2.to(".quote-text.bottom", { yPercent: -155, duration: 0.6, ease: "power2.in" });
         tl2.set(".quote-line", { display: "none" });
 
         secondTimeline.current = tl2;
@@ -84,7 +84,7 @@ const Preloader = ({ onComplete, onMidway }) => {
             // Mobile: 90% width of device with 16/9 aspect ratio
             const deviceWidth = window.innerWidth;
             boxWidth = deviceWidth * 0.9;
-            boxHeight = 200
+            window.innerHeight < 400 ? boxHeight = 60 : boxHeight = 200
         } else {
             // Desktop: original calculation
             boxHeight = 200;
@@ -136,6 +136,11 @@ const Preloader = ({ onComplete, onMidway }) => {
 
     return (
         <div id="preloader">
+
+            <div className="mobile-info">
+                Best experienced on desktops.
+            </div>
+
             <div className="preloader-content-wrapper">
                 <div className="quote-line">
                     <div className="quote-text top">
@@ -151,13 +156,13 @@ const Preloader = ({ onComplete, onMidway }) => {
                 </div>
                 <div className="quote-line">
                     <div className="quote-text bottom">
-                        we must <span>see through it</span><span>.</span>
+                        we first <span>see through it</span><span>.</span>
                     </div>
                 </div>
             </div>
 
             {/* Optional: Debug info - remove in production */}
-            {process.env.NODE_ENV === 'development' && (
+            {/* {process.env.NODE_ENV === 'development' && (
                 <div style={{
                     position: 'fixed',
                     top: '20px',
@@ -171,7 +176,7 @@ const Preloader = ({ onComplete, onMidway }) => {
                 }}>
                     Loading progress: {progress}% (Complete: {isComplete ? 'Yes' : 'No'})
                 </div>
-            )}
+            )} */}
         </div>
     );
 };
