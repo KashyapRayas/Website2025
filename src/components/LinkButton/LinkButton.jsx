@@ -1,6 +1,6 @@
 import styles from "./LinkButton.module.css";
 
-const LinkButton = ({ isActive = false, linkName, linkTo = "", lenis, onClick }) => {
+const LinkButton = ({ isActive = false, linkName, linkTo = "", lenis, onClick, size="small"}) => {
 	const handleClick = () => {
 		// Handle lenis scroll if linkTo is provided
 		if(lenis && linkTo !== "") {
@@ -14,7 +14,7 @@ const LinkButton = ({ isActive = false, linkName, linkTo = "", lenis, onClick })
 	};
 
 	// Build the className string conditionally
-	const buttonClassName = `${styles.navLink} ${isActive ? styles.active : ""}`;
+	const buttonClassName = `${styles.navLink} ${size === "large" ? styles.large : ""} ${isActive ? styles.active : ""}`;
 
 	return (
 		// Use the combined className string

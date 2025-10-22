@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react';
-import '../App.css';
 import './Project.css';
 import ProjectBigText from '../components/ProjectBigText';
 import ProjectParaText from '../components/ProjectParaText';

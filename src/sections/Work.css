@@ -178,13 +178,15 @@
             display: flex;
             align-items: flex-start;
             gap: 0px;
+            width: 100%;
+            min-width: 0;
             h3 {
                 margin: 0;
                 padding: 0 14px 0 0;
                 font-weight: 700;
                 font-size: 24px;
                 color: var(--off-black);
-                min-width: 0;
+                text-wrap: wrap;
                 word-break: break-word;
             }
         }

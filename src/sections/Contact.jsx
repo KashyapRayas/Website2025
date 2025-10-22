@@ -1,5 +1,4 @@
 import { useState, forwardRef } from 'react'
-import '../App.css'
 import './Contact.css'
 import Denji from '../components/Denji'
 import AnimatedArrow from '../components/AnimatedArrow'

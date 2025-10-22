@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef, forwardRef, useMemo, useCallback } from "react";
-import "../App.css";
 import "./About.css";
 import lego_210 from "/lego_210.svg";
 import star from "/star.svg";

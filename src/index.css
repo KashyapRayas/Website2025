@@ -44,6 +44,12 @@
 
 }
 
+@media (prefers-contrast: more) {
+    :root {
+        --off-black-06: var(--off-black);
+    }
+}
+
 #root, html {
     width: 100%;
     box-sizing: border-box;

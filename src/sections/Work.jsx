@@ -1,5 +1,4 @@
 import { useState, useRef, forwardRef, useCallback, useMemo } from "react";
-import "../App.css";
 import "./Work.css";
 import AnimatedArrow from "../components/AnimatedArrow";
 import projectsData from "../data/projects.json";

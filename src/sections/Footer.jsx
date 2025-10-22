@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from "react";
-import "../App.css";
 import "./Footer.css";
 import footerImg from "/footer.svg";
 import AnimatedDownwardArrowSmall from "../components/AnimatedDownwardArrowSmall";

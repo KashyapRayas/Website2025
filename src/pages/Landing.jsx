@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import '../App.css';
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Header from '../sections/Header.jsx';
