@@ -71,9 +71,7 @@
             "Branding",
             "UI/UX Design"
         ],
-        "projectTitle": "TABLE READ",
+        "projectTitle": "MOVIE COLAB SUITE",
         "projectLink": "https://moviecolab.com/tableread/"
-    },
-    "nextWorkTitle": "TABLE READ",
-    "nextWorkDescription": "An AI-powered web app to simulate table reads for film scripts"
+    }
 }

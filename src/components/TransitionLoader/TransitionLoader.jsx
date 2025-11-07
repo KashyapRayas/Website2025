@@ -62,7 +62,7 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
                 target,
                 { clipPath: "inset(50% 50% 50% 50% round 9px)" },
                 {
-                    clipPath: "inset(0% 0% 0% 0% round 0px)",
+                    clipPath: "inset(0% 0% 0% 0% round 9px)",
                     duration: 2,
                     ease: "expo.inOut",
                 }

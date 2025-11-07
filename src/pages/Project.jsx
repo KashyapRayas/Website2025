@@ -8,14 +8,13 @@ import Contact from '../sections/Contact';
 import Footer from '../sections/Footer';
 import AnimatedArrow from '../components/AnimatedArrow';
 import star from '/star.svg';
+import projectsData from '../data/projects.json';
 import { useLenis } from 'lenis/react';
 
 const BASE_PATH = '/Website2025';
 
-// This mapping function will generate the path to the JSON file
 const getProjectDataPath = (projectName) => {
     if (!projectName) return null;
-    // Convert "ARTIST HUB" to "artist_hub"
     const filename = projectName.toLowerCase().replace(/\s/g, '_');
     return `../data/project_data/${filename}.json`;
 };
@@ -49,9 +48,26 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
 
     const currentStyle = isIncomingTransition ? initialStyle : finalStyle;
 
-    useEffect(() => {
+    // Calculate next project from projects.json
+    const nextProject = useMemo(() => {
+        if (!projectData?.details?.projectTitle || !projectsData?.projects) {
+            return null;
+        }
 
-    }, [])
+        const currentIndex = projectsData.projects.findIndex(
+            p => p.name === projectData.details.projectTitle
+        );
+
+        if (currentIndex === -1) return null;
+
+        const nextIndex = (currentIndex + 1) % projectsData.projects.length;
+        const nextProj = projectsData.projects[nextIndex];
+
+        return {
+            nextWorkTitle: nextProj.name,
+            nextWorkDescription: nextProj.description
+        };
+    }, [projectData]);
 
     useEffect(() => {
         let cancelled = false;
@@ -68,7 +84,7 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                 setProjectData(null);
                 return;
             }
-            const key = path; // matches the keys created by import.meta.glob
+            const key = path;
             const loader = projectModules[key];
             if (!loader) {
                 console.error(
@@ -98,10 +114,10 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
         };
     }, [selectedProjectName]);
 
-    // Prefetch next project's JSON and images as soon as we know them
+    // Prefetch next project's JSON and images
     useEffect(() => {
-        if (!projectData?.nextWorkTitle) return;
-        const nextFile = projectData.nextWorkTitle
+        if (!nextProject?.nextWorkTitle) return;
+        const nextFile = nextProject.nextWorkTitle
             .toLowerCase()
             .replace(/\s/g, '_');
         const nextKey = `../data/project_data/${nextFile}.json`;
@@ -110,19 +126,18 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
         nextLoader()
             .then((mod) => {
                 const nextData = mod.default || mod;
-                // Preload any images referenced in nextData.content
                 if (Array.isArray(nextData.content)) {
                     nextData.content
                         .filter((i) => i.type === 'img' && i.url)
                         .forEach((i) => {
                             const img = new Image();
                             img.loading = 'eager';
-                            img.src = BASE_PATH +  i.url;
+                            img.src = BASE_PATH + i.url;
                         });
                 }
             })
             .catch(() => {});
-    }, [projectData]);
+    }, [nextProject]);
 
     if (!projectData) {
         return (
@@ -134,8 +149,7 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
         );
     }
 
-    // Destructure data from loaded JSON for easier access
-    const { content, details, nextWorkTitle, nextWorkDescription } = projectData;
+    const { content, details } = projectData;
 
     return (
         <div id="project-content" style={currentStyle}>
@@ -151,7 +165,7 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                                 <div className={"nav-link"} onClick={handleBack}>
                                     BACK
                                 </div>
-                                {details.projectLink? <div className={"nav-link website"} onClick={() => window.open(details.projectLink, "_blank")}>GO TO WEBSITE</div> : <div className="cell"></div>}
+                                {details.projectLink? <div className={"nav-link website"} onClick={() => window.open(details.projectLink, "_blank")}>GO TO PROJECT</div> : <div className="cell"></div>}
                             </div>
                             <div className={"project-title"}>{details.projectTitle || selectedProjectName}</div>
                             <div className={"details-wrapper"}>
@@ -193,16 +207,18 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                                     </div>
                                 </div>
                             </div>
-                            <div className={`project`} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={() => {onNextProjectSelect({ name: nextWorkTitle, description: nextWorkDescription })}}>
-                                <div className={"title"}>
-                                    <AnimatedArrow isActive={!hovered} />
-                                    <h3>{nextWorkTitle}</h3>
-                                    <AnimatedArrow isActive={hovered} />
+                            {nextProject && (
+                                <div className={`project`} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={() => {onNextProjectSelect({ name: nextProject.nextWorkTitle, description: nextProject.nextWorkDescription })}}>
+                                    <div className={"title"}>
+                                        <AnimatedArrow isActive={!hovered} />
+                                        <h3>{nextProject.nextWorkTitle}</h3>
+                                        <AnimatedArrow isActive={hovered} />
+                                    </div>
+                                    <div className={"description"}>
+                                        <p>{nextProject.nextWorkDescription}</p>
+                                    </div>
                                 </div>
-                                <div className={"description"}>
-                                    <p>{nextWorkDescription}</p>
-                                </div>
-                            </div>
+                            )}
                             <div className={"rounder"}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
                                     <path d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z" fill="var(--off-teal)"/>
@@ -214,7 +230,6 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                         </div>
                     </div>
                     <div className={"right"}>
-                        {/* Dynamically render content based on the 'content' array */}
                         {content.map((item, index) => {
                             if (item.type === 'img') {
                                 return <ProjectImage key={index} src={BASE_PATH + item.url} alt={`Project image ${index}`} caption={item.caption} />;
@@ -231,18 +246,20 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                             <div className={"nav-link"} onClick={handleBack}>
                                 BACK
                             </div>
-                            {details.projectLink? <div className={"nav-link website"} onClick={() => window.open(details.projectLink, "_blank")}>GO TO WEBSITE</div> : <div className="cell"></div>}
+                            {details.projectLink? <div className={"nav-link website"} onClick={() => window.open(details.projectLink, "_blank")}>GO TO PROJECT</div> : <div className="cell"></div>}
                         </div>
-                        <div className={`project`} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={() => {onNextProjectSelect({ name: nextWorkTitle, description: nextWorkDescription })}}>
-                            <div className={"title"}>
-                                <AnimatedArrow isActive={!hovered} />
-                                <h3>{nextWorkTitle}</h3>
-                                <AnimatedArrow isActive={hovered} />
+                        {nextProject && (
+                            <div className={`project`} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={() => {onNextProjectSelect({ name: nextProject.nextWorkTitle, description: nextProject.nextWorkDescription })}}>
+                                <div className={"title"}>
+                                    <AnimatedArrow isActive={!hovered} />
+                                    <h3>{nextProject.nextWorkTitle}</h3>
+                                    <AnimatedArrow isActive={hovered} />
+                                </div>
+                                <div className={"description"}>
+                                    <p>{nextProject.nextWorkDescription}</p>
+                                </div>
                             </div>
-                            <div className={"description"}>
-                                <p>{nextWorkDescription}</p>
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </div>
 

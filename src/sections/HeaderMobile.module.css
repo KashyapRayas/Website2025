@@ -41,6 +41,18 @@ header > .middle {
     background-color: var(--off-teal);
     pointer-events: all;
     clip-path: inset(50% 50% 50% 50% round 9px);
+    z-index: 1;
+}
+
+.green-rect {
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    height: 100dvh;
+    background-color: var(--dark-green);
+    clip-path: inset(50% 50% 50% 50% round 9px);
+    z-index: 0;
 }
 
 .wrapper .middle {
@@ -91,6 +103,6 @@ header > .middle {
     .wrapper .middle {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        flex-direction: row; 
+        flex-direction: row;
     }
 }

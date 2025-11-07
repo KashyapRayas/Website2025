@@ -71,7 +71,7 @@ const AnimatedArrow = ({ isActive = false }) => {
                 delay: 0.3
             },
             "<"
-            );
+            )
         },
         { scope: container }
     );

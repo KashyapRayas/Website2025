@@ -77,6 +77,9 @@ header > .middle > .left {
             background-color: var(--off-white);
             color: var(--off-black);
         }
+        a:hover > svg {
+            transform: scale(0.95);
+        }
     }
 }
 

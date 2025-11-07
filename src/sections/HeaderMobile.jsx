@@ -8,6 +8,7 @@ const HeaderMobile = ({lenis}) => {
 
     const [isMenuActive, setIsMenuActive] = useState(false);
     const menuRef = useRef(null);
+    const greenRectRef = useRef(null)
     const prevMenuStateRef = useRef(false);
     const [isHomeActive, setIsHomeActive] = useState(false);
 
@@ -23,23 +24,36 @@ const HeaderMobile = ({lenis}) => {
         prevMenuStateRef.current = isMenuActive;
 
         if (isMenuActive) {
-            tl.fromTo(menuRef.current, {
+            tl.fromTo(greenRectRef.current , {
                 clipPath: "inset(50% 50% 50% 50% round 9px)",
                 height: "100dvh",
                 width: "100%",
             }, {
-                clipPath: "inset(0% 0% 0% 0% round 0px)",
+                clipPath: "inset(0% 0% 0% 0% round 9px)",
                 duration: 0.9,
                 ease: "power2.out",
-                delay: 0.6,
-            });
+            })
+            .fromTo(menuRef.current, {
+                clipPath: "inset(50% 50% 50% 50% round 9px)",
+                height: "100dvh",
+                width: "100%",
+            }, {
+                clipPath: "inset(0% 0% 0% 0% round 9px)",
+                duration: 1.2,
+                ease: "power2.out",
+            }, "<0.3");
         } else {
             tl.to(menuRef.current, {
                 clipPath: "inset(50% 50% 50% 50% round 9px)",
                 duration: 0.9,
                 ease: "power2.in",
-                delay: 0.6,
-            });
+                delay: 0.6
+            })
+            .to(greenRectRef.current, {
+                clipPath: "inset(50% 50% 50% 50% round 9px)",
+                duration: 1.2,
+                ease: "power2.in",
+            }, "<0.3");
         }
     }, [isMenuActive]);
 
@@ -93,6 +107,9 @@ const HeaderMobile = ({lenis}) => {
                     <div className={"extremes-wrapper-right"}>
                         <div className={"extremes"}></div>
                     </div>
+                </div>
+                <div className={styles["green-rect"]} ref={greenRectRef}>
+
                 </div>
             </div>
 

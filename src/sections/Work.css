@@ -101,7 +101,7 @@
             display: flex;
             justify-content: center;
             transition: opacity 0.4s ease-in-out;
-            background-color: var(--dark-green);
+            background-color: var(--light-off-teal);
 
             .work-img {
                 height: 100%;
@@ -206,7 +206,6 @@
     .project:hover, .project--active {
         background-color: var(--off-white);
     }
-
 }
 
 @media (max-width: 1200px) {
