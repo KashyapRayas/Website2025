@@ -69,6 +69,10 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
         };
     }, [projectData]);
 
+    useEffect(()=> {
+        
+    }, [projectData])
+
     useEffect(() => {
         let cancelled = false;
         const load = async () => {

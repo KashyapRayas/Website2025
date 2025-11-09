@@ -1,13 +1,17 @@
-header {
+.header {
     display: flex;
     justify-content: center;
     gap: 0;
     box-sizing: border-box;
     width: 100%;
     height: 60px;
+    position: sticky !important;
+    top: 0px;
+    z-index: 999;
+    background-color: var(--off-teal);
 }
 
-header > .middle {
+.header > .middle {
     position: relative;
     display: flex;
     justify-content: center;
@@ -42,6 +46,41 @@ header > .middle {
     pointer-events: all;
     clip-path: inset(50% 50% 50% 50% round 9px);
     z-index: 1;
+}
+
+.rounder {
+    position: absolute;
+    bottom: -8px;
+    right: 0px;
+    display: flex;
+    width: 100%;
+    height: 9px;
+    align-items: start;
+    justify-content: space-between;
+    gap: 0px;
+    border-top: 1.5px solid var(--off-teal);
+    box-sizing: border-box;
+
+    .left {
+        display: flex;
+        gap: 0px;
+        margin-left: -9.5px;
+    }
+
+    .right {
+        display: flex;
+        gap: 0px;
+        margin-right: -9.5px;
+    }
+
+    svg {
+        width: 9px;
+        height: 9px;
+    }
+
+    svg.svg-shrink-left, svg.svg-shrink-right {
+        transform: scaleX(1);
+    }
 }
 
 .green-rect {
@@ -104,5 +143,15 @@ header > .middle {
         display: grid;
         grid-template-columns: 1fr 1fr;
         flex-direction: row;
+    }
+}
+
+@media screen and (max-width: 520px) {
+    .rounder svg.svg-shrink-right {
+        transform: scaleX(0.5) translateX(-4.5px);
+    }
+
+    .rounder svg.svg-shrink-left {
+        transform: scaleX(0.5) translateX(4.5px);
     }
 }

@@ -14,8 +14,8 @@ const preloadProject = () => import('./pages/Project.jsx')
 
 function App() {
     // Start with isInitialLoading true to ensure Preloader is shown
-    const [isAssetLoaded, setIsAssetLoad] = useState(false) //change
-    const [isPreloaderDone, setIsPreloaderDone] = useState(false)  //change
+    const [isAssetLoaded, setIsAssetLoad] = useState(true) //change
+    const [isPreloaderDone, setIsPreloaderDone] = useState(true)  //change
     const [view, setView] = useState('landing')
     const [isTransitioning, setIsTransitioning] = useState(false)
     const [transitionDirection, setTransitionDirection] = useState('out')
@@ -42,9 +42,10 @@ function App() {
         setIsTransitioning(false)
         setCorrector(false)
         if (transitionDirection === "out") {
+            const isSmall = window.innerWidth <= 1201;
             setTimeout(() => {
                 // Safely scroll, lenis might not be mounted immediately if transitions are fast
-                lenis?.scrollTo("#WORK", { duration: 2 });
+                lenis?.scrollTo("#WORK", { duration: 2, offset: isSmall ? -60 : 0, });
             }, 500);
         }
     }, [transitionDirection, lenis]);
@@ -73,10 +74,6 @@ function App() {
     const handlePreloaderComplete = useCallback(() => {
         setIsPreloaderDone(true)
     }, []);
-
-    useEffect(()=> {
-        console.log(isAssetLoaded)
-    }, [isAssetLoaded])
 
     return (
         <>

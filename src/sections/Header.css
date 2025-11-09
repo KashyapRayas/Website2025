@@ -5,6 +5,7 @@ header {
     box-sizing: border-box;
     width: 100%;
     height: 60px;
+    position: relative !important;
 }
 
 header > .middle {

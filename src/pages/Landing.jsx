@@ -92,7 +92,7 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, isPreloaderDo
             <Work ref={workRef} handleProjectSelect={onProjectSelect}/>
             <About ref={aboutRef} />
             <Contact ref={contactRef} />
-            <Footer lenis={lenis} />
+            <Footer lenis={lenis} isMobile={isMobile}/>
         </div>
     );
 };

@@ -72,13 +72,13 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
 
         const midwayAnimation = () => {
         if (onMidway) {
-            console.log("reached midway - calling onMidway()");
+            // console.log("reached midway - calling onMidway()");
             onMidway();
             setTimeout(() => {
             animateContentIn();
             }, 500);
         } else {
-            console.log("No onMidway handler, animating content directly.");
+            // console.log("No onMidway handler, animating content directly.");
             animateContentIn();
         }
         };

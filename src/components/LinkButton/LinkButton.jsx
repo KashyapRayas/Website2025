@@ -1,10 +1,10 @@
 import styles from "./LinkButton.module.css";
 
-const LinkButton = ({ isActive = false, linkName, linkTo = "", lenis, onClick, size="small"}) => {
+const LinkButton = ({ isActive = false, linkName, linkTo = "", lenis, onClick, size="small", offset=false}) => {
 	const handleClick = () => {
 		// Handle lenis scroll if linkTo is provided
 		if(lenis && linkTo !== "") {
-            lenis.scrollTo(linkTo, {duration: 2})
+            lenis.scrollTo(linkTo, {duration: 2, offset: offset? -60 : 0})
         }
 
         // Call the onClick callback if provided

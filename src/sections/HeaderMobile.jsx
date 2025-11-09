@@ -57,17 +57,13 @@ const HeaderMobile = ({lenis}) => {
         }
     }, [isMenuActive]);
 
-    useEffect(() => {
-        console.log("Menu active:", isMenuActive);
-    }, [isMenuActive]);
-
     const handleMenuToggle = () => {
         setIsMenuActive(!isMenuActive);
         setIsHomeActive(!isHomeActive);
     };
 
     return (
-        <header>
+        <div className={styles["header"]}>
             <div className={styles["menu-active"]}>
                 <div className={styles["wrapper"]} ref={menuRef}>
                     <div className={"extremes-wrapper-left"}>
@@ -98,10 +94,10 @@ const HeaderMobile = ({lenis}) => {
                                 </svg>
                             </a>
                         </div>
-                        <LinkButton isActive={isHomeActive} linkName={"HOME"} linkTo={"#HOME"} lenis={lenis} onClick={handleMenuToggle} size="large"/>
-                        <LinkButton isActive={false} linkName={"WORK"} linkTo={"#WORK"} lenis={lenis} onClick={handleMenuToggle} size="large"/>
-                        <LinkButton isActive={false} linkName={"ABOUT"} linkTo={"#ABOUT"} lenis={lenis} onClick={handleMenuToggle} size="large"/>
-                        <LinkButton isActive={false} linkName={"CONTACT"} linkTo={"#CONTACT"} lenis={lenis} onClick={handleMenuToggle} size="large"/>
+                        <LinkButton isActive={isHomeActive} linkName={"HOME"} linkTo={"#HOME"} lenis={lenis} onClick={handleMenuToggle} size="large" offset={true}/>
+                        <LinkButton isActive={false} linkName={"WORK"} linkTo={"#WORK"} lenis={lenis} onClick={handleMenuToggle} size="large" offset={true}/>
+                        <LinkButton isActive={false} linkName={"ABOUT"} linkTo={"#ABOUT"} lenis={lenis} onClick={handleMenuToggle} size="large" offset={true}/>
+                        <LinkButton isActive={false} linkName={"CONTACT"} linkTo={"#CONTACT"} lenis={lenis} onClick={handleMenuToggle} size="large" offset={true}/>
                         <LinkButton isActive={false} linkName={"CLOSE MENU"} linkTo={""} lenis={lenis} onClick={handleMenuToggle} size="large"/>
                     </div>
                     <div className={"extremes-wrapper-right"}>
@@ -118,14 +114,70 @@ const HeaderMobile = ({lenis}) => {
             </div>
 
             <div className={styles["middle"]}>
-                <LinkButton isActive={!isHomeActive} linkName={"HOME"} linkTo={"#HOME"} lenis={lenis}/>
+                <div className={styles["rounder"]}>
+                    <div className={styles["left"]}>
+                        <svg
+                        className={styles["svg-shrink-left"]}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="9"
+                        height="9"
+                        viewBox="0 0 9 9"
+                        fill="none"
+                        >
+                        <path
+                        d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z"
+                        fill="var(--off-teal)"
+                        />
+                        </svg>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="9"
+                            height="9"
+                            viewBox="0 0 9 9"
+                            fill="none"
+                        >
+                            <path
+                            d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z"
+                            fill="var(--off-teal)"
+                            />
+                        </svg>
+                    </div>
+                    <div className={styles["right"]}>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="9"
+                            height="9"
+                            viewBox="0 0 9 9"
+                            fill="none"
+                        >
+                            <path
+                            d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z"
+                            fill="var(--off-teal)"
+                            />
+                        </svg>
+                        <svg
+                            className={styles["svg-shrink-right"]}
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="9"
+                            height="9"
+                            viewBox="0 0 9 9"
+                            fill="none"
+                        >
+                            <path
+                            d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z"
+                            fill="var(--off-teal)"
+                            />
+                        </svg>
+                    </div>
+                </div>
+                {/* <LinkButton isActive={!isHomeActive} linkName={"HOME"} linkTo={"#HOME"} lenis={lenis}/> */}
                 <LinkButton isActive={false} linkName={"MENU"} linkTo={""} lenis={lenis} onClick={handleMenuToggle}/>
             </div>
 
             <div className={"extremes-wrapper-right"}>
                 <div className={"extremes"}></div>
             </div>
-        </header>
+        </div>
     );
 };
 

@@ -6,10 +6,10 @@ import AnimatedDownwardArrowSmall from "../components/AnimatedDownwardArrowSmall
 // Pre-compute year once instead of on every render
 const CURRENT_YEAR = new Date().getFullYear();
 
-const Footer = ({ inProject = false, lenis }) => {
+const Footer = ({ inProject = false, lenis, isMobile }) => {
   // Scroll handler wrapped in useCallback to prevent re-allocating function each re-render
   const handleScrollTo = useCallback(() => {
-    lenis.scrollTo(inProject ? 0 : "#WORK", { duration: 3 });
+    lenis.scrollTo(inProject ? 0 : "#WORK", { duration: 3, offset: isMobile? -60 : 0 });
   }, [inProject, lenis]);
 
   // Pre-compute link text (saves recomputation each render and clarifies intent)
