@@ -10,7 +10,7 @@ const containerStyle = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "start",
-  gap: "18px"
+  gap: "18px",
 };
 
 const squareStyle = {
@@ -18,12 +18,14 @@ const squareStyle = {
   height: "100%",
   aspectRatio: "1 / 1",
   backgroundColor: "var(--dark-green)", // Dark gray-green from the image
-  borderRadius: "6px",
+  borderRadius: "9px",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   color: "white",
   fontSize: "42px",
+  border: "3px solid var(--off-teal)",
+  boxSizing: "border-box",
 };
 
 const PercentageSlider = () => {

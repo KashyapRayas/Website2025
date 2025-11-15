@@ -13,12 +13,13 @@ const containerStyle = {
   height: "100%",
   display: "flex",
   backgroundColor: "var(--dark-green)",
-  borderRadius: "6px",
+  borderRadius: "9px",
   justifyContent: "center",
   alignItems: "end",
   overflow: "hidden",
   padding: "18px 18px 0 18px",
   boxSizing: "border-box",
+  border: "3px solid var(--off-teal)",
 };
 
 const baseRectStyle = {

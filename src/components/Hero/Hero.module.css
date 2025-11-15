@@ -244,4 +244,7 @@
     position: absolute;
     top: 0;
     right: 0;
+    border-radius: 0 0 9px 9px;
+    border-bottom: 3px solid var(--off-teal);
+    border-top: none
 }
