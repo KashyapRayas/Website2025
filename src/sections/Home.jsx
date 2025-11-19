@@ -163,6 +163,16 @@ const Home = forwardRef(({isLoaded, handleProjectSelect}, ref) => {
                 <div className={styles.left}>
                     <div className={styles.first}>
                         <div className={styles.hero}>
+                            <svg
+                            className={styles.herorounder}
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="9"
+                            height="9"
+                            viewBox="0 0 9 9"
+                            fill="none"
+                            >
+                                <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="var(--off-teal)"/>
+                            </svg>
                             <Hero ref={heroRef} isLoaded={isLoaded}/>
                         </div>
                         <div className={styles.cell}></div>

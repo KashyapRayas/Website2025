@@ -44,6 +44,9 @@ header > .middle > .left {
         background-color: #006352;
         width: 100%;
         height: 100%;
+        border-left: 3px solid var(--off-teal);
+        border-right: 3px solid var(--off-teal);
+        box-sizing: border-box;
     }
     .links {
         display: flex;

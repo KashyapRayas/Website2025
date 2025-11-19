@@ -76,20 +76,21 @@ const About = forwardRef((_, ref) => {
 
   // --- Data Lists ---
   const currentEnjoy = [
-    { text: "Netflix & The Office", span: "[ US ]" },
-    { text: "Anime + Games", span: "[ big on kojima + chainsaw man ]" },
+    { text: "Films & The Office", span: "[ US ]" },
+    { text: "Arc Raiders" },
+    { text: "Chainsaw Man" },
     { text: "Learning French" },
-    { text: "Building Lego sets" },
-    { text: "Fitness + Swimming" },
-    { text: "Hip Hop + Glitchcore" },
+    { text: "Lego" },
+    { text: "Gym" },
+    { text: "Hip Hop & Glitchcore" },
     { text: "The color green" },
   ];
 
   const goals = [
-    { text: "Design 10 products", checked: true },
-    { text: "Play Death Stranding 2 + GTA 6" },
+    { text: "Design a VR experience", checked: true },
+    { text: "Play Death Stranding 2" },
     { text: "Mod a Casio watch" },
-    { text: "Watch One Piece", span: "[ maybe ]" },
+    { text: "Finish reading - The Courage To Be Disliked" },
     { text: "Pursue a HCI Master’s" },
     { text: "Work at Google or Nothing" },
   ];

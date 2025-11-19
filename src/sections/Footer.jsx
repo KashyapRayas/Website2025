@@ -26,7 +26,7 @@ const Footer = ({ inProject = false, lenis, isMobile }) => {
 
       <div className="middle">
         <div className="right">
-          <h3>Designed with 3L of H2O</h3>
+          <h3>Footer? I hardly know her!</h3>
           <div className="wrapper">
             <h3>
               KASHYAP RAYAS &copy; {CURRENT_YEAR}

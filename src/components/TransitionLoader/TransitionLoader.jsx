@@ -100,6 +100,7 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
         {
             width: "100%",
             height: "100%",
+            border: "0px",
             duration: 2,
             ease: "expo.inOut",
             borderRadius: "0px",

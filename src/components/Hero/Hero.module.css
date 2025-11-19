@@ -157,7 +157,7 @@
 .fishing-line {
     position: absolute;
     z-index: 3;
-    left: 215px;
+    left: 218px;
     top: 140px;
     width: max-content;
     height: 124px;
@@ -167,7 +167,7 @@
     align-items: center;
 
     .line {
-        width: 1px;
+        width: 1.5px;
         background-color: var(--off-white);
         height: 100%;
     }
@@ -240,11 +240,24 @@
 
 }
 
-.me {
+.heroWrapper {
     position: absolute;
     top: 0;
     right: 0;
+    width: 375px;
+    height: 480px;
+    overflow: hidden;
     border-radius: 0 0 9px 9px;
     border-bottom: 3px solid var(--off-teal);
-    border-top: none
+    border-left: 3px solid var(--off-teal);
+    border-right: 3px solid var(--off-teal);
+    box-sizing: border-box;
+    border-top: none;
+    overflow: hidden;
+}
+
+.me {
+    position: relative;
+    bottom: 0;
+    left: 0;
 }

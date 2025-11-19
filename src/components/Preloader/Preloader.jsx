@@ -156,7 +156,7 @@ const Preloader = ({ onComplete, onMidway }) => {
                 </div>
                 <div className="quote-line">
                     <div className="quote-text bottom">
-                        we first <span>see through it</span><span>.</span>
+                        we must <span>see through it</span><span>.</span>
                     </div>
                 </div>
             </div>

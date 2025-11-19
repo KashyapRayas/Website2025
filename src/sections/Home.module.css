@@ -64,11 +64,19 @@ section > .middle {
 }
 
 .left .first .hero {
+    position: relative;
   width: 100%;
   display: flex;
   justify-content: flex-end;
   background-color: var(--off-white);
   border-radius: 9px 0 0 9px;
+}
+
+.left .first .hero .herorounder {
+  position: absolute;
+  top: 0px;
+  left: 222px;
+  z-index: 3;
 }
 
 .left .first .cell {
