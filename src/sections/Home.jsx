@@ -207,12 +207,12 @@ const Home = forwardRef(({isLoaded, handleProjectSelect}, ref) => {
                         </div>
                     </div>
                     <div className={styles.third}>
-                        <h4>NARRATOR'S NOTE</h4>
+                        <h4>MY INNIE'S NOTE</h4>
                         <h3>
-                            For the past two years, Kashyap has immersed himself
-                            in the world of product design, nurturing his dream of
-                            becoming a leading design engineer. He is shy and known
-                            to daydream from time to time.
+                            I refine the product. The product refines me. I have decided to dedicate
+                            my life to learn the architecture of things, quietly nurturing the engineer within.
+                            I speak little. Often, I am elsewhere, wandering the spaces between what is real and
+                            what is yet to be designed.
                         </h3>
                     </div>
                 </div>

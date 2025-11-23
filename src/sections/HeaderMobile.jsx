@@ -10,7 +10,6 @@ const HeaderMobile = ({lenis}) => {
     const menuRef = useRef(null);
     const greenRectRef = useRef(null)
     const prevMenuStateRef = useRef(false);
-    const [isHomeActive, setIsHomeActive] = useState(false);
 
     useGSAP(()=>{
         if (!menuRef.current) return;
@@ -59,7 +58,6 @@ const HeaderMobile = ({lenis}) => {
 
     const handleMenuToggle = () => {
         setIsMenuActive(!isMenuActive);
-        setIsHomeActive(!isHomeActive);
     };
 
     return (
@@ -94,7 +92,7 @@ const HeaderMobile = ({lenis}) => {
                                 </svg>
                             </a>
                         </div>
-                        <LinkButton isActive={isHomeActive} linkName={"HOME"} linkTo={"#HOME"} lenis={lenis} onClick={handleMenuToggle} size="large" offset={true}/>
+                        <LinkButton isActive={false} linkName={"HOME"} linkTo={"#HOME"} lenis={lenis} onClick={handleMenuToggle} size="large" offset={true}/>
                         <LinkButton isActive={false} linkName={"WORK"} linkTo={"#WORK"} lenis={lenis} onClick={handleMenuToggle} size="large" offset={true}/>
                         <LinkButton isActive={false} linkName={"ABOUT"} linkTo={"#ABOUT"} lenis={lenis} onClick={handleMenuToggle} size="large" offset={true}/>
                         <LinkButton isActive={false} linkName={"CONTACT"} linkTo={"#CONTACT"} lenis={lenis} onClick={handleMenuToggle} size="large" offset={true}/>

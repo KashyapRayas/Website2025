@@ -1,4 +1,4 @@
-import { useState, useRef, forwardRef, useCallback, useMemo } from "react";
+import { useState, useRef, forwardRef, useCallback, useMemo, useEffect } from "react";
 import "./Work.css";
 import AnimatedArrow from "../components/AnimatedArrow";
 import projectsData from "../data/projects.json";
@@ -6,19 +6,25 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
 const BASE_PATH = "/Website2025";
-const FALLBACK_IMG = BASE_PATH + "/project_imgs/placeholder.png";
+const FALLBACK_IMG_SRC = BASE_PATH + "/project_imgs/placeholder.png";
 
 const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const [hoveredIndex, setHoveredIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(null);
 
-    gsap.config({
-        force3D: true
-    })
+  const imagesRef = useRef({});
+  const canvasRef = useRef(null);
+
+  // Tracks the source of the image currently fully painted on the canvas
+  const currentImageKey = useRef(null);
+  const animationRef = useRef(null);
+
+  gsap.config({
+    force3D: true,
+  });
 
   const handRef = useRef(null);
   const handShadowRef = useRef(null);
-  const imgRef = useRef(null);
 
   // --- Find active project ---
   const activeIndex = hoveredIndex !== 0 ? hoveredIndex : selectedIndex ?? 0;
@@ -27,7 +33,26 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     [activeIndex]
   );
 
-  // --- Floating hand animation ---
+  // --- Preload / Image Getter ---
+  const getOrLoadImage = (src) => {
+    if (imagesRef.current[src]) return imagesRef.current[src];
+
+    const img = new Image();
+    img.src = src;
+    imagesRef.current[src] = img;
+    return img;
+  };
+
+  // --- Preload All on Mount ---
+  useEffect(() => {
+    const sources = projectsData.projects.map(p =>
+      p.img ? BASE_PATH + p.img : FALLBACK_IMG_SRC
+    );
+    if (!sources.includes(FALLBACK_IMG_SRC)) sources.push(FALLBACK_IMG_SRC);
+    sources.forEach(src => getOrLoadImage(src));
+  }, []);
+
+  // --- GSAP Animations ---
   useGSAP(() => {
     if (!handRef.current) return;
     gsap.to(handRef.current, {
@@ -42,7 +67,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     });
   }, []);
 
-useGSAP(() => {
+  useGSAP(() => {
     if (!handShadowRef.current) return;
     gsap.to(handShadowRef.current, {
       y: 40,
@@ -56,36 +81,112 @@ useGSAP(() => {
     });
   }, []);
 
-  // --- Project image fade + swap ---
-  useGSAP(() => {
-    if (!imgRef.current) return;
+  // --- Canvas Helper ---
+  const drawImageCover = (ctx, img) => {
+    if (!img || !img.naturalWidth) return;
 
-    const newSrc = activeProject.img
+    const canvas = ctx.canvas;
+    const w = canvas.width;
+    const h = canvas.height;
+
+    // Safety check to prevent division by zero or drawing on 0x0 canvas
+    if (w === 0 || h === 0) return;
+
+    const r = w / h;
+    const ir = img.naturalWidth / img.naturalHeight;
+
+    let nw, nh;
+
+    if (ir > r) {
+      nh = h;
+      nw = h * ir;
+    } else {
+      nw = w;
+      nh = w / ir;
+    }
+
+    const x = (w - nw) / 2;
+    const y = (h - nh) / 2;
+
+    ctx.drawImage(img, x, y, nw, nh);
+  };
+
+  // --- MAIN CANVAS LOOP ---
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // Force set dimension to match CSS to ensure we don't draw on a 0x0 buffer
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+
+    const ctx = canvas.getContext("2d", { alpha: false });
+
+    // Determine Target
+    const targetSrc = activeProject.img
       ? BASE_PATH + activeProject.img
-      : FALLBACK_IMG;
-    const newAlt = activeProject.name || "Placeholder";
+      : FALLBACK_IMG_SRC;
+    const targetImg = getOrLoadImage(targetSrc);
 
-    if (imgRef.current.dataset.src === newSrc) return; // prevent duplicate animations
+    // Determine Previous (for transition)
+    const prevSrc = currentImageKey.current;
+    const prevImg = prevSrc ? imagesRef.current[prevSrc] : null;
 
-    const tl = gsap.timeline();
+    // If we are already showing this image, do nothing.
+    if (prevSrc === targetSrc && currentImageKey.current !== null) return;
 
-    tl.to(imgRef.current, {
-      opacity: 0,
-      duration: 0.3,
-      ease: "power2.out",
-      onComplete: () => {
-        imgRef.current.src = newSrc;
-        imgRef.current.alt = newAlt;
-        imgRef.current.dataset.src = newSrc;
-      },
-    }).to(imgRef.current, {
-      opacity: 1,
-      duration: 0.3,
-      ease: "power2.in",
-    });
+    let startTime = null;
+    const DURATION = 300; // Crossfade duration in ms
 
-    return () => tl.kill();
-  }, [activeProject]);
+    const render = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+
+      // 1. Wait for Target Image to Load
+      // If not ready, keep requesting frames until it is.
+      if (!targetImg.complete || targetImg.naturalWidth === 0) {
+         animationRef.current = requestAnimationFrame(render);
+         return;
+      }
+
+      // 2. Calculate Transition Progress
+      // If there is no previous image (first load), progress is instantly 1.
+      let progress = !prevImg ? 1 : Math.min((timestamp - startTime) / DURATION, 1);
+
+      // If the previous image is the same as target (redundant check, but safe), instant 1.
+      if (prevSrc === targetSrc) progress = 1;
+
+      // 3. Draw
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Layer 1: Previous Image (Bottom)
+      // Only draw if we are transitioning and we actually have a previous image
+      if (prevImg && progress < 1) {
+         ctx.globalAlpha = 1;
+         drawImageCover(ctx, prevImg);
+      }
+
+      // Layer 2: Target Image (Top)
+      ctx.globalAlpha = progress;
+      drawImageCover(ctx, targetImg);
+
+      // 4. Continue or Finish
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(render);
+      } else {
+        ctx.globalAlpha = 1; // Reset alpha
+        currentImageKey.current = targetSrc; // Mark as "done"
+      }
+    };
+
+    // Cancel any running loop and start a new one
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    animationRef.current = requestAnimationFrame(render);
+
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [activeProject]); // Re-run whenever active project changes
 
   // --- Handlers ---
   const handleMouseEnter = useCallback((index) => setHoveredIndex(index), []);
@@ -105,16 +206,13 @@ useGSAP(() => {
       </div>
 
       <div className="middle">
-        {/* --- RIGHT SIDE: Projects List --- */}
         <div className="right">
           <div className="heading">
             <span>{"<"}</span>WORK<span>{"/>"}</span>
           </div>
 
           {projectsData.projects.map((project, index) => {
-            const isActive =
-              hoveredIndex === index || selectedIndex === index;
-
+            const isActive = hoveredIndex === index || selectedIndex === index;
             return (
               <div
                 key={index}
@@ -136,65 +234,42 @@ useGSAP(() => {
           })}
         </div>
 
-        {/* --- LEFT SIDE: Preview Area --- */}
         <div className="left">
           <div className="img-superwrapper">
             <div className="hand-wrapper">
-            <svg
-              className="hand"
-              ref={handRef}
-              width="375"
-              height="204"
-              viewBox="0 0 375 204"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g clipPath="url(#clip0_1777_11121)">
-                <path
-                  d="M49.0618 123.485L56.8618 61.3268C59.6093 39.4325 74.3931 31.2993 81.4416 29.9696L180.953 -30.9677L343.024 -100.102L431.686 -166.746L490.875 -42.6034L220.577 34.7595L201.388 56.2242C202.084 68.5095 177.784 86.984 165.547 94.6856L148.557 128.126L140.646 148.859C136.794 157.435 125.279 153.829 120.003 150.954C118.344 159.574 109.853 160.477 105.815 159.85C97.7597 158.901 96.1809 152.263 96.3924 148.776L93.3972 187.16C93.7293 196.948 85.5258 198.78 81.3825 198.472C72.7686 199.362 70.4136 187.774 70.3128 181.868C70.4371 190.229 64.0519 192.039 60.8437 191.899C53.0597 190.982 50.7775 182.188 50.6094 177.906L49.0618 123.485Z"
-                  fill="var(--off-white)"
-                />
-                <path
-                  d="M69.1837 36.3929C69.2131 36.5706 69.1955 36.76 69.1125 36.9423C66.9236 41.7479 64.8589 49.5246 68.4566 54.1433C69.0056 54.8482 68.6032 56.4162 67.7682 56.7339C65.0452 57.7691 61.9191 60.3449 61.2087 66.1545L55.3176 119.29C55.3107 119.352 55.3102 119.413 55.3168 119.475C55.6448 122.534 57.7724 128.409 63.7649 128.945C64.1664 128.981 64.5278 128.716 64.6457 128.331L82.0305 71.4838C82.358 70.4141 83.9544 70.7806 83.7826 71.886L75.3004 126.383C75.2152 126.93 75.6391 127.425 76.1916 127.464C79.0759 127.671 83.5423 128.76 85.8988 131.85C86.3986 132.506 87.5899 132.499 87.9069 131.738L113.669 69.9017L100.42 120.089C100.285 120.604 100.619 121.122 101.144 121.205L101.157 121.208C107.294 122.179 117.88 123.854 119.06 131.96L120.664 142.975C120.807 143.955 122.197 144.021 122.432 143.058L134.426 93.8205C134.439 93.7703 134.455 93.721 134.476 93.6737L140.589 79.6442L134.704 95.5287L128.124 123.598C128.029 124.003 128.224 124.421 128.595 124.609L139.374 130.056C142.911 131.844 144.82 135.699 144.208 139.52L140.646 148.855C136.795 157.43 125.279 153.824 120.003 150.949C118.344 159.57 109.853 160.472 105.815 159.846C97.7599 158.897 96.1808 152.259 96.3922 148.772L93.3974 187.156C93.7294 196.944 85.5259 198.776 81.3826 198.468C72.7687 199.358 70.4137 187.769 70.3129 181.864C70.4372 190.225 64.0522 192.035 60.8439 191.895C53.06 190.978 50.7778 182.184 50.6097 177.902L49.0621 123.48L56.8621 61.3227C58.3873 49.1684 63.6224 41.2558 69.1837 36.3929Z"
-                  fill="var(--off-teal)"
-                />
-                <path
-                  d="M98.9336 59.3005C92.1732 47.8981 97.7253 36.4034 101.346 32.0813C99.1787 31.7897 93.9714 33.9747 90.4829 45.0476C86.9944 56.1205 94.6632 59.1632 98.9336 59.3005Z"
-                  fill="var(--off-teal)"
-                />
-                <path
-                  d="M128.599 47.2406C129.351 42.3951 130.982 40.67 131.704 40.4132C128.493 40.8806 127.145 43.5057 126.872 44.7598C125.206 50.8313 124.985 62.0357 125.083 66.8789L128.599 47.2406Z"
-                  fill="var(--off-teal)"
-                />
-                <path
-                  d="M70.118 126.723L82.6475 72.6003L71.2121 127.282C70.7823 129.337 70.5588 131.43 70.5448 133.529L70.2477 178.234L69.3124 134.512C69.2564 131.892 69.527 129.275 70.118 126.723Z"
-                  fill="var(--off-black)"
-                />
-                <path
-                  d="M98.4036 115.564L110.832 78.5155L99.2796 116.421C98.5603 118.781 98.1204 121.218 97.9689 123.681L96.3036 150.761L96.7709 125.024C96.8293 121.806 97.3799 118.616 98.4036 115.564Z"
-                  fill="var(--off-black)"
-                />
-                <path
-                  d="M123.091 134.565L133.132 100.315L120.328 149.995L123.091 134.565Z"
-                  fill="var(--off-black)"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_1777_11121">
-                  <rect width="375" height="204" rx="9" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
+              <svg
+                className="hand"
+                ref={handRef}
+                width="375"
+                height="204"
+                viewBox="0 0 375 204"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+               {/* Hand Paths... (omitted for brevity, same as before) */}
+               <g clipPath="url(#clip0_1777_11121)">
+                <path d="M49.0618 123.485L56.8618 61.3268C59.6093 39.4325 74.3931 31.2993 81.4416 29.9696L180.953 -30.9677L343.024 -100.102L431.686 -166.746L490.875 -42.6034L220.577 34.7595L201.388 56.2242C202.084 68.5095 177.784 86.984 165.547 94.6856L148.557 128.126L140.646 148.859C136.794 157.435 125.279 153.829 120.003 150.954C118.344 159.574 109.853 160.477 105.815 159.85C97.7597 158.901 96.1809 152.263 96.3924 148.776L93.3972 187.16C93.7293 196.948 85.5258 198.78 81.3825 198.472C72.7686 199.362 70.4136 187.774 70.3128 181.868C70.4371 190.229 64.0519 192.039 60.8437 191.899C53.0597 190.982 50.7775 182.188 50.6094 177.906L49.0618 123.485Z" fill="var(--off-white)"/>
+                <path d="M69.1837 36.3929C69.2131 36.5706 69.1955 36.76 69.1125 36.9423C66.9236 41.7479 64.8589 49.5246 68.4566 54.1433C69.0056 54.8482 68.6032 56.4162 67.7682 56.7339C65.0452 57.7691 61.9191 60.3449 61.2087 66.1545L55.3176 119.29C55.3107 119.352 55.3102 119.413 55.3168 119.475C55.6448 122.534 57.7724 128.409 63.7649 128.945C64.1664 128.981 64.5278 128.716 64.6457 128.331L82.0305 71.4838C82.358 70.4141 83.9544 70.7806 83.7826 71.886L75.3004 126.383C75.2152 126.93 75.6391 127.425 76.1916 127.464C79.0759 127.671 83.5423 128.76 85.8988 131.85C86.3986 132.506 87.5899 132.499 87.9069 131.738L113.669 69.9017L100.42 120.089C100.285 120.604 100.619 121.122 101.144 121.205L101.157 121.208C107.294 122.179 117.88 123.854 119.06 131.96L120.664 142.975C120.807 143.955 122.197 144.021 122.432 143.058L134.426 93.8205C134.439 93.7703 134.455 93.721 134.476 93.6737L140.589 79.6442L134.704 95.5287L128.124 123.598C128.029 124.003 128.224 124.421 128.595 124.609L139.374 130.056C142.911 131.844 144.82 135.699 144.208 139.52L140.646 148.855C136.795 157.43 125.279 153.824 120.003 150.949C118.344 159.57 109.853 160.472 105.815 159.846C97.7599 158.897 96.1808 152.259 96.3922 148.772L93.3974 187.156C93.7294 196.944 85.5259 198.776 81.3826 198.468C72.7687 199.358 70.4137 187.769 70.3129 181.864C70.4372 190.225 64.0522 192.035 60.8439 191.895C53.06 190.978 50.7778 182.184 50.6097 177.902L49.0621 123.48L56.8621 61.3227C58.3873 49.1684 63.6224 41.2558 69.1837 36.3929Z" fill="var(--off-teal)"/>
+                <path d="M98.9336 59.3005C92.1732 47.8981 97.7253 36.4034 101.346 32.0813C99.1787 31.7897 93.9714 33.9747 90.4829 45.0476C86.9944 56.1205 94.6632 59.1632 98.9336 59.3005Z" fill="var(--off-teal)"/>
+                <path d="M128.599 47.2406C129.351 42.3951 130.982 40.67 131.704 40.4132C128.493 40.8806 127.145 43.5057 126.872 44.7598C125.206 50.8313 124.985 62.0357 125.083 66.8789L128.599 47.2406Z" fill="var(--off-teal)"/>
+                <path d="M70.118 126.723L82.6475 72.6003L71.2121 127.282C70.7823 129.337 70.5588 131.43 70.5448 133.529L70.2477 178.234L69.3124 134.512C69.2564 131.892 69.527 129.275 70.118 126.723Z" fill="var(--off-black)"/>
+                <path d="M98.4036 115.564L110.832 78.5155L99.2796 116.421C98.5603 118.781 98.1204 121.218 97.9689 123.681L96.3036 150.761L96.7709 125.024C96.8293 121.806 97.3799 118.616 98.4036 115.564Z" fill="var(--off-black)"/>
+                <path d="M123.091 134.565L133.132 100.315L120.328 149.995L123.091 134.565Z" fill="var(--off-black)"/>
+               </g>
+               <defs>
+                 <clipPath id="clip0_1777_11121">
+                   <rect width="375" height="204" rx="9" fill="white" />
+                 </clipPath>
+               </defs>
+              </svg>
             </div>
 
-            {/* Decorative blocks */}
             <div className="first">
               <div className="cell"></div>
               <div className="window"></div>
               <div className="cell-small"></div>
             </div>
 
-            {/* Dynamic Project Image */}
             <div className="img-wrapper">
                 <div className="hand-shadow-wrapper">
                     <svg ref={handShadowRef} className="hand-shadow" width="99" height="89" viewBox="0 0 99 89" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -202,35 +277,20 @@ useGSAP(() => {
                     </svg>
                 </div>
               <div className="work-img-wrapper">
-                <img ref={imgRef} className="work-img" />
+                <canvas
+                    ref={canvasRef}
+                    className="work-img"
+                    style={{ width: '100%', height: '100%', display: 'block' }}
+                />
               </div>
             </div>
 
-            {/* Rounded corners accent */}
             <div className="rounder">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="9"
-                height="9"
-                viewBox="0 0 9 9"
-                fill="none"
-              >
-                <path
-                  d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z"
-                  fill="var(--off-teal)"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
+                <path d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z" fill="var(--off-teal)"/>
               </svg>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="9"
-                height="9"
-                viewBox="0 0 9 9"
-                fill="none"
-              >
-                <path
-                  d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z"
-                  fill="var(--off-teal)"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
+                <path d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z" fill="var(--off-teal)"/>
               </svg>
             </div>
           </div>

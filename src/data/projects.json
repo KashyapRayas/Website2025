@@ -1,6 +1,11 @@
 {
     "projects": [
         {
+        "name": "SAVVYWISE",
+        "description": "An AI-powered research assistant for Australian tax and compliance",
+        "img": "/project_imgs/sw_1.png"
+        },
+        {
         "name": "TABLE READ",
         "description": "An AI-powered web app to simulate table reads for film scripts",
         "img": "/project_imgs/tr_1.png"

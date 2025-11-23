@@ -76,7 +76,7 @@ const About = forwardRef((_, ref) => {
 
   // --- Data Lists ---
   const currentEnjoy = [
-    { text: "Films & The Office", span: "[ US ]" },
+    { text: "Films, Severance & The Office", span: "[ US ]" },
     { text: "Arc Raiders" },
     { text: "Chainsaw Man" },
     { text: "Learning French" },
@@ -126,7 +126,7 @@ const About = forwardRef((_, ref) => {
           </div>
 
           <div className="first">
-            <h4>MY FAVOURITE QUOTE</h4>
+            <h4>SOMETHING TO LIVE BY</h4>
             <h3>
               Ever since I was a kid<span>,</span> I knew I wanted to{" "}
               <span>write emails</span> and work{" "}
@@ -139,7 +139,7 @@ const About = forwardRef((_, ref) => {
             <h3>
               Hi there! <span>[ again ]</span> I’m Kashyap Rayas, a{" "}
               <span>[ {age} M ]</span> Product Designer with a passion for
-              harnessing AI to describe me <span>[ joking ]</span>. I craft
+              harnessing AI to describe me <span>[ Gemini 3 ]</span>. I craft
               experiences that feel natural to use and effortless to build.
               <br />
               <br />
@@ -164,12 +164,9 @@ const About = forwardRef((_, ref) => {
 
             <div className="third-wrapper-new">
                     <div className="third">
-                        <h4>ABOUT WEBSITE</h4>
+                        <h4>THE UNDERGROUND MAN</h4>
                         <h3>
-                            This website is an abstract extension of myself, a space shaped
-                            by the things I love and enjoy. Its modular, cell-like elements
-                            reflect my logical and structured side, while they drift within
-                            a chaotic, creative pool of green.
+                            It is clear to me now that, owing to my unbounded vanity and to the high standard I set for myself, I often looked at myself with furious discontent, which verged on loathing, and so I inwardly attributed the same feeling to everyone.
                         </h3>
                     </div>
                     <div className="s2">

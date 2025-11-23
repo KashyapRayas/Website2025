@@ -33,6 +33,28 @@ const STATIC_IMAGE_ASSETS = Object.freeze([
   '/icons/figma_cancel.png',
   '/icons/figma_search.png',
 
+  // Images in public/about_imgs folder
+    '/about_imgs/1.jpg',
+    '/about_imgs/2.jpg',
+    '/about_imgs/3.jpg',
+    '/about_imgs/4.jpg',
+    '/about_imgs/5.jpg',
+    '/about_imgs/6.jpg',
+    '/about_imgs/7.jpg',
+    '/about_imgs/8.jpg',
+    '/about_imgs/9.jpg',
+    '/about_imgs/10.jpg',
+    '/about_imgs/11.jpg',
+    '/about_imgs/12.jpg',
+    '/about_imgs/13.jpg',
+    '/about_imgs/14.jpg',
+    '/about_imgs/15.jpg',
+    '/about_imgs/16.jpg',
+    '/about_imgs/17.jpg',
+    '/about_imgs/18.jpg',
+    '/about_imgs/19.jpg',
+    '/about_imgs/20.jpg',
+
   // Images in public/project_imgs folder (those NOT dynamically loaded from project data JSONs)
   '/project_imgs/placeholder.png',
 

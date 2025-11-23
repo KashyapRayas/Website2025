@@ -8,8 +8,8 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
     const tlRef = useRef(null);
     const contentTlRef = useRef(null);
     const boopRef = useRef(null);
-    const words = ["Boop", "Beep", "Bebop", "Blip"];
-    const [word, setWord] = useState("Boop");
+    const words = ["Vision", "Verve", "Wit", "Cheer", "Humility", "Benevolence", "Nimbleness", "Probity", "Wiles"];
+    const [word, setWord] = useState("Cheer");
 
     useGSAP(() => {
         gsap.set("#transition-loader", { display: "flex", zIndex: 2 });
@@ -127,7 +127,7 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
         <div className="green-box">
             <div className="wrapper">
             <h3 id="boop" ref={boopRef}>
-                {word} <span>!</span>
+                {word}<span>.</span>
             </h3>
             </div>
         </div>
