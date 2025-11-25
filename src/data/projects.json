@@ -6,6 +6,11 @@
         "img": "/project_imgs/sw_1.png"
         },
         {
+        "name": "PROJECTS MOBILE",
+        "description": "A mobile app for film production session management and version review",
+        "img": "/project_imgs/mm_1.png"
+        },
+        {
         "name": "TABLE READ",
         "description": "An AI-powered web app to simulate table reads for film scripts",
         "img": "/project_imgs/tr_1.png"

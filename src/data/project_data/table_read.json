@@ -67,10 +67,10 @@
     "details": {
         "timeline": "2022 - Present",
         "company": "VigaET",
-        "deliverables": [
-            "Branding",
-            "UI/UX Design",
-            "Web Design"
+        "tags": [
+            "Web App",
+            "AI Product",
+            "Movie Colab Suite"
         ],
         "projectTitle": "TABLE READ",
         "projectLink": "https://moviecolab.com/tableread/"

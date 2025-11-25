@@ -122,6 +122,8 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     canvas.height = rect.height;
 
     const ctx = canvas.getContext("2d", { alpha: false });
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
 
     // Determine Target
     const targetSrc = activeProject.img
@@ -137,7 +139,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     if (prevSrc === targetSrc && currentImageKey.current !== null) return;
 
     let startTime = null;
-    const DURATION = 300; // Crossfade duration in ms
+    const DURATION = 150; // Crossfade duration in ms
 
     const render = (timestamp) => {
       if (!startTime) startTime = timestamp;

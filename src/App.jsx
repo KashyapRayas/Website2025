@@ -7,6 +7,7 @@ import Preloader from './components/Preloader/Preloader.jsx'
 import TransitionLoader from './components/TransitionLoader/TransitionLoader.jsx'
 import Landing from './pages/Landing.jsx'
 import Project from './pages/Project.jsx'
+import { useSmoothScrollConfig } from './hooks/useSmoothScrollConfig'
 
 // Keeping these for potential dynamic loading later, but initial preload is handled by useAssetPreloader
 const preloadLanding = () => import('./pages/Landing.jsx')
@@ -14,6 +15,7 @@ const preloadProject = () => import('./pages/Project.jsx')
 
 function App() {
     // Start with isInitialLoading true to ensure Preloader is shown
+    const scrollConfig = useSmoothScrollConfig()
     const [isAssetLoaded, setIsAssetLoad] = useState(false) //change
     const [isPreloaderDone, setIsPreloaderDone] = useState(false)  //change
     const [view, setView] = useState('landing')
@@ -23,6 +25,7 @@ function App() {
     const [projectToLoad, setProjectToLoad] = useState(null)
     const [corrector, setCorrector] = useState(false)
     const lenis = useLenis() // useLenis must be called within <ReactLenis>
+
 
     const handleMidway = useCallback(() => {
         if (transitionDirection === 'in') {
@@ -85,7 +88,7 @@ function App() {
             <ReactLenis
                 root
                 options={{
-                    duration: 3,
+                    duration: scrollConfig.enabled ? scrollConfig.duration : 0,
                     autoRaf: true
                 }}
             >

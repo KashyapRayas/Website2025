@@ -70,7 +70,7 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
     }, [projectData]);
 
     useEffect(()=> {
-        
+
     }, [projectData])
 
     useEffect(() => {
@@ -198,9 +198,9 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                                     </div>
                                 </div>
                                 <div className={"detail"}>
-                                    <h3>DELIVERABLES</h3>
+                                    <h3>TAGS</h3>
                                     <div className={"list"}>
-                                        {details.deliverables.map((item, index) => (
+                                        {details.tags.map((item, index) => (
                                             <div className={"item"} key={index}>
                                                 <div className={"wrapper"}>
                                                     <img src={star} alt="" />

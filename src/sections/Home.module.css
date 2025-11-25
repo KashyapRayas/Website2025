@@ -361,19 +361,28 @@ section > .middle {
   width: 100%;
   aspect-ratio: 4 / 3;
   background-color: var(--off-teal);
-  border-radius: 6px;
-  overflow: hidden;
+  border-radius: 9px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  overflow: hidden;
+    border: 1.8px solid var(--off-teal);
+    box-sizing: border-box;
 }
 
 .img {
-  height: 100%;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   object-position: center;
   image-rendering: pixelated;
   opacity: 0.9;
   transition: all 0.3s ease-in-out;
+}
+
+.secondInnerwrapper:hover .img,
+.secondInnerwrapperSelected .img {
+  transform: scale(1.02);
 }
 
 .td {

@@ -19,14 +19,26 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
     gap: "12px"
   };
 
-  const imgStyle = {
+  const imgWrapperStyle = {
     width: "100%",
     aspectRatio: "16 / 9",
     height: "auto",
     borderRadius: "6px",
     backgroundColor: "var(--light-off-teal)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden", // IMPORTANT: This keeps the zoom inside the rounded corners
+    cursor: "pointer",
+  };
+
+  const imgStyle = {
+    width: "100%",
+    aspectRatio: "16 / 9",
+    height: "auto",
     objectFit: "cover",
-    cursor: "pointer"
+    display: "block",
+    // Removed borderRadius here because the wrapper handles it
   };
 
   const captionStyle = {
@@ -35,29 +47,46 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
     color: "var(--off-black-06)",
     width: "100%",
     textAlign: "center",
-    textWrap: "wrap",
     margin: 0
   };
 
   return (
     <div style={containerStyle}>
-        <style>
+      {/* We use a style tag here to handle the hover state easily */}
+      <style>
         {`
+          .project-image {
+            transition: transform 0.3s ease-in-out;
+          }
+
+          /* When hovering the wrapper, scale the image inside */
+          .project-image-wrapper:hover .project-image {
+            transform: scale(1.02) !important;
+          }
+
           .yarl__button:hover {
             background-color: var(--light-off-teal) !important;
             transition: all 0.2s ease !important;
           }
         `}
-        </style>
+      </style>
+
+      <div
+        style={imgWrapperStyle}
+        className="project-image-wrapper"
+        onClick={() => setOpen(true)}
+      >
         <img
-            src={src}
-            alt={alt}
-            style={imgStyle}
-            loading='lazy'
-            decoding='async'
-            onClick={() => setOpen(true)}
+          src={src}
+          alt={alt}
+          style={imgStyle}
+          className="project-image"
+          loading='lazy'
+          decoding='async'
         />
-        {caption !== "" && <h3 style={captionStyle}>{caption}</h3>}
+      </div>
+
+      {caption !== "" && <h3 style={captionStyle}>{caption}</h3>}
 
       <Lightbox
         open={open}
@@ -65,25 +94,25 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
         slides={[{ src }]}
         plugins={[Zoom]}
         render={{
-            buttonPrev: () => null,
-            buttonNext: () => null,
+          buttonPrev: () => null,
+          buttonNext: () => null,
         }}
         zoom={{
-            maxZoomPixelRatio: 3,
-          }}
+          maxZoomPixelRatio: 3,
+        }}
         styles={{
-            container: { backgroundColor: "var(--off-white)" },
-            button : {
-                backgroundColor: "var(--off-white)",
-                color: "var(--dark-green)",
-                filter: "none",
-                borderRadius: "6px",
-                border: "1px solid var(--off-teal)",
-                margin: "0px 6px"
-            },
-            slide: {
-                padding: "18px"
-            }
+          container: { backgroundColor: "var(--off-white)" },
+          button: {
+            backgroundColor: "var(--off-white)",
+            color: "var(--dark-green)",
+            filter: "none",
+            borderRadius: "6px",
+            border: "1px solid var(--off-teal)",
+            margin: "0px 6px"
+          },
+          slide: {
+            padding: "18px"
+          }
         }}
       />
     </div>

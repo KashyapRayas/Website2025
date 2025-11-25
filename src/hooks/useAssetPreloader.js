@@ -7,7 +7,8 @@ const PROJECT_DATA_FOLDER = '../data/project_data/'; // Path to your individual 
 
 // Helper to convert project name to a valid JSON filename (e.g., "TABLE READ" -> "table_read")
 const getProjectJsonFilename = (projectName) => {
-  return projectName.toLowerCase().replace(/ /g, '_');
+    const lowercased = projectName.toLowerCase();
+    return lowercased.includes(' ') ? lowercased.replace(/ /g, '_') : lowercased;
 };
 
 // --- STATIC ASSETS ---

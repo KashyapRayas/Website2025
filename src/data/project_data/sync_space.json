@@ -73,9 +73,10 @@
     "details": {
         "timeline": "Jan - Mar '25",
         "company": "VigaET",
-        "deliverables": [
-            "UI/UX Design",
-            "Web Design"
+        "tags": [
+            "Desktop App",
+            "File Management",
+            "Movie Colab Suite"
         ],
         "projectTitle": "SYNC SPACE",
         "projectLink": "https://moviecolab.com/syncspace/"
