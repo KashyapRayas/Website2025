@@ -198,7 +198,7 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
                                     </div>
                                 </div>
                                 <div className={"detail"}>
-                                    <h3>TAGS</h3>
+                                    <h3>QUICK TAGS</h3>
                                     <div className={"list"}>
                                         {details.tags.map((item, index) => (
                                             <div className={"item"} key={index}>

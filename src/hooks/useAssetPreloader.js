@@ -1,25 +1,21 @@
 // src/hooks/useAssetPreloader.js
 import { useState, useEffect, useCallback, useRef } from 'react';
-import projectsIndex from '../data/projects.json'; // Make sure this path is correct
+import projectsIndex from '../data/projects.json';
 
-const BASE_PATH = "/Website2025"; // Your base path for static assets
-const PROJECT_DATA_FOLDER = '../data/project_data/'; // Path to your individual project JSONs
+const BASE_PATH = "/Website2025";
+const PROJECT_DATA_FOLDER = '../data/project_data/';
 
-// Helper to convert project name to a valid JSON filename (e.g., "TABLE READ" -> "table_read")
 const getProjectJsonFilename = (projectName) => {
     const lowercased = projectName.toLowerCase();
     return lowercased.includes(' ') ? lowercased.replace(/ /g, '_') : lowercased;
 };
 
 // --- STATIC ASSETS ---
-// List of static image assets in your public folder.
-// This list should be exhaustive for all images directly referenced in JSX or CSS
-// that are NOT found dynamically within project JSONs.
+// Only list things that are hardcoded in your React components/CSS.
 const STATIC_IMAGE_ASSETS = Object.freeze([
-  // Root public folder images from your image
   '/box_anchor.svg',
   '/checked.svg',
-  '/Cursor.svg', // Assuming Cursor.svg is directly in public/
+  '/Cursor.svg',
   '/denji.svg',
   '/footer.svg',
   '/hand.svg',
@@ -28,187 +24,190 @@ const STATIC_IMAGE_ASSETS = Object.freeze([
   '/star.svg',
   '/unchecked.svg',
 
-  // Images in public/icons folder
   '/icons/cursor.png',
   '/icons/figma_apply.png',
   '/icons/figma_cancel.png',
   '/icons/figma_search.png',
 
-  // Images in public/about_imgs folder
-    '/about_imgs/1.jpg',
-    '/about_imgs/2.jpg',
-    '/about_imgs/3.jpg',
-    '/about_imgs/4.jpg',
-    '/about_imgs/5.jpg',
-    '/about_imgs/6.jpg',
-    '/about_imgs/7.jpg',
-    '/about_imgs/8.jpg',
-    '/about_imgs/9.jpg',
-    '/about_imgs/10.jpg',
-    '/about_imgs/11.jpg',
-    '/about_imgs/12.jpg',
-    '/about_imgs/13.jpg',
-    '/about_imgs/14.jpg',
-    '/about_imgs/15.jpg',
-    '/about_imgs/16.jpg',
-    '/about_imgs/17.jpg',
-    '/about_imgs/18.jpg',
-    '/about_imgs/19.jpg',
-    '/about_imgs/20.jpg',
+  // If you have a specific list of about images, keep them.
+  // If they are in JSON, the scanner below will find them automatically.
+  '/about_imgs/1.jpg',
+  '/about_imgs/2.jpg',
+  '/about_imgs/3.jpg',
+  '/about_imgs/4.jpg',
+  '/about_imgs/5.jpg',
+  '/about_imgs/6.jpg',
+  '/about_imgs/7.jpg',
+  '/about_imgs/8.jpg',
+  '/about_imgs/9.jpg',
+  '/about_imgs/10.jpg',
+  '/about_imgs/11.jpg',
+  '/about_imgs/12.jpg',
+  '/about_imgs/13.jpg',
+  '/about_imgs/14.jpg',
+  '/about_imgs/15.jpg',
+  '/about_imgs/16.jpg',
+  '/about_imgs/17.jpg',
+  '/about_imgs/18.jpg',
+  '/about_imgs/19.jpg',
+  '/about_imgs/20.jpg',
 
-  // Images in public/project_imgs folder (those NOT dynamically loaded from project data JSONs)
   '/project_imgs/placeholder.png',
-
-  // If you have dot_numbers images like /public/dot_numbers/0.png to 9.png
-  // you might add them here:
-  // '/dot_numbers/0.png', '/dot_numbers/1.png', /* ... up to */ '/dot_numbers/9.png',
 ]);
 
-// List of React component modules to eagerly load
 const REACT_MODULES_TO_PRELOAD = Object.freeze([
   () => import('../pages/Project.jsx'),
-  // Add other top-level components that are dynamically imported if necessary
+  () => import('../pages/Landing.jsx'),
 ]);
 
-// --- HELPER FUNCTIONS ---
-
-// Preload a single image (always resolves to prevent blocking on errors)
 const preloadImage = (src) => {
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => resolve(src);
     img.onerror = () => {
-      console.warn(`Failed to load image: ${src}`);
-      resolve(src); // Resolve anyway to not block the preloader
+        // Resolve even on error to prevent blocking the entire app
+        resolve(src);
     };
     img.src = src;
   });
 };
 
-// Preload a single JSON file (for project data)
 const preloadJson = async (filename) => {
   try {
-    // Dynamically import JSON modules.
-    // The /* @vite-ignore */ comment is crucial for bundlers like Vite
-    // to correctly handle dynamic import paths when they're not fully static.
     const module = await import(/* @vite-ignore */ `${PROJECT_DATA_FOLDER}${filename}.json`);
     return module.default;
   } catch (error) {
     console.error(`Failed to load project JSON for ${filename}.json:`, error);
-    return null; // Return null on error
+    return null;
   }
 };
 
-// --- MAIN HOOK ---
+// Helper: recursively find strings in JSON that look like image paths
+const scanForImages = (data, paths = new Set()) => {
+    if (!data) return paths;
+
+    // Convert the entire object to string and Regex match all image paths
+    // This catches everything: "url": "/project_imgs/...", "banner": "...", etc.
+    const jsonString = JSON.stringify(data);
+    // Matches strings starting with /project_imgs/ or /about_imgs/ ending in common extensions
+    const regex = /"(\/(?:project_imgs|about_imgs)\/[^"]+\.(?:png|jpg|jpeg|gif|webp|svg))"/gi;
+
+    let match;
+    while ((match = regex.exec(jsonString)) !== null) {
+        paths.add(match[1]); // match[1] is the captured path inside quotes
+    }
+    return paths;
+};
+
 export const useAssetPreloader = () => {
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
-  const loadedCountRef = useRef(0); // Tracks how many assets have been loaded
-  const totalCountRef = useRef(0);  // Tracks the total number of assets to load
 
-  // Memoized callback to update progress safely
-  const updateProgress = useCallback((increment = 1) => {
-    loadedCountRef.current += increment;
-    const newProgress = Math.round((loadedCountRef.current / totalCountRef.current) * 100);
-    setProgress(Math.min(100, newProgress)); // Cap at 100%
-  }, []);
+  const loadedCountRef = useRef(0);
+  const totalCountRef = useRef(0);
 
-  // Memoized callback to set total assets safely
-  const setTotalAssets = useCallback((count) => {
-    totalCountRef.current = count;
+  // Weights: Phase 1 (Core) = 25%, Phase 2 (Assets) = 75%
+  // This ensures the bar moves slowly at start and does the heavy lifting in Phase 2
+  const PHASE1_WEIGHT = 0.25;
+
+  const calculateTotalProgress = useCallback(() => {
+    if (totalCountRef.current === 0) return;
+
+    const percentage = Math.round((loadedCountRef.current / totalCountRef.current) * 100);
+    setProgress(Math.min(100, percentage));
   }, []);
 
   const startPreloading = useCallback(async () => {
-    loadedCountRef.current = 0; // Reset loaded count for a fresh start
+    // 1. CRITICAL UI FIX: Delay start to let GSAP animation render first
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    loadedCountRef.current = 0;
     setProgress(0);
     setIsComplete(false);
 
-    const assetsToPreloadUrls = new Set(); // Use a Set to automatically deduplicate image URLs
+    const assetsToLoad = new Set();
+    const phase1Promises = [];
 
-    // 1. Add static image assets (prepend BASE_PATH)
-    STATIC_IMAGE_ASSETS.forEach(asset => assetsToPreloadUrls.add(BASE_PATH + asset));
+    // --- PHASE 1: Collect Static & Core Assets ---
 
-    // 2. Add landing page thumbnail images from projects.json (prepend BASE_PATH)
-    // Note: projects.json contains paths like "/project_imgs/tr_1.png" which are relative to public.
-    // We already prepended BASE_PATH above, so no need to add it twice if your project.img
-    // paths are already absolute from public.
+    // A. Static Assets
+    STATIC_IMAGE_ASSETS.forEach(asset => assetsToLoad.add(BASE_PATH + asset));
+
+    // B. Project Thumbnails (from projects.json)
     projectsIndex.projects.forEach(project => {
-      if (project.img) {
-        assetsToPreloadUrls.add(BASE_PATH + project.img);
-      }
+        if (project.img) assetsToLoad.add(BASE_PATH + project.img);
     });
 
-    // Prepare to load project data JSONs
+    // C. Prepare JSON files to load
     const projectJsonFilenames = projectsIndex.projects.map(p => getProjectJsonFilename(p.name));
 
-    // Calculate initial total count of assets:
-    // - Unique image URLs collected so far (static + landing thumbnails)
-    // - Number of React module imports
-    // - Number of project data JSON files
-    const initialTotalAssetCount = assetsToPreloadUrls.size + REACT_MODULES_TO_PRELOAD.length + projectJsonFilenames.length;
-    setTotalAssets(initialTotalAssetCount);
+    // Initial Total (We will increase this later when we scan JSONs)
+    let currentTotal = assetsToLoad.size + REACT_MODULES_TO_PRELOAD.length + projectJsonFilenames.length;
+    totalCountRef.current = currentTotal;
 
-    // --- PHASE 1: Preload collected image assets (static + landing thumbnails) ---
-    // Make sure to use Array.from(assetsToPreloadUrls) to process the Set
-    await Promise.all(
-      Array.from(assetsToPreloadUrls).map(url => preloadImage(url).then(() => updateProgress()))
-    );
+    const tick = () => {
+        loadedCountRef.current++;
+        calculateTotalProgress();
+    };
 
-    // --- PHASE 2: Preload React Modules ---
-    await Promise.all(
-      REACT_MODULES_TO_PRELOAD.map(importFn => importFn().then(() => updateProgress()))
-    );
+    // --- EXECUTE PHASE 1 ---
 
-    // --- PHASE 3: Preload Project Data JSONs ---
-    const loadedProjectData = await Promise.all(
-      projectJsonFilenames.map(filename =>
-        preloadJson(filename).then(data => {
-          updateProgress(); // Mark JSON file itself as loaded
-          return data;
-        })
-      )
-    );
-
-    // --- PHASE 4: Discover and Preload Dynamic Images from Project Data ---
-    const dynamicAssetsFromProjectData = new Set();
-    loadedProjectData.filter(Boolean).forEach(project => { // Filter out any nulls from failed JSON loads
-      if (project.content && Array.isArray(project.content)) {
-        project.content.forEach(item => {
-          if (item.type === "img" && item.url) {
-            const fullImageUrl = BASE_PATH + item.url;
-            // Only add if it's a new URL not already in our main set
-            if (!assetsToPreloadUrls.has(fullImageUrl)) {
-                 dynamicAssetsFromProjectData.add(fullImageUrl);
-            }
-          }
-        });
-      }
-      // Add more logic here if images are structured differently in your JSONs
-      // e.g., if (project.details && project.details.bannerImage) { dynamicAssetsFromProjectData.add(BASE_PATH + project.details.bannerImage); }
+    // Load Core Images
+    Array.from(assetsToLoad).forEach(url => {
+        phase1Promises.push(preloadImage(url).then(tick));
     });
 
-    // Update total count to include newly discovered unique dynamic images.
-    const newUniqueDynamicImageUrls = Array.from(dynamicAssetsFromProjectData);
-    setTotalAssets(totalCountRef.current + newUniqueDynamicImageUrls.length);
+    // Load React Modules
+    REACT_MODULES_TO_PRELOAD.forEach(fn => {
+        phase1Promises.push(fn().then(tick));
+    });
 
-    await Promise.all(
-      newUniqueDynamicImageUrls.map(url => preloadImage(url).then(() => updateProgress()))
+    // Load JSONs and prepare for Phase 2
+    const jsonPromises = projectJsonFilenames.map(filename =>
+        preloadJson(filename).then(data => {
+            tick();
+            return data;
+        })
     );
 
-    // --- FINALIZATION ---
-    // Ensure progress reaches 100% and loaded count matches final total.
-    loadedCountRef.current = totalCountRef.current;
+    // Wait for Phase 1 to partially complete so we have JSON data
+    // We wait for JSONs specifically to build the full list
+    const loadedJsonData = await Promise.all(jsonPromises);
+
+    // --- PHASE 2: Brute Force Discovery ---
+    // Now that we have the JSONs, find EVERY image mentioned in them
+    const discoveredImages = new Set();
+    loadedJsonData.forEach(data => scanForImages(data, discoveredImages));
+
+    // Filter out images we already loaded in Phase 1
+    const newImagesToLoad = Array.from(discoveredImages).filter(url => !assetsToLoad.has(BASE_PATH + url));
+
+    // Update Total Count to include these new found images
+    totalCountRef.current += newImagesToLoad.length;
+
+    // Wait for remaining Phase 1 assets (images/modules) just to be safe
+    // (They run in parallel, but we await them here to sync up)
+    await Promise.all(phase1Promises);
+
+    // --- EXECUTE PHASE 2: Load Discovered Images ---
+    if (newImagesToLoad.length > 0) {
+        await Promise.all(
+            newImagesToLoad.map(url => {
+                const fullUrl = BASE_PATH + url;
+                return preloadImage(fullUrl).then(tick);
+            })
+        );
+    }
+
+    // --- DONE ---
     setProgress(100);
+    setTimeout(() => setIsComplete(true), 500);
 
-    // Add a small delay for a smoother user experience before transitioning
-    setTimeout(() => setIsComplete(true), 300);
+  }, [calculateTotalProgress]);
 
-  }, [updateProgress, setTotalAssets]); // Dependencies for useCallback
-
-  // Start preloading when the hook is first mounted
   useEffect(() => {
     startPreloading();
-  }, [startPreloading]); // Dependency array ensures it runs once on mount
+  }, [startPreloading]);
 
   return { progress, isComplete };
 };

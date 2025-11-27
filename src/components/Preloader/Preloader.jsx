@@ -118,14 +118,17 @@ const Preloader = ({ onComplete, onMidway }) => {
             ease: "power2.out",
             onUpdate: () => {
                 if (counterTextRef.current) {
-                    counterTextRef.current.textContent = Math.round(animatedCounterValue.current.value);
+                    counterTextRef.current.textContent = Math.round(animatedCounterValue.current.value)+"%";
                 }
             },
             onComplete: () => {
                 if (isComplete && animatedCounterValue.current.value >= 99.5) {
-                    if (firstTimeline.current && firstTimeline.current.isActive()) {
-                        firstTimeline.current.then(() => secondTimeline.current?.resume());
+                    if (firstTimeline.current?.isActive()) {
+                        firstTimeline.current.eventCallback("onComplete", () => {
+                            secondTimeline.current?.resume();
+                        });
                     } else {
+                        // tl1 already done, resume tl2 immediately
                         secondTimeline.current?.resume();
                     }
                 }
@@ -150,7 +153,7 @@ const Preloader = ({ onComplete, onMidway }) => {
                 <div className="preloader-box">
                     <div className="counter-wrapper">
                         <div className="counter-text" ref={counterTextRef}>
-                            0
+                            0%
                         </div>
                     </div>
                 </div>
