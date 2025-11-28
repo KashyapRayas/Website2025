@@ -9,10 +9,6 @@ import Landing from './pages/Landing.jsx'
 import Project from './pages/Project.jsx'
 import { useSmoothScrollConfig } from './hooks/useSmoothScrollConfig'
 
-// Keeping these for potential dynamic loading later, but initial preload is handled by useAssetPreloader
-const preloadLanding = () => import('./pages/Landing.jsx')
-const preloadProject = () => import('./pages/Project.jsx')
-
 function App() {
     // Start with isInitialLoading true to ensure Preloader is shown
     const scrollConfig = useSmoothScrollConfig()

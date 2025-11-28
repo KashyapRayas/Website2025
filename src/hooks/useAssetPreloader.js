@@ -83,17 +83,16 @@ const preloadJson = async (filename) => {
 };
 
 // Helper: recursively find strings in JSON that look like image paths
+const IMAGE_PATH_REGEX = /"(\/(?:project_imgs|about_imgs)\/[^"]+\.(?:png|jpg|jpeg|gif|webp|svg))"/gi;
 const scanForImages = (data, paths = new Set()) => {
     if (!data) return paths;
 
     // Convert the entire object to string and Regex match all image paths
     // This catches everything: "url": "/project_imgs/...", "banner": "...", etc.
     const jsonString = JSON.stringify(data);
-    // Matches strings starting with /project_imgs/ or /about_imgs/ ending in common extensions
-    const regex = /"(\/(?:project_imgs|about_imgs)\/[^"]+\.(?:png|jpg|jpeg|gif|webp|svg))"/gi;
 
     let match;
-    while ((match = regex.exec(jsonString)) !== null) {
+    while ((match = IMAGE_PATH_REGEX.exec(jsonString)) !== null) {
         paths.add(match[1]); // match[1] is the captured path inside quotes
     }
     return paths;
@@ -105,10 +104,6 @@ export const useAssetPreloader = () => {
 
   const loadedCountRef = useRef(0);
   const totalCountRef = useRef(0);
-
-  // Weights: Phase 1 (Core) = 25%, Phase 2 (Assets) = 75%
-  // This ensures the bar moves slowly at start and does the heavy lifting in Phase 2
-  const PHASE1_WEIGHT = 0.25;
 
   const calculateTotalProgress = useCallback(() => {
     if (totalCountRef.current === 0) return;
