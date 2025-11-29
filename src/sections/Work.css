@@ -104,7 +104,7 @@
             justify-content: center;
             align-items: center;
             background-color: var(--light-off-teal);
-            border: 3px solid var(--off-teal);
+            border: 0px solid var(--off-teal);
             box-sizing: border-box;
 
             .work-img {
@@ -112,6 +112,7 @@
                 object-fit: cover;
                 object-position: center;
                 image-rendering: pixelated;
+                background-color: var(--light-off-teal);
                 opacity: 1;
             }
         }

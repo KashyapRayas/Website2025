@@ -215,6 +215,12 @@ const Home = forwardRef(({isLoaded, handleProjectSelect}, ref) => {
                             what is yet to be designed.
                         </h3>
                     </div>
+                    {/* <div className={styles.fourth}>
+                        <div className={styles.s2}></div>
+                        <img className={styles.s3} src={lego_44} alt="" />
+                        <div className={styles.s4}></div>
+                        <div className={styles.s1}></div>
+                    </div> */}
                 </div>
 
             </div>

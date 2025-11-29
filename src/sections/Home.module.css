@@ -366,7 +366,7 @@ section > .middle {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-    border: 1.8px solid var(--off-teal);
+    border: 0px solid var(--off-teal);
     box-sizing: border-box;
 }
 
@@ -449,6 +449,45 @@ section > .middle {
 }
 
 .right .third .s4 {
+  width: 100%;
+  height: 100%;
+  background-color: var(--off-white);
+  border-radius: 9px;
+}
+
+.left .fourth {
+  display: flex;
+  gap: 1px;
+  box-sizing: border-box;
+  height: 180px;
+  width: 100%;
+}
+
+.left .fourth .s1 {
+  min-width: 90px;
+  max-width: 90px;
+  height: 100%;
+  background-color: var(--light-off-teal);
+  border-radius: 9px;
+}
+
+.left .fourth .s2 {
+  min-width: 180px;
+  max-width: 180px;
+  height: 180px;
+  background-color: var(--off-white);
+  border-radius: 9px;
+}
+
+.left .fourth .s3 {
+  min-width: 180px;
+  max-width: 180px;
+  height: 180px;
+  background-color: var(--off-teal);
+  border-radius: 9px;
+}
+
+.left .fourth .s4 {
   width: 100%;
   height: 100%;
   background-color: var(--off-white);

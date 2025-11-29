@@ -1,12 +1,12 @@
 // App.jsx (No changes needed)
-import { useState, useCallback, useEffect} from "react"
+import { useState, useCallback } from "react"
 import './App.css'
 import { ReactLenis, useLenis } from 'lenis/react'
 
 import Preloader from './components/Preloader/Preloader.jsx'
-import TransitionLoader from './components/TransitionLoader/TransitionLoader.jsx'
 import Landing from './pages/Landing.jsx'
 import Project from './pages/Project.jsx'
+import TransitionLoader from './components/TransitionLoader/TransitionLoader.jsx'
 import { useSmoothScrollConfig } from './hooks/useSmoothScrollConfig'
 
 function App() {
@@ -50,21 +50,18 @@ function App() {
     }, [transitionDirection, lenis]);
 
     const handleProjectSelect = (projectData) => {
-        preloadProject()
         setSelectedProjectName(projectData.name)
         setTransitionDirection('in')
         setIsTransitioning(true)
     };
 
     const handleNextProjectSelect = (projectData) => {
-        preloadProject()
         setProjectToLoad(projectData.name)
         setTransitionDirection('loop')
         setIsTransitioning(true)
     };
 
     const handleBackToLanding = useCallback(() => {
-        preloadLanding()
         setTransitionDirection('out')
         setIsTransitioning(true)
     }, []);

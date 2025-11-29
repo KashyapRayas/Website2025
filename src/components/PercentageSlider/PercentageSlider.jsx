@@ -31,7 +31,7 @@ const squareStyle = {
   alignItems: "center",
   color: "white",
   fontSize: "42px",
-  border: "3px solid var(--off-teal)",
+  border: "0px solid var(--off-teal)",
   boxSizing: "border-box",
   position: "relative",
   overflow: "hidden"
