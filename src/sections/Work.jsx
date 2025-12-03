@@ -88,7 +88,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const drawImageCover = (ctx, img) => {
     if (!img || !img.naturalWidth) return;
 
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = ( window.devicePixelRatio || 1 ) * 1;
     const logicalW = canvasRef.current.width / dpr;
     const logicalH = canvasRef.current.height / dpr;
 
@@ -118,7 +118,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = ( window.devicePixelRatio || 1 ) * 1.03;
 
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
@@ -202,7 +202,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
   useGSAP(() => {
     if (!canvasRef.current) return;
-    gsap.set(canvasRef.current, { scale: 1.05 });
+    gsap.set(canvasRef.current, { scale: 1.02 });
   }, []);
 
   useGSAP(() => {
@@ -213,12 +213,14 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
       scale: 1,
       duration: 0.2,
       ease: "power2.inOut",
+        // filter: "blur(1.2px)",
     }).to(
       canvasRef.current,
       {
-        scale: 1.01,
+        scale: 1.02,
         duration: 0.15,
         ease: "power2.inOut",
+        filter: "blur(0px)",
       },
       0.2
     );
@@ -335,15 +337,17 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                 </svg>
               </div>
               <div className="work-img-wrapper">
-                <canvas
-                  ref={canvasRef}
-                  className="work-img"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    display: "block",
-                  }}
-                />
+                <div className="canvas-wrapper">
+                    <canvas
+                    ref={canvasRef}
+                    className="work-img"
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        display: "block",
+                    }}
+                    />
+                </div>
               </div>
             </div>
 

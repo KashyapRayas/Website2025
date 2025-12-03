@@ -34,7 +34,8 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
         height: "100dvh",
         overflow: "hidden",
         backgroundColor: "var(--off-teal)",
-        zIndex: 0
+        zIndex: 0,
+        clipPath: "inset(50% 50% 50% 50% round 9px)"
     }), []);
 
     const finalStyle = useMemo(() => ({
@@ -58,10 +59,23 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
             p => p.name === projectData.details.projectTitle
         );
 
-        if (currentIndex === -1) return null;
+        // If current project not found, return first project
+        if (currentIndex === -1) {
+            const firstProj = projectsData.projects[0];
+            if (!firstProj) return null;
+            return {
+                nextWorkTitle: firstProj.name,
+                nextWorkDescription: firstProj.description
+            };
+        }
 
+        // Calculate next index with wrapping
         const nextIndex = (currentIndex + 1) % projectsData.projects.length;
         const nextProj = projectsData.projects[nextIndex];
+
+        if (!nextProj) {
+            return null;
+        }
 
         return {
             nextWorkTitle: nextProj.name,
@@ -69,9 +83,9 @@ const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNext
         };
     }, [projectData]);
 
-    useEffect(()=> {
+    useEffect(() => {
 
-    }, [projectData])
+    }, [projectData]);
 
     useEffect(() => {
         let cancelled = false;

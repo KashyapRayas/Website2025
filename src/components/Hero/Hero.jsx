@@ -10,6 +10,7 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLenis } from "lenis/react";
 
 import styles from "./Hero.module.css";
 
@@ -18,7 +19,7 @@ import figma_cancel from "/icons/figma_cancel.png";
 import figma_search from "/icons/figma_search.png";
 import box_anchor from "/box_anchor.svg";
 
-gsap.registerPlugin(CustomEase, ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, CustomEase);
 
 // Create the named ease once
 (() => {
@@ -43,6 +44,8 @@ const fonts = Object.freeze([
 
 const Hero = ({ isLoaded }) => {
 
+    const lenis = useLenis();
+
     gsap.config({
         force3D: true
     })
@@ -60,12 +63,16 @@ const Hero = ({ isLoaded }) => {
   const fontRefs = useRef([]);
   const parallaxGroupRef = useRef(null);
   const meSvgRef = useRef(null);
+  const fishermanRef = useRef(null);
 
   // Bars for wave animation
   const rect1Ref = useRef(null);
   const rect2Ref = useRef(null);
   const rect3Ref = useRef(null);
   const rect4Ref = useRef(null);
+
+const stopTimerRef = useRef(null);
+const isScrollingRef = useRef(false);
 
   // Timelines
   const t1 = useRef(null); // fishing line timeline
@@ -115,6 +122,7 @@ const Hero = ({ isLoaded }) => {
 
   // Eye animations
   const animateEyesLeft = useCallback(() => {
+      if (!leftIrisRef.current || !rightIrisRef.current || !leftBrowRef.current || !rightBrowRef.current) return;
     gsap.to(leftIrisRef.current, {
       attr: {
         d: "M143 237.5C143 241.918 139.418 245.5 135 245.5C130.582 245.5 127 241.918 127 237.5C127 233.082 130.582 229.5 135 229.5C139.418 229.5 143 233.082 143 237.5Z",
@@ -146,6 +154,7 @@ const Hero = ({ isLoaded }) => {
   }, []);
 
   const animateEyesRight = useCallback(() => {
+      if (!leftIrisRef.current || !rightIrisRef.current || !leftBrowRef.current || !rightBrowRef.current) return;
     gsap.to(leftIrisRef.current, {
       attr: {
         d: "M151 240.5C151 244.918 147.418 248.5 143 248.5C138.582 248.5 135 244.918 135 240.5C135 236.082 138.582 232.5 143 232.5C147.418 232.5 151 236.082 151 240.5Z",
@@ -175,6 +184,38 @@ const Hero = ({ isLoaded }) => {
       ease: "power3.out",
     });
   }, []);
+
+    useEffect(() => {
+        if (!lenis) return;
+
+        const STOP_DELAY = 160; // ms after last scroll frame
+        const VELOCITY_EPS = 0.02; // ignore micro motion
+
+        const onLenisScroll = ({ velocity }) => {
+        const v = Math.abs(velocity || 0);
+
+        // If moving and we weren't in "scrolling" state yet
+        if (v > VELOCITY_EPS && !isScrollingRef.current) {
+            isScrollingRef.current = true;
+            animateEyesLeft();
+        }
+
+        // Reset stop timer on each frame
+        if (stopTimerRef.current) clearTimeout(stopTimerRef.current);
+        stopTimerRef.current = setTimeout(() => {
+            if (isScrollingRef.current) {
+            isScrollingRef.current = false;
+            animateEyesRight();
+            }
+        }, STOP_DELAY);
+        };
+
+        lenis.on("scroll", onLenisScroll);
+        return () => {
+        lenis.off("scroll", onLenisScroll);
+        if (stopTimerRef.current) clearTimeout(stopTimerRef.current);
+        };
+    }, [lenis, animateEyesLeft, animateEyesRight]);
 
   // One effect to decide eye direction (hover overrides loaded)
   useEffect(() => {
@@ -213,6 +254,20 @@ const Hero = ({ isLoaded }) => {
       t1.current = null;
     };
   }, [checkIntersection]);
+
+  useGSAP(() => {
+    if (!fishermanRef.current) return;
+
+    const tl = gsap.timeline({ repeat: -1, yoyo: true, autoplay: true });
+
+    tl.to(fishermanRef.current, {
+        scaleY: 1.05,
+        transformOrigin: "top center",
+        duration: 1.5,
+        ease: "sine.inOut",
+        delay: 0.25,
+    });
+}, [])
 
   // Wave animation on header rectangles
   useGSAP(() => {
@@ -546,35 +601,41 @@ const Hero = ({ isLoaded }) => {
                     />
                 </g>
 
-                <g id="Fisherman with Boat">
-                    <path
-                    id="Vector 41 (Stroke)"
-                    d="M24.041 32.001C42.1258 32.5034 76.0772 35.6801 107.699 44.4121C123.51 48.7781 138.804 54.5504 151.257 62.1143C163.699 69.6718 173.438 79.1002 177.902 90.832L175.098 91.8994C170.962 81.0315 161.838 72.0522 149.699 64.6787C137.57 57.3115 122.565 51.6292 106.9 47.3037C75.5721 38.6528 41.8723 35.4967 23.957 34.999L24.041 32.001Z"
-                    fill="var(--off-white)"
-                    />
-                    <g id="Group 31">
-                    <path
-                        id="Vector 38"
-                        d="M169.365 97.9722C162.038 98.1933 141.886 97.7987 130.528 97.5223C129.184 97.4895 128.363 98.7324 129.311 99.6856C132.602 102.995 140.264 106.411 144.39 107.94C159.032 112.005 186.987 107.835 199.134 105.242C203.542 104.694 207.518 101.749 210.173 99.0834C211.344 97.9078 210.405 96.107 208.747 96.1823L169.365 97.9722Z"
-                        fill="var(--off-black)"
-                    />
-                    <path
-                        id="Vector 39"
-                        d="M181.866 101.559C165.627 102.915 141.397 100.184 129.574 98.0691C129.337 98.0266 129.373 97.6997 129.614 97.7002C140.017 97.7202 159.272 98.2107 168.204 98.1485L209.493 96.2499C210.011 96.2261 210.168 96.8055 209.684 96.9904C203.485 99.3585 189.161 101.007 181.866 101.559Z"
+                <clipPath id="fishermanclip">
+                    <rect x="0" y="0" width="210px" height="108"/>
+                </clipPath>
+
+                <g id="FishermanGroupWrapper" clipPath="url(#fishermanclip)">
+                    <g id="Fisherman with Boat" ref={fishermanRef}>
+                        <path
+                        id="Vector 41 (Stroke)"
+                        d="M24.041 32.001C42.1258 32.5034 76.0772 35.6801 107.699 44.4121C123.51 48.7781 138.804 54.5504 151.257 62.1143C163.699 69.6718 173.438 79.1002 177.902 90.832L175.098 91.8994C170.962 81.0315 161.838 72.0522 149.699 64.6787C137.57 57.3115 122.565 51.6292 106.9 47.3037C75.5721 38.6528 41.8723 35.4967 23.957 34.999L24.041 32.001Z"
                         fill="var(--off-white)"
-                    />
-                    </g>
-                    <g id="Group 30">
-                    <path
-                        id="Vector 40"
-                        d="M173.01 77.4609C174.37 74.7406 177.43 75.6473 178.791 76.4407C181.239 78.345 182.078 82.2214 182.191 83.9216L180.831 85.2817C181.103 91.5384 179.584 99.2233 178.791 102.284H175.05C174.234 101.196 173.35 94.5761 173.01 91.4024L171.99 91.7425V85.9618L170.63 86.9819L169.27 86.3019L173.01 77.4609Z"
-                        fill="var(--off-black)"
-                    />
-                    <path
-                        id="Ellipse 14"
-                        d="M177.089 73.3803C177.089 74.6949 176.023 75.7605 174.708 75.7605C173.394 75.7605 172.328 74.6949 172.328 73.3803C172.328 72.0657 173.394 71 174.708 71C176.023 71 177.089 72.0657 177.089 73.3803Z"
-                        fill="var(--off-black)"
-                    />
+                        />
+                        <g id="Group 31" style={{transform: "rotate(2deg) translateY(-5px)"}}>
+                        <path
+                            id="Vector 38"
+                            d="M169.365 97.9722C162.038 98.1933 141.886 97.7987 130.528 97.5223C129.184 97.4895 128.363 98.7324 129.311 99.6856C132.602 102.995 140.264 106.411 144.39 107.94C159.032 112.005 186.987 107.835 199.134 105.242C203.542 104.694 207.518 101.749 210.173 99.0834C211.344 97.9078 210.405 96.107 208.747 96.1823L169.365 97.9722Z"
+                            fill="var(--off-black)"
+                        />
+                        <path
+                            id="Vector 39"
+                            d="M181.866 101.559C165.627 102.915 141.397 100.184 129.574 98.0691C129.337 98.0266 129.373 97.6997 129.614 97.7002C140.017 97.7202 159.272 98.2107 168.204 98.1485L209.493 96.2499C210.011 96.2261 210.168 96.8055 209.684 96.9904C203.485 99.3585 189.161 101.007 181.866 101.559Z"
+                            fill="var(--off-white)"
+                        />
+                        </g>
+                        <g id="Group 30">
+                        <path
+                            id="Vector 40"
+                            d="M173.01 77.4609C174.37 74.7406 177.43 75.6473 178.791 76.4407C181.239 78.345 182.078 82.2214 182.191 83.9216L180.831 85.2817C181.103 91.5384 179.584 99.2233 178.791 102.284H175.05C174.234 101.196 173.35 94.5761 173.01 91.4024L171.99 91.7425V85.9618L170.63 86.9819L169.27 86.3019L173.01 77.4609Z"
+                            fill="var(--off-black)"
+                        />
+                        <path
+                            id="Ellipse 14"
+                            d="M177.089 73.3803C177.089 74.6949 176.023 75.7605 174.708 75.7605C173.394 75.7605 172.328 74.6949 172.328 73.3803C172.328 72.0657 173.394 71 174.708 71C176.023 71 177.089 72.0657 177.089 73.3803Z"
+                            fill="var(--off-black)"
+                        />
+                        </g>
                     </g>
                 </g>
                 </g>

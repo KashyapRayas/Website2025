@@ -261,3 +261,9 @@
     bottom: 0;
     left: 0;
 }
+
+#FishermanGroupWrapper {
+    position: relative;
+    height: 77px;
+    overflow: hidden;
+}
