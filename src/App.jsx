@@ -12,8 +12,8 @@ import { useSmoothScrollConfig } from './hooks/useSmoothScrollConfig'
 function App() {
     // Start with isInitialLoading true to ensure Preloader is shown
     const scrollConfig = useSmoothScrollConfig()
-    const [isAssetLoaded, setIsAssetLoad] = useState(false) //change
-    const [isPreloaderDone, setIsPreloaderDone] = useState(false)  //change
+    const [isAssetLoaded, setIsAssetLoad] = useState(true) //change
+    const [isPreloaderDone, setIsPreloaderDone] = useState(true)  //change
     const [view, setView] = useState('landing')
     const [isTransitioning, setIsTransitioning] = useState(false)
     const [transitionDirection, setTransitionDirection] = useState('out')

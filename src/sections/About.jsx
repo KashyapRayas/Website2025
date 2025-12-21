@@ -9,9 +9,11 @@ import unchecked from "/unchecked.svg";
 import PercentageSlider from "../components/PercentageSlider/PercentageSlider.jsx";
 import AnimatedLegWiggle from "../components/AnimatedLegWiggle.jsx";
 import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(CustomEase, ScrollTrigger);
 
 // --- Small Reusable Components ---
 const ListItem = ({ icon, text, span }) => (
@@ -19,7 +21,7 @@ const ListItem = ({ icon, text, span }) => (
     <div className="wrapper">
       <img src={icon} alt="" />
     </div>
-    <h2>
+    <h2 className={icon === checked ? "checked" : "unchecked"}>
       {text} {span && <span>{span}</span>}
     </h2>
   </div>
@@ -46,6 +48,20 @@ const About = forwardRef((_, ref) => {
   const [resumeHovered, setResumeHovered] = useState(false);
   const cellRef = useRef(null);
   const legRef = useRef(null);
+  const rectRef = useRef(null);
+
+    useGSAP(() => {
+        if (!document.querySelectorAll(".star")) return;
+        CustomEase.create("wave", "M0,0 C0.6,0, 0.3,1.4, 1,1");
+
+        gsap.to(".star", {
+        rotate: "360deg",
+        duration: 3,
+        ease: "wave",
+        repeat: -1,
+        });
+
+    }, []);
 
   // --- Precompute Age ---
   const age = useMemo(() => {
@@ -126,7 +142,12 @@ const About = forwardRef((_, ref) => {
           </div>
 
           <div className="first">
-            <h4>SOMETHING TO LIVE BY</h4>
+            <div>
+                <div className="iconWrapper">
+                    <h4>{">"}</h4>
+                </div>
+                <h4>OBJECTIVE</h4>
+            </div>
             <h3>
               Ever since I was a kid<span>,</span> I knew I wanted to{" "}
               <span>write emails</span> and work{" "}
@@ -135,7 +156,12 @@ const About = forwardRef((_, ref) => {
           </div>
 
           <div className="second">
-            <h4>ABOUT ME, MYSELF & I</h4>
+            <div>
+                <div className="iconWrapper">
+                    <h4>{">"}</h4>
+                </div>
+                <h4>DESCRIPTIVE</h4>
+            </div>
             <h3>
               Hi there! <span>[ again ]</span> I’m Kashyap Rayas, a{" "}
               <span>[ {age} M ]</span> Product Designer with a passion for
@@ -164,7 +190,12 @@ const About = forwardRef((_, ref) => {
 
             <div className="third-wrapper-new">
                     <div className="third">
-                        <h4>THE UNDERGROUND MAN</h4>
+                        <div>
+                            <div className="iconWrapper">
+                                <h4>{">"}</h4>
+                            </div>
+                            <h4>THE UNDERGROUND MAN</h4>
+                        </div>
                         <h3>
                             It is clear to me now that, owing to my unbounded vanity and to the high standard I set for myself, I often looked at myself with furious discontent, which verged on loathing, and so I inwardly attributed the same feeling to everyone.
                         </h3>

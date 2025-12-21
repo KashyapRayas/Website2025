@@ -120,8 +120,8 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     const rect = canvas.getBoundingClientRect();
     const dpr = ( window.devicePixelRatio || 1 ) * 1.03;
 
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+    canvas.width = rect.width;
+    canvas.height = rect.height;
 
     const ctx = canvas.getContext("2d", { alpha: false });
     ctx.scale(dpr, dpr);
@@ -139,7 +139,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     if (prevSrc === targetSrc && currentImageKey.current !== null) return;
 
     let startTime = null;
-    const DURATION = 200;
+    const DURATION = 150;
 
     const render = (timestamp) => {
       if (!startTime) startTime = timestamp;
@@ -217,7 +217,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     }).to(
       canvasRef.current,
       {
-        scale: 1.02,
+        scale: 1.05,
         duration: 0.15,
         ease: "power2.inOut",
         filter: "blur(0px)",
@@ -341,11 +341,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                     <canvas
                     ref={canvasRef}
                     className="work-img"
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                        display: "block",
-                    }}
                     />
                 </div>
               </div>

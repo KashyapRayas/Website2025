@@ -27,6 +27,10 @@ const Preloader = ({ onComplete, onMidway }) => {
     }, []);
 
     useGSAP(() => {
+        
+    }, [] );
+
+    useGSAP(() => {
 
         // This function is called when the *entire* preloader sequence finishes
         const handleCompleteAllAnimation = () => {
@@ -162,6 +166,10 @@ const Preloader = ({ onComplete, onMidway }) => {
                         we must <span>see through it</span><span>.</span>
                     </div>
                 </div>
+            </div>
+
+            <div className="bottom-info">
+                Making things breaks you open
             </div>
 
             {/* Optional: Debug info - remove in production */}

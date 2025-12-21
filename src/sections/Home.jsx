@@ -1,4 +1,4 @@
-import { useState, useRef, forwardRef, useMemo, useCallback } from 'react'
+import { useState, useRef, forwardRef, useMemo, useCallback, use } from 'react'
 import gsap from 'gsap'
 import { CustomEase } from "gsap/CustomEase";
 import styles from './Home.module.css'
@@ -11,8 +11,10 @@ import Hero from '../components/Hero/Hero'
 import projects from '../data/projects.json'
 import AnimatedMan from '../components/AnimatedMan';
 import { useGSAP } from "@gsap/react";
+import icon from '/star.svg'
 
 const BASE_PATH = "/Website2025"
+gsap.registerPlugin(CustomEase);
 
 const Home = forwardRef(({isLoaded, handleProjectSelect}, ref) => {
 
@@ -28,14 +30,13 @@ const Home = forwardRef(({isLoaded, handleProjectSelect}, ref) => {
         if (!rectRef.current) return;
         CustomEase.create("wave", "M0,0 C0.6,0, 0.3,1.4, 1,1");
 
-        const tween = gsap.to(rectRef.current, {
+        gsap.to(rectRef.current, {
         rotate: "360deg",
         duration: 3,
         ease: "wave",
         repeat: -1,
         });
 
-        return () => tween.kill();
     }, []);
 
     useGSAP(() => {
@@ -207,7 +208,12 @@ const Home = forwardRef(({isLoaded, handleProjectSelect}, ref) => {
                         </div>
                     </div>
                     <div className={styles.third}>
-                        <h4>MY INNIE'S NOTE</h4>
+                        <div>
+                            <div className={styles.iconWrapper}>
+                                <h4>{">"}</h4>
+                            </div>
+                            <h4>MY INNIE'S NOTE</h4>
+                        </div>
                         <h3>
                             I refine the product. The product refines me. I have decided to dedicate
                             my life to learn the architecture of things, quietly nurturing the engineer within.

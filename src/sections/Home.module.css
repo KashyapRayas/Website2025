@@ -1,6 +1,13 @@
 .home {
   width: 100%;
-  height: 100%;
+      align-self: stretch;
+  /* min-height: calc(100dvh - 60px); */
+  max-height: 900px;
+      display: flex;
+    justify-content: center;
+    gap: 0;
+    padding: 0 0 1px 0;
+    box-sizing: border-box;
 }
 
 .extremesWrapperLeft {
@@ -28,24 +35,14 @@
     background-color: var(--light-off-teal);
 }
 
-section {
-    /* position: relative; */
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    padding: 0 0 1px 0;
-    box-sizing: border-box;
-    width: 100%;
-    align-self: stretch;
-}
-
-section > .middle {
+.home > .middle {
     position: relative;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     gap: 1px;
+    align-self: stretch;
 }
 
 .left {
@@ -54,6 +51,8 @@ section > .middle {
   display: flex;
   flex-direction: column;
   gap: 1px;
+  align-self: stretch;
+  transition: all 1s ease-in-out;
 }
 
 .left .first {
@@ -138,7 +137,7 @@ section > .middle {
 
 .left .third {
   width: 100%;
-  height: 180px;
+    height: 100%;
   background-color: var(--off-white);
   padding: 30px;
   border-radius: 9px;
@@ -147,6 +146,33 @@ section > .middle {
   justify-content: space-between;
   flex-direction: column;
   box-sizing: border-box;
+  align-self: stretch;
+}
+
+.left .third div {
+    display: flex;
+    width: 100%;
+    gap: 0px;
+    align-items: center;
+    justify-content: start;
+}
+
+.left .third div .iconWrapper {
+    width: 0px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+        h4 {
+        font-weight: 800;
+        color: var(--off-black);
+    }
+}
+
+.left .third:hover > div .iconWrapper{
+    width: 18px;
 }
 
 .left .third h4 {

@@ -188,8 +188,8 @@ const isScrollingRef = useRef(false);
     useEffect(() => {
         if (!lenis) return;
 
-        const STOP_DELAY = 160; // ms after last scroll frame
-        const VELOCITY_EPS = 0.02; // ignore micro motion
+        const STOP_DELAY = 100; // ms after last scroll frame
+        const VELOCITY_EPS = 0.8; // ignore micro motion
 
         const onLenisScroll = ({ velocity }) => {
         const v = Math.abs(velocity || 0);
@@ -265,7 +265,7 @@ const isScrollingRef = useRef(false);
         transformOrigin: "top center",
         duration: 1.5,
         ease: "sine.inOut",
-        delay: 0.25,
+        delay: 0.2,
     });
 }, [])
 

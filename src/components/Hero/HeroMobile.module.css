@@ -156,9 +156,9 @@
     position: absolute;
     z-index: 3;
     left: 60px;
-    top: 270px;
+    top: 220px;
     width: max-content;
-    height: 330px;
+    height: 380px;
     display: flex;
     flex-direction: column;
     gap: 0px;

@@ -33,6 +33,7 @@
     justify-content: center;
     align-items: center;
 	position: relative;
+    z-index: 2;
     /* border: 3px solid var(--off-teal); */
 }
 
@@ -73,6 +74,7 @@
 }
 
 .mobile-info {
+    z-index: 1;
     display: none;
     width: 100%;
     position: absolute;
@@ -84,6 +86,20 @@
     text-wrap: wrap;
     padding: 0 30px;
     box-sizing: border-box;
+}
+
+.bottom-info {
+    width: 100%;
+    position: absolute;
+    font-size: 15px;
+    color: var(--off-black-06);
+    text-align: center;
+    bottom: 30px;
+    left: 0px;
+    text-wrap: wrap;
+    padding: 0 30px;
+    box-sizing: border-box;
+    z-index: 1;
 }
 
 @media screen and (max-width: 1200px) {

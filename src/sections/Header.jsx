@@ -13,6 +13,7 @@ const Header = ({setLinkHovered, lenis}) => {
                         <LinkButton isActive={true} linkName={"HOME"} linkTo={"#HOME"} lenis={lenis}/>
                         <LinkButton linkName={"WORK"} linkTo={"#WORK"} lenis={lenis}/>
                         <LinkButton linkName={"ABOUT"} linkTo={"#ABOUT"} lenis={lenis}/>
+                        <LinkButton linkName={"LAB"} linkTo={"#LAB"} lenis={lenis}/>
                         <LinkButton linkName={"CONTACT"} linkTo={"#CONTACT"} lenis={lenis}/>
                         <div className={"cell"}></div>
                     </div>
