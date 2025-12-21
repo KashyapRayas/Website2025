@@ -110,6 +110,7 @@
             .canvas-wrapper {
               height: 100%;
               width: 100%;
+              overflow: hidden;
             }
 
             .work-img {
@@ -118,7 +119,7 @@
                 display: block;
                 object-fit: cover;
                 object-position: center;
-                image-rendering: pixelated;
+                image-rendering: auto;
                 background-color: var(--light-off-teal);
                 opacity: 1;
             }
