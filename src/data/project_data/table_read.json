@@ -3,7 +3,7 @@
     [
         {
             "type": "img",
-            "url": "/project_imgs/tr_1.png",
+            "url": "/project_imgs/tr_1.webp",
             "caption": ""
         },
         {
@@ -21,7 +21,7 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_2.png",
+            "url": "/project_imgs/tr_2.webp",
             "caption": "The initial vibe-coded prototype"
         },
         {
@@ -31,12 +31,12 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_3.png",
+            "url": "/project_imgs/tr_3.webp",
             "caption": "The final product, designed while vibing to music"
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_4.png",
+            "url": "/project_imgs/tr_4.webp",
             "caption": "One of my favourite sign up pages I've designed"
         },
         {
@@ -45,22 +45,22 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_5.png",
+            "url": "/project_imgs/tr_5.webp",
             "caption": "Voice cloning modal—secondary feature accessed on demand"
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_6.png",
+            "url": "/project_imgs/tr_6.webp",
             "caption": "I do like how simple this looks"
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_7.png",
+            "url": "/project_imgs/tr_7.webp",
             "caption": "Dialogue editing with AI-suggested improvements"
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_8.png",
+            "url": "/project_imgs/tr_8.webp",
             "caption": "Loading states with film and series references"
         }
     ],

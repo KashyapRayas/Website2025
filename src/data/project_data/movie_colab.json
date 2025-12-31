@@ -2,7 +2,7 @@
     "content": [
         {
             "type": "img",
-            "url": "/project_imgs/mc_1.png",
+            "url": "/project_imgs/mc_1.webp",
             "caption": ""
         },
         {
@@ -20,17 +20,17 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/mc_2.png",
+            "url": "/project_imgs/mc_2.webp",
             "caption": "Project Updates: Customize with a variety of widgets"
         },
         {
             "type": "img",
-            "url": "/project_imgs/mc_3.png",
+            "url": "/project_imgs/mc_3.webp",
             "caption": "Project Tasks: Manage tasks linked to film shots and assets"
         },
         {
             "type": "img",
-            "url": "/project_imgs/mc_4.png",
+            "url": "/project_imgs/mc_4.webp",
             "caption": "Version viewer, annotation and more!"
         },
         {
@@ -40,22 +40,22 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/mc_5.png",
+            "url": "/project_imgs/mc_5.webp",
             "caption": "Projects list and Project Updates"
         },
         {
             "type": "img",
-            "url": "/project_imgs/mc_6.png",
+            "url": "/project_imgs/mc_6.webp",
             "caption": "Version Viewer: Lets you comment and review on the go"
         },
         {
             "type": "img",
-            "url": "/project_imgs/mc_7.png",
+            "url": "/project_imgs/mc_7.webp",
             "caption": "List of tasks to check-in referenced from web app"
         },
         {
             "type": "img",
-            "url": "/project_imgs/mc_8.png",
+            "url": "/project_imgs/mc_8.webp",
             "caption": "Task Analytics"
         }
     ],

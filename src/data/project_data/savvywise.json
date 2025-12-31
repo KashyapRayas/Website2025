@@ -2,7 +2,7 @@
     "content": [
         {
             "type": "img",
-            "url": "/project_imgs/sw_1.png",
+            "url": "/project_imgs/sw_1.webp",
             "caption": ""
         },
         {
@@ -20,7 +20,7 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/sw_2.png",
+            "url": "/project_imgs/sw_2.webp",
             "caption": "The Logo"
         },
         {
@@ -30,7 +30,7 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/sw_8.png",
+            "url": "/project_imgs/sw_8.webp",
             "caption": "An interface revolving under a model dropdown"
         },
         {
@@ -40,27 +40,27 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/sw_3.png",
+            "url": "/project_imgs/sw_3.webp",
             "caption": "Home"
         },
         {
             "type": "img",
-            "url": "/project_imgs/sw_4.png",
+            "url": "/project_imgs/sw_4.webp",
             "caption": "Tax research model - color coded to yellow"
         },
         {
             "type": "img",
-            "url": "/project_imgs/sw_5.png",
+            "url": "/project_imgs/sw_5.webp",
             "caption": "Other research model - color coded to orange"
         },
         {
             "type": "img",
-            "url": "/project_imgs/sw_6.png",
+            "url": "/project_imgs/sw_6.webp",
             "caption": "General task model"
         },
         {
             "type": "img",
-            "url": "/project_imgs/sw_7.png",
+            "url": "/project_imgs/sw_7.webp",
             "caption": "Workflows"
         }
     ],

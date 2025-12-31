@@ -3,76 +3,66 @@
     [
         {
             "type": "img",
-            "url": "/project_imgs/tr_1.png",
+            "url": "/project_imgs/vc_1.webp",
             "caption": ""
         },
         {
             "type": "bigtext",
-            "text": "An AI-powered web app to simulate table reads for film scripts"
+            "text": "Centralized web management for your organization and VigaET suite subscriptions"
         },
         {
             "type": "para",
-            "text": "Table reads are an integral part of script evaluation, providing invaluable insights into a screenplay's strengths and weaknesses before production. Actors typically read the script aloud, allowing creators to assess dialogue, pacing, and character dynamics. Table Read can simulate this crucial process, democratizing access to feedback and enabling more efficient script iteration for writers and filmmakers."
+            "text": "The third project I worked on after joining VigaET involved revamping and expanding the organization management features of their CRM web application. Originally built as a simple SSO portal, the app later evolved into a basic CRM tool. Organizations could invite members via email, manage their team structure, and assign seats for various VigaET products including Movie Colab project subscriptions and Script Viz AI credits."
         },
         {
             "type": "headingpara",
-            "heading": "The Idea",
-            "para": "The backstory behind this is actually pretty interesting. This whole thing first came to life when Mr. Vivek Reddy, CEO of VigaET, vibe-coded a super simple prototype. It was bare-bones; just a handful of dialogues stitched together using the Eleven Labs API. That early version was shown to me, and from there we kicked off the journey of building a full-fledged product. But since this was truly one of a kind, we basically had to start from scratch, brainstorming, mapping out workflows, and figuring out exactly how users would engage with and experience these dialogues inside the product."
-        },
-        {
-            "type": "img",
-            "url": "/project_imgs/tr_2.png",
-            "caption": "The initial vibe-coded prototype"
+            "heading": "The Aesthetic",
+            "para": "My goal was to elevate the app’s visual identity to feel more premium. Since it would be used by creative managers in the film industry, the design needed to reflect a cinematic sense of lighting and atmosphere while staying true to VigaET’s futuristic and minimal brand aesthetic."
         },
         {
             "type": "headingpara",
-            "heading": "The Product",
-            "para": "After gathering feedback from internal artists and directors, we identified two core workflows: script management and playback (primary) versus voice selection and cloning (secondary). We made the timeline and script permanently visible, relegating optional features to modals to reduce cognitive load and prevent layout shifts during active work."
+            "heading": "The Workflow",
+            "para": "As we expanded the CRM’s capabilities, it was important to avoid overwhelming users with too many separate management flows. We achieved this by grouping major workflows within the main navigation and organizing related sub-flows through a clean, tab-based structure."
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_3.png",
-            "caption": "The final product, designed while vibing to music"
+            "url": "/project_imgs/vc_2.webp",
+            "caption": "Organization setup"
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_4.png",
-            "caption": "One of my favourite sign up pages I've designed"
-        },
-        {
-            "type": "para",
-            "text": "Here are some modals I created, each showcasing an optional feature that stays close to the main workflow. Utilizing modals for specific product features streamlines navigation by minimizing layout shifts and eliminating the need for additional pages."
+            "url": "/project_imgs/vc_3.webp",
+            "caption": "Home"
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_5.png",
-            "caption": "Voice cloning modal—secondary feature accessed on demand"
+            "url": "/project_imgs/vc_4.webp",
+            "caption": "Organization"
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_6.png",
-            "caption": "I do like how simple this looks"
+            "url": "/project_imgs/vc_5.webp",
+            "caption": "Manage Licenses"
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_7.png",
-            "caption": "Dialogue editing with AI-suggested improvements"
+            "url": "/project_imgs/vc_6.webp",
+            "caption": "Custom placeholder illustrations #1"
         },
         {
             "type": "img",
-            "url": "/project_imgs/tr_8.png",
-            "caption": "Loading states with film and series references"
+            "url": "/project_imgs/vc_7.webp",
+            "caption": "Custom placeholder illustrations #2"
         }
     ],
     "details": {
-        "timeline": "Mar '25  - Present",
+        "timeline": "Mar - May '24",
         "company": "VigaET",
         "tags": [
             "Web App",
-            "AI Integrated",
-            "Movie Colab Suite"
+            "Org Management"
         ],
-        "projectTitle": "TABLE READ",
-        "projectLink": "https://moviecolab.com/tableread/"
+        "projectTitle": "VIGA CRM",
+        "projectLink": ""
     }
 }

@@ -2,7 +2,7 @@
     "content": [
         {
             "type": "img",
-            "url": "/project_imgs/ss_1.png",
+            "url": "/project_imgs/ss_1.webp",
             "caption": ""
         },
         {
@@ -25,12 +25,12 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/ss_2.png",
+            "url": "/project_imgs/ss_2.webp",
             "caption": "Before: Projects"
         },
         {
             "type": "img",
-            "url": "/project_imgs/ss_3.png",
+            "url": "/project_imgs/ss_3.webp",
             "caption": "Before: In a Project"
         },
         {
@@ -40,33 +40,33 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/ss_9.png",
+            "url": "/project_imgs/ss_9.webp",
             "caption": "Revamped Logo"
         },
         {
             "type": "img",
-            "url": "/project_imgs/ss_4.png",
+            "url": "/project_imgs/ss_4.webp",
             "caption": "After: Projects"
         },
         {
             "type": "img",
-            "url": "/project_imgs/ss_5.png",
+            "url": "/project_imgs/ss_5.webp",
             "caption": "After: In a Project"
         },
         {
             "type": "img",
-            "url": "/project_imgs/ss_6.png",
+            "url": "/project_imgs/ss_6.webp",
             "caption": "Collapsible processes panel reducing visual clutter"
         },
         {
             "type": "img",
-            "url": "/project_imgs/ss_7.png",
+            "url": "/project_imgs/ss_7.webp",
             "caption": "Version history with 'Preferred' tag based on artist feedback"
 
         },
         {
             "type": "img",
-            "url": "/project_imgs/ss_8.png",
+            "url": "/project_imgs/ss_8.webp",
             "caption": "Local workspace showing modifications before submission"
         }
     ],

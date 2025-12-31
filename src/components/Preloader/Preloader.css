@@ -63,11 +63,14 @@
     height: max-content;
     color: var(--off-black);
     padding: 16px;
+    span {
+        opacity: 1;
+    }
     span:nth-child(1) {
         font-weight: 600;
         font-family: 'Lora';
     }
-    span:nth-child(2) {
+    span.period {
         font-weight: 600;
         color: var(--dark-green);
     }

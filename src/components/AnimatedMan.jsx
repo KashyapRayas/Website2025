@@ -61,13 +61,13 @@ const AnimatedMan = ({isLoaded}) => {
 
             const waveTl = gsap.timeline({
                 repeat: -1,
-                repeatDelay: 1,
+                repeatDelay: 0.9,
             });
 
             waveTl
                 .to("#hand-1", { fillOpacity: 0, duration: 0.15 })
                 .to("#hand-2", { fillOpacity: 1, duration: 0.15 }, "<")
-                .to("#hand-1", { fillOpacity: 1, duration: 0.15 }, "+=1")
+                .to("#hand-1", { fillOpacity: 1, duration: 0.15 }, "+=0.6")
                 .to("#hand-2", { fillOpacity: 0, duration: 0.15 }, "<");
                 masterTl.add(waveTl);
         }

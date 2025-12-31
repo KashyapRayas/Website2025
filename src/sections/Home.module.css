@@ -167,7 +167,7 @@
     transition: all 0.2s ease-in-out;
         h4 {
         font-weight: 800;
-        color: var(--off-black);
+        color: var(--off-black-06);
     }
 }
 
@@ -289,7 +289,7 @@
 }
 
 .right .first .time h3 span {
-  color: var(--off-black-09);
+  color: var(--off-black-06);
   padding-left: 9px;
 }
 

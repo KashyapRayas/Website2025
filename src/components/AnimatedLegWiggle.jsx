@@ -70,7 +70,7 @@ const AnimatedLegWiggle = forwardRef((props, ref) => {
         // 3. Create a separate timeline for the waving animation
         const waveTl = gsap.timeline({
             repeat: -1, // Repeat this timeline forever
-            repeatDelay: 1, // Add a 1s pause between each full wave cycle
+            repeatDelay: 0.9, // Add a 0.3s pause between each full wave cycle
         });
 
         // 4. Build the waving sequence inside the wave timeline
@@ -82,8 +82,8 @@ const AnimatedLegWiggle = forwardRef((props, ref) => {
             .to(footL, { fillOpacity: 1, duration: 0.15 }, "<")
 
             // Second part of the wave: foot-l reappears, foot-r disappears
-            // The "+=1" position parameter creates the 1-second delay you wanted
-            .to(footLd, { fillOpacity: 1, duration: 0.15 }, "+=1")
+            // The "+=0.3" position parameter creates the 0.3-second delay you wanted
+            .to(footLd, { fillOpacity: 1, duration: 0.15 }, "+=0.6")
             .to(footL, { fillOpacity: 0, duration: 0.15 }, "<")
             .to(footRd, { fillOpacity: 0, duration: 0.15 }, "<")
             .to(footR, { fillOpacity: 1, duration: 0.15 }, "<");

@@ -27,7 +27,7 @@ const Preloader = ({ onComplete, onMidway }) => {
     }, []);
 
     useGSAP(() => {
-        
+
     }, [] );
 
     useGSAP(() => {
@@ -67,13 +67,47 @@ const Preloader = ({ onComplete, onMidway }) => {
             }
         });
 
+        // 1. Counter Exits
         tl2.to(counterTextRef.current, { yPercent: -205, duration: 0.6, ease: "power2.in" });
         tl2.set(counterTextRef.current, { display: "none" });
 
-        tl2.from(".quote-text.top", { yPercent: 155, duration: 0.6, ease: "power2.out" }, "<0");
-        tl2.from(".quote-text.bottom", { yPercent: -155, duration: 0.6, ease: "power2.out" }, "+=1");
-        tl2.to(".quote-text.top", { yPercent: 155, duration: 0.6, ease: "power2.in" }, "+=1");
-        tl2.to(".quote-text.bottom", { yPercent: -155, duration: 0.6, ease: "power2.in" });
+        // 2. Quotes Enter (Staggered)
+        // We target the specific span class inside the top quote
+        tl2.from(".quote-text.top .word-anim", {
+            yPercent: 155,
+            opacity: 0,
+            duration: 0.8, // Slightly longer to accommodate stagger feel
+            ease: "power2.out",
+            stagger: 0.05 // Delay between each word
+        }, "<0");
+
+        // We target the specific span class inside the bottom quote
+        tl2.from(".quote-text.bottom .word-anim", {
+            yPercent: -155,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            stagger: 0.05
+        }, "-=0.4"); // Overlap slightly with the top quote animation
+
+
+        // 3. Quotes Exit (Staggered)
+        // Top exits up
+        tl2.to(".quote-text.top .word-anim", {
+            yPercent: 155,
+            duration: 0.8,
+            ease: "power2.in",
+            stagger: -0.05
+        }, "+=1");
+
+        // Bottom exits down
+        tl2.to(".quote-text.bottom .word-anim", {
+            yPercent: -155,
+            duration: 0.8,
+            ease: "power2.in",
+            stagger: -0.05
+        }, "<0"); // Sync with top exit
+
         tl2.set(".quote-line", { display: "none" });
 
         secondTimeline.current = tl2;
@@ -140,6 +174,8 @@ const Preloader = ({ onComplete, onMidway }) => {
         });
     }, [progress, isComplete]);
 
+    // Helper style for split text
+    const wordStyle = { display: "inline-block" };
 
     return (
         <div id="preloader">
@@ -151,7 +187,12 @@ const Preloader = ({ onComplete, onMidway }) => {
             <div className="preloader-content-wrapper">
                 <div className="quote-line">
                     <div className="quote-text top">
-                        To think <span>outside the box</span><span>,</span>
+                        {/* We split the sentence into chunks for the stagger effect */}
+                        <span className="word-anim" style={wordStyle}>To</span>{" "}
+                        <span className="word-anim" style={wordStyle}>think</span>{" "}
+                        <span className="word-anim" style={wordStyle}>
+                            <span>outside the box</span><span className="period">,</span>
+                        </span>
                     </div>
                 </div>
                 <div className="preloader-box">
@@ -163,7 +204,12 @@ const Preloader = ({ onComplete, onMidway }) => {
                 </div>
                 <div className="quote-line">
                     <div className="quote-text bottom">
-                        we must <span>see through it</span><span>.</span>
+                         {/* We split the sentence into chunks for the stagger effect */}
+                         <span className="word-anim" style={wordStyle}>we</span>{" "}
+                         <span className="word-anim" style={wordStyle}>must</span>{" "}
+                         <span className="word-anim" style={wordStyle}>
+                            <span>see through it</span><span className="period">.</span>
+                         </span>
                     </div>
                 </div>
             </div>
@@ -171,23 +217,6 @@ const Preloader = ({ onComplete, onMidway }) => {
             <div className="bottom-info">
                 Making things breaks you open
             </div>
-
-            {/* Optional: Debug info - remove in production */}
-            {/* {process.env.NODE_ENV === 'development' && (
-                <div style={{
-                    position: 'fixed',
-                    top: '20px',
-                    left: '20px',
-                    color: 'white',
-                    fontSize: '12px',
-                    zIndex: 9999,
-                    background: 'rgba(0,0,0,0.5)',
-                    padding: '10px',
-                    borderRadius: '5px'
-                }}>
-                    Loading progress: {progress}% (Complete: {isComplete ? 'Yes' : 'No'})
-                </div>
-            )} */}
         </div>
     );
 };
