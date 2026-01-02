@@ -29,11 +29,6 @@
         "name": "VIGA CRM",
         "description": "Centralized web management for your organization and VigaET suite subscriptions",
         "img": "/project_imgs/vc_1.webp"
-        },
-        {
-        "name": "SCRIPT VIZ",
-        "description": "An AI-powered research assistant for Australian tax and compliance",
-        "img": "/project_imgs/sw_1.webp"
         }
     ]
 }

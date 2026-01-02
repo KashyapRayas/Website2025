@@ -97,7 +97,7 @@ const Preloader = ({ onComplete, onMidway }) => {
             yPercent: 155,
             duration: 0.8,
             ease: "power2.in",
-            stagger: -0.05
+            stagger: -0.02
         }, "+=1");
 
         // Bottom exits down
@@ -105,7 +105,7 @@ const Preloader = ({ onComplete, onMidway }) => {
             yPercent: -155,
             duration: 0.8,
             ease: "power2.in",
-            stagger: -0.05
+            stagger: -0.02
         }, "<0"); // Sync with top exit
 
         tl2.set(".quote-line", { display: "none" });
@@ -188,11 +188,11 @@ const Preloader = ({ onComplete, onMidway }) => {
                 <div className="quote-line">
                     <div className="quote-text top">
                         {/* We split the sentence into chunks for the stagger effect */}
-                        <span className="word-anim" style={wordStyle}>To</span>{" "}
-                        <span className="word-anim" style={wordStyle}>think</span>{" "}
-                        <span className="word-anim" style={wordStyle}>
-                            <span>outside the box</span><span className="period">,</span>
-                        </span>
+                        <span className="word-anim span-1" style={wordStyle}>To</span>{" "}
+                        <span className="word-anim span-1" style={wordStyle}>think</span>{" "}
+                        <span className="word-anim span-2" style={wordStyle}>outside</span>{" "}
+                        <span className="word-anim span-2" style={wordStyle}>the</span>{" "}
+                        <span className="word-anim span-2" style={wordStyle}>box<span className="period">,</span></span>{" "}
                     </div>
                 </div>
                 <div className="preloader-box">
@@ -205,11 +205,11 @@ const Preloader = ({ onComplete, onMidway }) => {
                 <div className="quote-line">
                     <div className="quote-text bottom">
                          {/* We split the sentence into chunks for the stagger effect */}
-                         <span className="word-anim" style={wordStyle}>we</span>{" "}
-                         <span className="word-anim" style={wordStyle}>must</span>{" "}
-                         <span className="word-anim" style={wordStyle}>
-                            <span>see through it</span><span className="period">.</span>
-                         </span>
+                         <span className="word-anim span-1" style={wordStyle}>we</span>{" "}
+                         <span className="word-anim span-1" style={wordStyle}>must</span>{" "}
+                         <span className="word-anim span-2" style={wordStyle}>see</span>{" "}
+                         <span className="word-anim span-2" style={wordStyle}>through</span>{" "}
+                         <span className="word-anim span-2" style={wordStyle}>it<span className="period">.</span></span>{" "}
                     </div>
                 </div>
             </div>

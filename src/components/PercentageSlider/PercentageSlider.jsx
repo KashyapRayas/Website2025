@@ -2,12 +2,12 @@ import { useState, useRef, useEffect } from "react";
 import "./PercentageSlider.css";
 
 // --- Configuration ---
-const FRAME_COUNT = 20; // You have 20 images
+const FRAME_COUNT = 21; // You have 20 images
 const BASE_PATH = "/Website2025"; // Ensure this matches your base path if defined in vite.config, otherwise use ""
 
-// Function to generate path: /about_imgs/1.jpeg ... /about_imgs/20.jpeg
+// Function to generate path: /about_imgs/1.webp ... /about_imgs/20.webp
 const currentFrame = (index) =>
-  `${BASE_PATH}/about_imgs/${index + 1}.jpg`;
+  `${BASE_PATH}/about_imgs/${index + 1}.webp`;
 
 // --- Styles (Keeping your original look) ---
 const containerStyle = {
