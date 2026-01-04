@@ -16,10 +16,10 @@ const BASE_PATH = '/Website2025';
 const getProjectDataPath = (projectName) => {
     if (!projectName) return null;
     const filename = projectName.toLowerCase().replace(/\s/g, '_');
-    return `../data/project_data/${filename}.json`;
+    return `/src/data/project_data/${filename}.json`;
 };
 
-const projectModules = import.meta.glob('../data/project_data/*.json');
+const projectModules = import.meta.glob('/src/data/project_data/*.json');
 
 const Project = ({ handleBack, isIncomingTransition, selectedProjectName, onNextProjectSelect }) => {
     const [projectData, setProjectData] = useState(null);

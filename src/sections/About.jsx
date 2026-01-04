@@ -98,7 +98,6 @@ const About = forwardRef((_, ref) => {
     { text: "Learning French" },
     { text: "Lego" },
     { text: "Gym" },
-    { text: "Hip Hop & Glitchcore" },
     { text: "The color green" },
   ];
 
@@ -163,10 +162,10 @@ const About = forwardRef((_, ref) => {
                 <h4>DESCRIPTIVE</h4>
             </div>
             <h3>
-              Hi there! <span>[ again ]</span> I’m Kashyap Rayas, a{" "}
-              <span>[ {age} M ]</span> Product Designer with a passion for
-              harnessing AI to describe me <span>[ Gemini 3 ]</span>. I craft
-              experiences that feel natural to use and effortless to build.
+              Hi there <span>[ again ]</span> I’m Kashyap Rayas <span>[ {age} M ]</span>,
+              Product Designer by trade and professional overthinker by nature. I love shaping
+              products that work beautifully and make sense fast. With a background in computer
+              science and design, I thrive at the intersection of technology and creativity.
               <br />
               <br />
               At present, I’m working at Viga ET as a UI/UX Engineer, where I
@@ -175,7 +174,7 @@ const About = forwardRef((_, ref) => {
             </h3>
           </div>
 
-            <a
+            {/* <a
                 href="mailto:kashyap.rayas@gmail.com"
                 className="resume"
                 onMouseEnter={handleEnter}
@@ -183,10 +182,10 @@ const About = forwardRef((_, ref) => {
             >
                 <AnimatedArrow isActive={!resumeHovered} />
                 <h4>
-                DOWNLOAD <span>RESUME</span>
+                VIEW <span>RESUME</span>
                 </h4>
                 <AnimatedArrow isActive={resumeHovered} />
-            </a>
+            </a> */}
 
             <div className="third-wrapper-new">
                     <div className="third">

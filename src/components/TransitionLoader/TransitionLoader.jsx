@@ -224,7 +224,7 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
         border: "0px",
         duration: 2,
         ease: "expo.inOut",
-        borderRadius: "0px",
+        borderRadius: "9px",
       }
     );
 

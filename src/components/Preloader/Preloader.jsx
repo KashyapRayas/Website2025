@@ -75,7 +75,6 @@ const Preloader = ({ onComplete, onMidway }) => {
         // We target the specific span class inside the top quote
         tl2.from(".quote-text.top .word-anim", {
             yPercent: 155,
-            opacity: 0,
             duration: 0.8, // Slightly longer to accommodate stagger feel
             ease: "power2.out",
             stagger: 0.05 // Delay between each word
@@ -84,7 +83,6 @@ const Preloader = ({ onComplete, onMidway }) => {
         // We target the specific span class inside the bottom quote
         tl2.from(".quote-text.bottom .word-anim", {
             yPercent: -155,
-            opacity: 0,
             duration: 0.8,
             ease: "power2.out",
             stagger: 0.05
@@ -97,7 +95,7 @@ const Preloader = ({ onComplete, onMidway }) => {
             yPercent: 155,
             duration: 0.8,
             ease: "power2.in",
-            stagger: -0.02
+            stagger: -0.05
         }, "+=1");
 
         // Bottom exits down
@@ -105,7 +103,7 @@ const Preloader = ({ onComplete, onMidway }) => {
             yPercent: -155,
             duration: 0.8,
             ease: "power2.in",
-            stagger: -0.02
+            stagger: -0.05
         }, "<0"); // Sync with top exit
 
         tl2.set(".quote-line", { display: "none" });
