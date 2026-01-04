@@ -50,19 +50,6 @@ const About = forwardRef((_, ref) => {
   const legRef = useRef(null);
   const rectRef = useRef(null);
 
-    useGSAP(() => {
-        if (!document.querySelectorAll(".star")) return;
-        CustomEase.create("wave", "M0,0 C0.6,0, 0.3,1.4, 1,1");
-
-        gsap.to(".star", {
-        rotate: "360deg",
-        duration: 3,
-        ease: "wave",
-        repeat: -1,
-        });
-
-    }, []);
-
   // --- Precompute Age ---
   const age = useMemo(() => {
     const today = new Date();

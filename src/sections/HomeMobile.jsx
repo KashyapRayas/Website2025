@@ -8,7 +8,7 @@ import HeroMobile from '../components/Hero/HeroMobile'
 import AnimatedMan from '../components/AnimatedMan';
 import { useGSAP } from "@gsap/react";
 
-const Home = forwardRef(({ isLoaded }, ref) => {
+const Home = forwardRef(({ isLoaded }, ref) => { 
 
     const rectRef = useRef(null);
     const heroRef = useRef(null)
@@ -75,12 +75,12 @@ const Home = forwardRef(({ isLoaded }, ref) => {
                     <div className={styles.metricWrapper}>
                         <Metric
                             name={"PRODUCTS DESIGNED"}
-                            count={10}
+                            count={11}
                             isLoaded={isLoaded}
                         />
                         <Metric
-                            name={"FEATURES DESIGNED"}
-                            count={119}
+                            name={"DESIGN EXPERIENCE"}
+                            count={"+" + Math.floor((new Date() - new Date("2023-10-01")) / (1000 * 60 * 60 * 24 * 365.25))}
                             isLoaded={isLoaded}
                         />
                     </div>
