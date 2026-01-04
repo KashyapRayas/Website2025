@@ -1,0 +1,74 @@
+{
+    "content": [
+        {
+            "type": "img",
+            "url": "/project_imgs/mc_1.webp",
+            "caption": ""
+        },
+        {
+            "type": "bigtext",
+            "text": "Studio-grade film production management for creators at any budget"
+        },
+        {
+            "type": "para",
+            "text": "Movie Colab Projects is a film production management web platform that democratizes filmmaking by making professional-grade workflows accessible and budget-friendly. This enables teams of any size to produce high-quality films without expensive tools or large production budgets."
+        },
+        {
+            "type": "headingpara",
+            "heading": "The Workflow",
+            "para": "Films are structured hierarchically. They’re divided into sequences, then individual shots and each shot goes through multiple iterations before approval. Artists are assigned tasks to refine shots and submit them for review by directors or department heads. Managing this complex, multi-stage process is traditionally challenging and costly. Movie Colab Projects solves this by consolidating version management, review workflows, and task tracking into a single platform, making professional production management accessible to indie filmmakers and small teams."
+        },
+        {
+            "type": "img",
+            "url": "/project_imgs/mc_2.webp",
+            "caption": "Project Updates: Customize with a variety of widgets"
+        },
+        {
+            "type": "img",
+            "url": "/project_imgs/mc_3.webp",
+            "caption": "Project Tasks: Manage tasks linked to film shots and assets"
+        },
+        {
+            "type": "img",
+            "url": "/project_imgs/mc_4.webp",
+            "caption": "Version viewer, annotation and more!"
+        },
+        {
+            "type": "headingpara",
+            "heading": "The Companion",
+            "para": "The internal teams at VigaET relied heavily on Movie Colab Projects for their animation and film production. However, they faced a key challenge: tracking and logging work sessions throughout the day was cumbersome. We developed a simple desktop tool that allowed artists to submit work and link it to their sessions in the web app. But this wasn’t the final solution. Based on feedback from both groups, we identified a clear need: artists wanted a mobile app aswell to manage sessions on the go, and reviewers needed an app to receive project updates and review versions from anywhere, not just from their desks. "
+        },
+        {
+            "type": "img",
+            "url": "/project_imgs/mc_5.webp",
+            "caption": "Projects list and Project Updates"
+        },
+        {
+            "type": "img",
+            "url": "/project_imgs/mc_6.webp",
+            "caption": "Version Viewer: Lets you comment and review on the go"
+        },
+        {
+            "type": "img",
+            "url": "/project_imgs/mc_7.webp",
+            "caption": "List of tasks to check-in referenced from web app"
+        },
+        {
+            "type": "img",
+            "url": "/project_imgs/mc_8.webp",
+            "caption": "Task Analytics"
+        }
+    ],
+    "details": {
+        "timeline": "2024 - Present",
+        "company": "VigaET",
+        "tags": [
+            "Web & Mobile App",
+            "AI Integration",
+            "Film Production",
+            "Movie Colab Suite"
+        ],
+        "projectTitle": "MOVIE COLAB",
+        "projectLink": "https://moviecolab.com/projects/"
+    }
+}

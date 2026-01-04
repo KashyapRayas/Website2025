@@ -1,0 +1,34 @@
+{
+    "projects": [
+        {
+        "name": "SAVVYWISE",
+        "description": "An AI-powered research assistant for Australian tax and compliance",
+        "img": "/project_imgs/sw_1.webp"
+        },
+        {
+        "name": "MOVIE COLAB",
+        "description": "Studio-grade film production management for creators at any budget",
+        "img": "/project_imgs/mc_1.webp"
+        },
+        {
+        "name": "TABLE READ",
+        "description": "An AI-powered web app to simulate table reads for film scripts",
+        "img": "/project_imgs/tr_1.webp"
+        },
+        {
+        "name": "SYNC SPACE",
+        "description": "Streamlined file management and version control for film production",
+        "img": "/project_imgs/ss_1.webp"
+        },
+        {
+        "name": "NOTHING CHALLENGE",
+        "description": "Community design challenge submission for Nothing Phone 3a",
+        "img": "/project_imgs/nc_1.jpg"
+        },
+        {
+        "name": "VIGA CRM",
+        "description": "Centralized web management for your organization and VigaET suite subscriptions",
+        "img": "/project_imgs/vc_1.webp"
+        }
+    ]
+}
