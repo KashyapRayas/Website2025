@@ -13,7 +13,7 @@ import { useGSAP } from "@gsap/react";
 
 const BASE_PATH = "/Website2025";
 const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
-const FALLBACK_IMG_SRC = BASE_PATH + "/project_imgs/placeholder.png";
+const FALLBACK_IMG_SRC = BASE_PATH + "/project_imgs/placeholder.webp";
 
 const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const [projectsData, setProjectsData] = useState(null);
