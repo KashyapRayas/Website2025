@@ -168,7 +168,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
   // --- GSAP Handlers ---
   useGSAP(() => {
-    if (!handRef.current) return;
+    if (!projectsData || !handRef.current) return;
     gsap.to(handRef.current, {
       y: 40,
       ease: "none",
@@ -179,10 +179,15 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
         scrub: 1,
       },
     });
-  }, []);
+
+    gsap.globalTimeline.add(() => {
+        // distinct from immediate execution to allow layout to settle
+        import("gsap/ScrollTrigger").then(st => st.ScrollTrigger.refresh());
+    }, 0.5);
+  }, [projectsData]);
 
   useGSAP(() => {
-    if (!handShadowRef.current) return;
+    if (!projectsData || !handShadowRef.current) return;
     gsap.to(handShadowRef.current, {
       y: 40,
       ease: "none",
@@ -193,7 +198,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
         scrub: 1,
       },
     });
-  }, []);
+  }, [projectsData]);
 
   const handleMouseEnter = useCallback((index) => setHoveredIndex(index), []);
   const handleMouseLeave = useCallback(() => {
