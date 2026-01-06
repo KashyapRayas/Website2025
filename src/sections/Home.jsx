@@ -18,7 +18,7 @@ import Hero from "../components/Hero/Hero";
 import AnimatedMan from "../components/AnimatedMan";
 import { useGSAP } from "@gsap/react";
 
-const BASE_PATH = "/Website2025";
+const BASE_PATH = "";
 const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
 
 gsap.registerPlugin(CustomEase);

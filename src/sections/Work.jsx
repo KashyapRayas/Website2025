@@ -11,7 +11,7 @@ import AnimatedArrow from "../components/AnimatedArrow";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
-const BASE_PATH = "/Website2025";
+const BASE_PATH = "";
 const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
 const FALLBACK_IMG_SRC = BASE_PATH + "/project_imgs/placeholder.webp";
 

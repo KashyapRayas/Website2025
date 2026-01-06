@@ -10,7 +10,7 @@ import AnimatedArrow from "../components/AnimatedArrow";
 import star from "/star.svg";
 import { useLenis } from "lenis/react";
 
-const BASE_PATH = "/Website2025"; // Change this if your site runs from a different base path
+const BASE_PATH = ""; // Change this if your site runs from a different base path
 
 // Helper: build correct JSON URL path from project name
 const getProjectDataPath = (projectName) => {
