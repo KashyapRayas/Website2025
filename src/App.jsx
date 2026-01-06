@@ -3,7 +3,6 @@ import './App.css'
 import { ReactLenis, useLenis } from 'lenis/react'
 
 import Preloader from './components/Preloader/Preloader.jsx'
-import { useAssetPreloader } from "./hooks/useAssetPreloader.js"
 import Landing from './pages/Landing.jsx'
 import Project from './pages/Project.jsx'
 import TransitionLoader from './components/TransitionLoader/TransitionLoader.jsx'
@@ -31,6 +30,18 @@ function App() {
         if ('scrollRestoration' in window.history) {
             window.history.scrollRestoration = 'manual';
         }
+    }, []);
+
+    useEffect(() => {
+        const originalTitle = document.title;
+        const hiddenTitle = "Observation paused.";
+
+        const handleVisibilityChange = () => {
+            document.title = document.hidden ? hiddenTitle : originalTitle;
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
     }, []);
 
     const handleMidway = useCallback(() => {
