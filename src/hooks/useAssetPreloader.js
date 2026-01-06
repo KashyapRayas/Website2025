@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
-const BASE_PATH = "/Website2025";
+const BASE_PATH = "";
 const PROJECT_DATA_FOLDER = `${BASE_PATH}/data/project_data`;
 const PROJECTS_INDEX_PATH = `${BASE_PATH}/data/projects.json`;
 

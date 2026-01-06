@@ -3,7 +3,7 @@ import "./PercentageSlider.css";
 
 // --- Configuration ---
 const FRAME_COUNT = 21; // You have 20 images
-const BASE_PATH = "/Website2025"; // Ensure this matches your base path if defined in vite.config, otherwise use ""
+const BASE_PATH = ""; // Ensure this matches your base path if defined in vite.config, otherwise use ""
 
 // Function to generate path: /about_imgs/1.webp ... /about_imgs/20.webp
 const currentFrame = (index) =>
