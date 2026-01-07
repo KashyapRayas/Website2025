@@ -50,9 +50,37 @@
     crossorigin
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function() {
+        // Configuration
+        const STANDARD_WIDTH = 1920; // The width your design was built for
+
+        function applyScale() {
+          const width = window.innerWidth;
+          const root = document.documentElement; // Apply to <html> tag, safer than #root
+
+          if (width > STANDARD_WIDTH) {
+            const scale = width / STANDARD_WIDTH;
+            // Apply CSS variable for use in styling
+            root.style.setProperty('--app-scale', scale);
+            // Apply the actual browser zoom
+            root.style.zoom = scale;
+          } else {
+            root.style.setProperty('--app-scale', 1);
+            root.style.zoom = 1;
+          }
+        }
+
+        // Run immediately (before DOM is fully parsed)
+        applyScale();
+
+        // Run on resize
+        window.addEventListener('resize', applyScale);
+      })();
+    </script>
     <title>Kashyap Rayas</title>
-    <script type="module" crossorigin src="/assets/index-CCaW2aLS.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CZ5MRV_R.css">
+    <script type="module" crossorigin src="/assets/index-CR_q8z5l.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DNjOFpq2.css">
   </head>
   <body>
     <div id="root"></div>
