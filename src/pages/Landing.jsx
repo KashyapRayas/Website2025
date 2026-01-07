@@ -49,8 +49,8 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, isPreloaderDo
 
     const initialStyle = {
         position: "relative",
-        width: "100dvw",
-        height: "100dvh",
+        width: "100%",
+        height: "calc(100dvh / var(--app-scale, 1))",
         overflow: "hidden",
         backgroundColor: "var(--off-teal)",
         zIndex: 1,

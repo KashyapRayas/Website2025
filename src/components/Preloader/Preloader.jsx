@@ -47,8 +47,8 @@ const Preloader = ({ onComplete, onMidway }) => {
         tl3.to(
             ".preloader-box",
             {
-                width: "100dvw",
-                height: "100dvh",
+                width: "100%",
+                height: "100%",
                 borderRadius: 0,
                 duration: 2,
                 ease: "expo.inOut",
