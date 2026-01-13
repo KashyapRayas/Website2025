@@ -1,38 +1,35 @@
-import React, { memo, useState } from "react";
-import Lightbox from "yet-another-react-lightbox";
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import "yet-another-react-lightbox/styles.css";
+import React, { memo, useState } from 'react';
+import Lightbox from 'yet-another-react-lightbox';
+import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+import 'yet-another-react-lightbox/styles.css';
 
 const ProjectImage = ({ src, alt, caption = "" }) => {
   const [open, setOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   const containerStyle = {
     width: "100%",
     padding: "30px",
     boxSizing: "border-box",
-    borderRadius: isHovered ? "18px" : "9px",
+    borderRadius: "9px",
     backgroundColor: "var(--off-white)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    gap: "12px",
-    transition: "all 0.3s ease-in-out",
+    gap: "12px"
   };
 
   const imgWrapperStyle = {
     width: "100%",
     aspectRatio: "16 / 9",
     height: "auto",
-    borderRadius: isHovered ? "12px" : "6px",
+    borderRadius: "6px",
     backgroundColor: "var(--light-off-teal)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    overflow: "hidden",
+    overflow: "hidden", // IMPORTANT: This keeps the zoom inside the rounded corners
     cursor: "pointer",
-    transition: "all 0.3s ease-in-out",
   };
 
   const imgStyle = {
@@ -41,6 +38,7 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
     height: "auto",
     objectFit: "cover",
     display: "block",
+    // Removed borderRadius here because the wrapper handles it
   };
 
   const captionStyle = {
@@ -49,21 +47,19 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
     color: "var(--off-black-06)",
     width: "100%",
     textAlign: "center",
-    margin: 0,
+    margin: 0
   };
 
   return (
-    <div
-      style={containerStyle}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div style={containerStyle}>
+      {/* We use a style tag here to handle the hover state easily */}
       <style>
         {`
           .project-image {
             transition: transform 0.3s ease-in-out;
           }
 
+          /* When hovering the wrapper, scale the image inside */
           .project-image-wrapper:hover .project-image {
             transform: scale(1.02) !important;
           }
@@ -85,8 +81,8 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
           alt={alt}
           style={imgStyle}
           className="project-image"
-          loading="lazy"
-          decoding="async"
+          loading='lazy'
+          decoding='async'
         />
       </div>
 
@@ -112,11 +108,11 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
             filter: "none",
             borderRadius: "6px",
             border: "1px solid var(--off-teal)",
-            margin: "0px 6px",
+            margin: "0px 6px"
           },
           slide: {
-            padding: "18px",
-          },
+            padding: "18px"
+          }
         }}
       />
     </div>

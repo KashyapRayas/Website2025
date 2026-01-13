@@ -25,7 +25,6 @@
             left: 0;
             overflow: hidden;
             z-index: 999;
-            pointer-events: none;
         }
 
         .hand {
@@ -50,10 +49,6 @@
                 height: 100%;
                 background-color: var(--off-white);
                 border-radius: 9px;
-                transition: all 0.3s ease-in-out;
-            }
-            .cell:hover {
-                border-radius: 18px;
             }
             .window {
                 min-width: 375px;
@@ -63,20 +58,12 @@
                 position: relative;
                 border: 3px solid var(--light-off-teal);
                 box-sizing: border-box;
-                transition: all 0.3s ease-in-out;
-            }
-            .window:hover {
-                border-radius: 18px;
             }
             .cell-small {
                 min-width: 30px;
                 height: 100%;
                 background-color: var(--off-white);
                 border-radius: 9px;
-                transition: all 0.3s ease-in-out;
-            }
-            .cell-small:hover {
-                border-radius: 18px;
             }
         }
 
@@ -88,11 +75,6 @@
             box-sizing: border-box;
             border-radius: 9px;
             background-color: var(--off-white);
-            transition: all 0.3s ease-in-out;
-        }
-
-        .img-wrapper:hover {
-            border-radius: 18px;
         }
 
         .hand-shadow-wrapper {
@@ -185,14 +167,11 @@
         font-weight: 600;
         color: var(--off-white);
         margin: 0;
-        transition: all 0.3s ease-in-out;
         span {
             font-weight: 400;
             color: var(--off-teal);
         }
-    }
-    .heading:hover {
-        border-radius: 18px;
+
     }
     .project {
         width: 100%;

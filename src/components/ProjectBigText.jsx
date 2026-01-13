@@ -1,39 +1,32 @@
-import { useState } from "react";
 
 const ProjectBigText = ({ text }) => {
-  const [isHovered, setIsHovered] = useState(false);
 
-  const containerStyle = {
-    width: "100%",
-    height: "max-content",
-    padding: "30px",
-    boxSizing: "border-box",
-    borderRadius: isHovered ? "18px" : "9px",
-    backgroundColor: "var(--off-white)",
-    display: "flex",
-    justifyContent: "center",
-    transition: "all 0.3s ease-in-out",
-  };
+    const containerStyle = {
+        width: "100%",
+        height: "max-content",
+        padding: "30px",
+        boxSizing: "border-box",
+        borderRadius: "9px",
+        backgroundColor: "var(--off-white)",
+        display: "flex",
+        justifyContent: "center"
+    };
 
-  const textStyle = {
-    width: "100%",
-    fontSize: "36px",
-    fontWeight: "600",
-    color: "var(--off-black)",
-    fontFamily: "'Lora', serif",
-    margin: 0,
-    textWrap: "wrap",
-  };
+    const textStyle = {
+        width: "100%",
+        fontSize: "36px",
+        fontWeight: "600",
+        color: "var(--off-black)",
+        fontFamily: "'Lora', serif",
+        margin: "0",
+        textWrap: "wrap"
+    }
 
-  return (
-    <div
-      style={containerStyle}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <h1 style={textStyle}>{text}</h1>
-    </div>
-  );
+    return (
+        <div style={containerStyle}>
+            <h1 style={textStyle}>{text}</h1>
+        </div>
+    );
 };
 
 export default ProjectBigText;

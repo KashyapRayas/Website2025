@@ -26,7 +26,6 @@ footer > .middle > .right {
     height: 100%;
     border-radius: 9px;
     background-color: var(--off-white);
-    transition: all 0.3s ease-in-out;
 
     h3 {
         font-size: 15px;
@@ -95,10 +94,6 @@ footer > .middle > .right {
     a:hover {
         color: var(--off-black-06);
     }
-}
-
-footer > .middle > .right:hover {
-    border-radius: 18px;
 }
 
 footer > .middle > .left {

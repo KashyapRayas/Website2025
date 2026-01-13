@@ -254,10 +254,6 @@
     box-sizing: border-box;
     border-top: none;
     overflow: hidden;
-    transition: all 0.3s ease-in-out;
-}
-.heroWrapper:hover {
-    border-radius: 0 0 12px 12px;
 }
 
 .me {

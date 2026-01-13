@@ -2,7 +2,7 @@
   width: 100%;
       align-self: stretch;
   /* min-height: calc(100dvh - 60px); */
-  /* max-height: 900px; */
+  max-height: 900px;
       display: flex;
     justify-content: center;
     gap: 0;
@@ -59,7 +59,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 571px;
+  height: 541px;
 }
 
 .left .first .hero {
@@ -69,13 +69,8 @@
   justify-content: flex-end;
   background-color: var(--off-white);
   border-radius: 9px 0 0 9px;
-  transition: all 0.3s ease-in-out;
-  padding-bottom: 18px;
 }
 
-.left .first:hover .hero {
-  border-radius: 18px 0 0 18px;
-}
 .left .first .hero .herorounder {
   position: absolute;
   top: 0px;
@@ -89,13 +84,7 @@
   max-width: 30px;
   height: 100%;
   border-radius: 9px 9px 9px 0px;
-  transition: all 0.3s ease-in-out;
 }
-
-.left .first:hover  .cell{
-  border-radius: 18px 18px 18px 0px;
-}
-
 
 .left .second {
   display: flex;
@@ -115,7 +104,6 @@
   border-radius: 9px;
   padding: 30px;
   box-sizing: border-box;
-  transition: all 0.3s ease-in-out;
 }
 
 .left .second .s1 .chestWindow {
@@ -145,12 +133,6 @@
   height: 150px;
   background-color: var(--light-off-teal);
   border-radius: 9px;
-  transition: all 0.3s ease-in-out;
-}
-
-
-.left .second .s1:hover, .left .second .s2:hover {
-    border-radius: 18px;
 }
 
 .left .third {
@@ -165,11 +147,6 @@
   flex-direction: column;
   box-sizing: border-box;
   align-self: stretch;
-  transition: all 0.3s ease-in-out;
-}
-
-.left .third:hover {
-    border-radius: 18px;
 }
 
 .left .third div {
@@ -237,11 +214,6 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-  transition: all 0.3s ease-in-out;
-}
-
-.right .first:hover {
-    border-radius: 18px;
 }
 
 .right .first .manWrapper {
@@ -405,7 +377,6 @@
   border-radius: 0px 0px 0px 9px;
 }
 
-
 .recentImgWrapper {
   width: 300px;
   padding-top: 11px;
@@ -485,7 +456,6 @@
   height: 100%;
   background-color: var(--light-off-teal);
   border-radius: 9px;
-  transition: all 0.3s ease-in-out;
 }
 
 .right .third .s2 {
@@ -494,7 +464,6 @@
   height: 180px;
   background-color: var(--off-white);
   border-radius: 9px;
-  transition: all 0.3s ease-in-out;
 }
 
 .right .third .s3 {
@@ -503,7 +472,6 @@
   height: 180px;
   background-color: var(--off-teal);
   border-radius: 9px;
-  transition: all 0.3s ease-in-out;
 }
 
 .right .third .s4 {
@@ -511,14 +479,6 @@
   height: 100%;
   background-color: var(--off-white);
   border-radius: 9px;
-  transition: all 0.3s ease-in-out;
-}
-
-.right .third .s1:hover,
-.right .third .s2:hover,
-.right .third .s3:hover,
-.right .third .s4:hover {
-    border-radius: 18px;
 }
 
 .left .fourth {
