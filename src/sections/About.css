@@ -24,6 +24,10 @@
             height: 100%;
             background-color: var(--light-off-teal);
             border-radius: 9px;
+            transition: all 0.3s ease-in-out;
+        }
+        .cell:hover {
+            border-radius: 18px;
         }
         .about-img-wrapper {
             width: 100%;
@@ -34,76 +38,13 @@
             display: flex;
             flex-direction: column;
             gap: 18px;
+            transition: all 0.3s ease-in-out;
+        }
+        .about-img-wrapper:hover {
+            border-radius: 18px;
         }
     }
-    .second {
-        width: 100%;
-        height: 100%;
-        background-color: var(--off-white);
-        padding: 30px 30px 30px 30px;
-        border-radius: 9px;
-        gap: 18px;
-        display: flex;
-        flex-direction: column;
-        box-sizing: border-box;
-        flex: 1;
 
-        h4 {
-            font-size: 13px;
-            width: 100%;
-            text-wrap: wrap;
-            font-weight: 400;
-            color: var(--off-black-06);
-            margin: 0;
-        }
-        .company {
-            display: flex;
-            gap: 9px;
-            align-items: center;
-            h4 {
-                margin: 0;
-                padding: 0;
-                font-weight: 400;
-                font-size: 15px;
-                color: var(--off-black-06);
-            }
-            img {
-                width: 9px;
-                height: 9px;
-            }
-        }
-        .experience-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            width: 100%;
-        }
-        .experience {
-            display: flex;
-            gap: 9px;
-            align-items: center;
-            width: 100%;
-        }
-        .line {
-            width: 100%;
-            max-height: 1.5px;
-            min-height: 1.5px;
-            background-color: var(--light-off-teal);
-            border-radius: 6px;
-        }
-        h3 {
-            font-size: 15px;
-            width: 100%;
-            text-wrap: nowrap;
-            font-weight: 400;
-            color: var(--off-black);
-            margin: 0;
-            width: max-content;
-        }
-        h3:nth-child(3) {
-            color: var(--dark-green);
-        }
-    }
     .resume {
         width: 100%;
         text-decoration: none;
@@ -167,6 +108,7 @@
             padding: 30px;
             background-color: var(--off-white);
             border-radius: 9px;
+            transition: all 0.3s ease-in-out;
             .list {
                 display: flex;
                 flex-direction: column;
@@ -212,6 +154,7 @@
             padding: 30px;
             background-color: var(--off-white);
             border-radius: 9px;
+            transition: all 0.3s ease-in-out;
 
             .list {
                 display: flex;
@@ -253,6 +196,9 @@
                 }
             }
 
+        }
+        .third-left:hover, .third-right:hover {
+            border-radius: 18px;
         }
 
     }
@@ -331,11 +277,14 @@
         font-weight: 600;
         color: var(--off-white);
         margin: 0;
+        transition: all 0.3s ease-in-out;
         span {
             font-weight: 400;
             color: var(--off-teal);
         }
-
+    }
+    .heading:hover {
+        border-radius: 18px;
     }
     .first {
         flex-shrink: 0;
@@ -348,6 +297,7 @@
         justify-content: space-between;
         flex-direction: column;
         box-sizing: border-box;
+        transition: all 0.3s ease-in-out;
 
         div {
             display: flex;
@@ -396,6 +346,9 @@
             font-weight: 600;
         }
     }
+    .first:hover {
+        border-radius: 18px;
+    }
     .first:hover > div .iconWrapper{
         width: 18px;
     }
@@ -405,6 +358,7 @@
         background-color: var(--off-white);
         padding: 30px 30px 30px 30px;
         border-radius: 9px;
+        transition: all 0.3s ease-in-out;
         gap: 18px;
         display: flex;
         justify-content: space-between;
@@ -450,6 +404,9 @@
             color: var(--dark-green);
         }
     }
+    .second:hover {
+        border-radius: 18px;
+    }
     .second:hover > div .iconWrapper{
         width: 18px;
     }
@@ -472,7 +429,7 @@
         justify-content: space-between;
         flex-direction: column;
         box-sizing: border-box;
-
+        transition: all 0.3s ease-in-out;
         div {
             display: flex;
             width: 100%;
@@ -510,6 +467,9 @@
             margin: 0;
         }
     }
+    .third:hover {
+        border-radius: 18px;
+    }
     .third:hover > div .iconWrapper{
         width: 18px;
     }
@@ -522,9 +482,13 @@
         align-self: stretch;
         background-color: var(--light-off-teal);
         border-radius: 9px;
+        transition: all 0.3s ease-in-out;
         img {
             width: 42px; height: 42px;
         }
+    }
+    .s2:hover {
+        border-radius: 18px;
     }
     .resume {
         width: 100%;

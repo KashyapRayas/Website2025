@@ -92,12 +92,17 @@
         .nav-link:hover {
             background-color: var(--off-white);
             color: var(--off-black-06);
+            border-radius: 30px;
         }
         .cell {
             background-color: var(--off-white);
             width: 100%;
             height: 100%;
             border-radius: 9px;
+            transition: all 0.3s ease-in-out;
+        }
+        .cell:hover {
+            border-radius: 18px;
         }
     }
 
@@ -160,12 +165,17 @@
                 background-color: var(--off-white);
                 color: var(--off-black-06);
                 font-size: 12.7px;
+                border-radius: 30px;
             }
             .cell {
                 background-color: var(--off-white);
                 width: 100%;
                 height: 100%;
                 border-radius: 9px;
+                transition: all 0.3s ease-in-out;
+            }
+            .cell:hover {
+                border-radius: 18px;
             }
         }
 
@@ -183,6 +193,10 @@
             flex: 0;
             transform: translateZ(0);
             image-rendering: pixelated;
+            transition: all 0.3s ease-in-out;
+        }
+        .project-title:hover {
+            border-radius: 18px;
         }
 
         .details-wrapper {
@@ -211,6 +225,7 @@
                 background-color: var(--off-white);
                 border-radius: 9px;
                 box-sizing: border-box;
+                transition: all 0.3s ease-in-out;
                 h3 {
                     color: var(--off-black-06);
                     font-size: 13px;
@@ -249,6 +264,9 @@
                         height: 9px;
                     }
                 }
+            }
+            .detail:hover {
+                border-radius: 18px;
             }
         }
 
@@ -318,10 +336,6 @@
         }
 
     }
-
-}
-
-#project-content {
 
 }
 

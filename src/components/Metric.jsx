@@ -1,19 +1,25 @@
 import Digit from "./Digit";
+import { useState } from "react";
 
 const Metric = ({ name, count, isLoaded }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <div
       style={{
         width: "100%",
         height: "150px",
         padding: "30px",
-        borderRadius: "9px",
+        borderRadius: isHovered ? "18px" : "9px",
         backgroundColor: "var(--off-white)",
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        transition: "all 0.3s ease-in-out",
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <h4
         style={{

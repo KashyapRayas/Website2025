@@ -37,6 +37,10 @@ header > .middle > .left {
             width: 100%;
             height: 100%;
             border-radius: 9px;
+            transition: all 0.3s ease-in-out;
+        }
+        .cell:hover {
+            border-radius: 18px;
         }
     }
     .green-rectangle {
@@ -80,6 +84,7 @@ header > .middle > .left {
         a:hover {
             background-color: var(--off-white);
             color: var(--off-black);
+            border-radius: 30px;
         }
         a:hover > svg {
             transform: scale(0.95);
@@ -127,5 +132,9 @@ header > .middle > .right {
         height: 100%;
         border-radius: 9px;
         min-width: none;
+        transition: all 0.3s ease-in-out;
+    }
+    .cell:hover {
+        border-radius: 18px;
     }
 }

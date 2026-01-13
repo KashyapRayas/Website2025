@@ -7,6 +7,10 @@
     box-sizing: border-box;
     padding: 30px;
     border-radius: 9px;
+    transition: all 0.3s ease-in-out;
+}
+#CONTACT > .middle > .left:hover {
+    border-radius: 18px;
 }
 
 #CONTACT > .middle > .right {
@@ -30,11 +34,14 @@
         font-weight: 600;
         color: var(--off-white);
         margin: 0;
+        transition: all 0.3s ease-in-out;
         span {
             font-weight: 400;
             color: var(--off-teal);
         }
-
+    }
+    .heading:hover {
+        border-radius: 18px;
     }
     .first {
         width: 100%;
@@ -47,7 +54,7 @@
         flex-direction: column;
         box-sizing: border-box;
         height: 100%;
-
+        transition: all 0.3s ease-in-out;
         h4 {
             font-size: 42px;
             width: 100%;
@@ -69,6 +76,9 @@
             color: var(--dark-green);
             font-weight: 400;
         }
+    }
+    .first:hover {
+        border-radius: 18px;
     }
     .second {
         width: 100%;

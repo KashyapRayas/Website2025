@@ -5,6 +5,7 @@ import {
   useMemo,
   useCallback,
   useEffect,
+  use,
 } from "react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
@@ -61,7 +62,7 @@ const Home = forwardRef(({ isLoaded, handleProjectSelect }, ref) => {
       ease: "wave",
       repeat: -1,
     });
-  }, []);
+  }, [rectRef.current]);
 
   useGSAP(() => {
     if (!parallaxRef.current || !ref.current) return;
