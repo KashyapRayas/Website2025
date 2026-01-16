@@ -12,6 +12,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import GrassOverlay from "../components/GrassOverlay.jsx";
 
 gsap.registerPlugin(CustomEase, ScrollTrigger);
 
@@ -49,6 +50,10 @@ const About = forwardRef((_, ref) => {
   const cellRef = useRef(null);
   const legRef = useRef(null);
   const rectRef = useRef(null);
+  const grassTargetRef1 = useRef(null);
+  const grassTargetRef2 = useRef(null);
+  const grassTargetRef3 = useRef(null);
+  const grassTargetRef4 = useRef(null);
 
   // --- Precompute Age ---
   const age = useMemo(() => {
@@ -141,7 +146,7 @@ const About = forwardRef((_, ref) => {
             </h3>
           </div>
 
-          <div className="second">
+          <div className="second" ref={grassTargetRef1}>
             <div>
                 <div className="iconWrapper">
                     <h4>{">"}</h4>
@@ -160,6 +165,7 @@ const About = forwardRef((_, ref) => {
               tailored for the filmmaking industry.
             </h3>
           </div>
+          <GrassOverlay targetRef={grassTargetRef1}></GrassOverlay>
 
             {/* <a
                 href="mailto:kashyap.rayas@gmail.com"
@@ -174,7 +180,7 @@ const About = forwardRef((_, ref) => {
                 <AnimatedArrow isActive={resumeHovered} />
             </a> */}
 
-            <div className="third-wrapper-new">
+            <div className="third-wrapper-new" ref={grassTargetRef2}>
                     <div className="third">
                         <div>
                             <div className="iconWrapper">
@@ -190,6 +196,7 @@ const About = forwardRef((_, ref) => {
                         <AnimatedDownwardSmiley isActive={true} />
                     </div>
             </div>
+            <GrassOverlay targetRef={grassTargetRef2}></GrassOverlay>
         </div>
 
         {/* --- LEFT SIDE --- */}
@@ -213,7 +220,7 @@ const About = forwardRef((_, ref) => {
                     ))}
                     </div>
                 </div>
-                <div className="third-right">
+                <div className="third-right" ref={grassTargetRef3}>
                     <h4>THINGS I HOPE TO COMPLETE</h4>
                     <div className="list">
                     {goals.map((item, i) => (
@@ -226,6 +233,7 @@ const About = forwardRef((_, ref) => {
                     ))}
                     </div>
                 </div>
+                <GrassOverlay targetRef={grassTargetRef3}></GrassOverlay>
             </div>
 
           {/* <div className="second">

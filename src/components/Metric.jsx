@@ -1,9 +1,12 @@
+import { forwardRef } from "react";
 import Digit from "./Digit";
 
-const Metric = ({ name, count, isLoaded }) => {
+const Metric = forwardRef(({ name, count, isLoaded }, ref) => {
   return (
     <div
+      ref={ref}
       style={{
+        position: "relative",
         width: "100%",
         height: "150px",
         padding: "30px",
@@ -47,6 +50,6 @@ const Metric = ({ name, count, isLoaded }) => {
       </div>
     </div>
   );
-};
+})
 
 export default Metric;

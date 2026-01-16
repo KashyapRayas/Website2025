@@ -59,7 +59,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 541px;
+  height: 571px;
 }
 
 .left .first .hero {
@@ -69,6 +69,7 @@
   justify-content: flex-end;
   background-color: var(--off-white);
   border-radius: 9px 0 0 9px;
+  padding-bottom: 30px;
 }
 
 .left .first .hero .herorounder {
@@ -93,6 +94,7 @@
   box-sizing: border-box;
   height: 150px;
   width: 100%;
+  position: relative;
 }
 
 .left .second .s1 {
@@ -124,6 +126,7 @@
 }
 
 .left .second .s2 {
+    position: relative;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -356,6 +359,7 @@
 }
 
 .metricSuperwrapper {
+    position: relative;
   top: 0;
   left: 0;
   width: calc(100% - 361px);
@@ -522,6 +526,6 @@
 
 @media screen and (min-width: 1700px) {
     .middle {
-        max-width: 1600px;
+        max-width: 1400px;
     }
 }

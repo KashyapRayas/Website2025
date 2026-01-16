@@ -10,6 +10,7 @@ import "./Work.css";
 import AnimatedArrow from "../components/AnimatedArrow";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import GrassOverlay from "../components/GrassOverlay";
 
 const BASE_PATH = "";
 const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
@@ -28,6 +29,8 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const ctxRef = useRef(null);
   const handRef = useRef(null);
   const handShadowRef = useRef(null);
+  const grassTargetRef1 = useRef(null);
+  const grassTargetRef2 = useRef(null);
 
   gsap.config({ force3D: true });
 
@@ -330,7 +333,8 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
             </div>
 
             <div className="first">
-              <div className="cell"></div>
+              <div className="cell" ref={grassTargetRef1}></div>
+              <GrassOverlay targetRef={grassTargetRef1}></GrassOverlay>
               <div className="window"></div>
               <div className="cell-small"></div>
             </div>
@@ -363,9 +367,10 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                   />
                 </div>
               </div>
+
             </div>
 
-            <div className="rounder">
+            <div className="rounder"  ref={grassTargetRef2}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="9"
@@ -391,6 +396,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                 />
               </svg>
             </div>
+            <GrassOverlay targetRef={grassTargetRef2}></GrassOverlay>
           </div>
         </div>
       </div>

@@ -17,6 +17,7 @@ import Metric from "../components/metric";
 import Hero from "../components/Hero/Hero";
 import AnimatedMan from "../components/AnimatedMan";
 import { useGSAP } from "@gsap/react";
+import GrassOverlay from "../components/GrassOverlay";
 
 const BASE_PATH = "";
 const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
@@ -30,6 +31,11 @@ const Home = forwardRef(({ isLoaded, handleProjectSelect }, ref) => {
   const rectRef = useRef(null);
   const heroRef = useRef(null);
   const parallaxRef = useRef(null);
+
+    const grassTargetRef1 = useRef(null);
+    const grassTargetRef2 = useRef(null);
+    const grassTargetRef3 = useRef(null);
+    const grassTargetRef4 = useRef(null);
 
   // ✅ Fetch projects.json dynamically from public/data/
   useEffect(() => {
@@ -61,7 +67,7 @@ const Home = forwardRef(({ isLoaded, handleProjectSelect }, ref) => {
       ease: "wave",
       repeat: -1,
     });
-  }, []);
+  }, [rectRef.current]);
 
   useGSAP(() => {
     if (!parallaxRef.current || !ref.current) return;
@@ -175,7 +181,9 @@ const Home = forwardRef(({ isLoaded, handleProjectSelect }, ref) => {
                   name={"PRODUCTS DESIGNED"}
                   count={11}
                   isLoaded={isLoaded}
+                  ref={grassTargetRef2}
                 />
+                <GrassOverlay targetRef={grassTargetRef2} />
                 <Metric
                   name={"DESIGN EXPERIENCE"}
                   count={
@@ -186,7 +194,9 @@ const Home = forwardRef(({ isLoaded, handleProjectSelect }, ref) => {
                     )
                   }
                   isLoaded={isLoaded}
+                  ref={grassTargetRef3}
                 />
+                <GrassOverlay targetRef={grassTargetRef3} />
               </div>
             </div>
 
@@ -225,12 +235,13 @@ const Home = forwardRef(({ isLoaded, handleProjectSelect }, ref) => {
             )}
           </div>
 
-          <div className={styles.third}>
+          <div className={styles.third} ref={grassTargetRef4}>
             <div className={styles.s2}></div>
             <img className={styles.s3} src={lego_44} alt="" />
             <div className={styles.s4}></div>
             <div className={styles.s1}></div>
           </div>
+          <GrassOverlay targetRef={grassTargetRef4} />
         </div>
 
         <div className={styles.left}>
@@ -255,12 +266,13 @@ const Home = forwardRef(({ isLoaded, handleProjectSelect }, ref) => {
           </div>
 
           <div className={styles.second}>
-            <div className={styles.s2}>
+            <div className={styles.s2} ref={grassTargetRef1}>
               <AnimatedDownwardArrow
                 isLoaded={isLoaded}
                 isActive={true}
               />
             </div>
+            <GrassOverlay targetRef={grassTargetRef1} />
 
             <div className={styles.s1}>
               <div className={styles.chestWindow}>

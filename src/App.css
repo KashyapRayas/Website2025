@@ -46,7 +46,7 @@ section > .middle {
 
 @media screen and (min-width: 1700px) {
     section > .middle, header > .middle, footer > .middle {
-        max-width: 1600px;
+        max-width: 1400px;
     }
     .extremes-wrapper-left, .extremes-wrapper-right {
         width: 100%;

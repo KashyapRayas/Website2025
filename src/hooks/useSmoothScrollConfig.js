@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 
 export function useSmoothScrollConfig() {
   const [config, setConfig] = useState({
-    duration: 3,
+    duration: 2,
     enabled: true,
   })
 
@@ -31,7 +31,7 @@ export function useSmoothScrollConfig() {
     } else {
       // Default for other devices
       setConfig({
-        duration: 3,
+        duration: 2,
         enabled: true,
       })
     }

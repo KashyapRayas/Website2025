@@ -245,7 +245,7 @@
     top: 0;
     right: 0;
     width: 375px;
-    height: 480px;
+    height: 480px; 
     overflow: hidden;
     border-radius: 0 0 9px 9px;
     border-bottom: 3px solid var(--off-teal);
