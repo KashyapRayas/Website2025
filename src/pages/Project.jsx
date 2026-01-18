@@ -9,6 +9,7 @@ import Footer from "../sections/Footer";
 import AnimatedArrow from "../components/AnimatedArrow";
 import star from "/star.svg";
 import { useLenis } from "lenis/react";
+import GrassOverlay from "../components/GrassOverlay";
 
 const BASE_PATH = ""; // Change this if your site runs from a different base path
 

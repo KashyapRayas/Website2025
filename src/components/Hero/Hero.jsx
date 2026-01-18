@@ -17,6 +17,7 @@ import figma_apply from "/icons/figma_apply.png";
 import figma_cancel from "/icons/figma_cancel.png";
 import figma_search from "/icons/figma_search.png";
 import box_anchor from "/box_anchor.svg";
+import { transformRawPath } from "gsap/utils/paths";
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
@@ -43,6 +44,7 @@ const fonts = Object.freeze([
 
 const Hero = ({ isLoaded }) => {
   const lenis = useLenis();
+
 
   gsap.config({
     force3D: true,
@@ -80,6 +82,9 @@ const Hero = ({ isLoaded }) => {
 
   const stopTimerRef = useRef(null);
   const isScrollingRef = useRef(false);
+
+  const rippleRef = useRef(null);
+  const previousBlinkRef = useRef("single");
 
   // Timelines
   const t1 = useRef(null);
@@ -399,25 +404,33 @@ const Hero = ({ isLoaded }) => {
     };
 
     const performBlinkGroup = () => {
-        // Randomly decide: single blink (50%) or double blink (50%)
-        const isDoubleBlink = Math.random() < 0.5;
+    let isDoubleBlink;
 
-        if (isDoubleBlink) {
+    // Determine probability based on previous blink
+    if (previousBlinkRef.current === "double") {
+        // After double blink, more likely to do single blink (70% single, 30% double)
+        isDoubleBlink = Math.random() < 0.3;
+    } else {
+        // After single blink, more likely to do double blink (40% single, 60% double)
+        isDoubleBlink = Math.random() < 0.6;
+    }
+
+    if (isDoubleBlink) {
         // First blink
         createSingleBlink();
 
         // Second blink after short delay (0.3 seconds)
         blinkTimeout = setTimeout(() => {
-            createSingleBlink();
-            // Schedule next group after 1.5-2 seconds
-            scheduleNextGroup();
+        createSingleBlink();
+        previousBlinkRef.current = "double";
+        scheduleNextGroup();
         }, 300);
-        } else {
+    } else {
         // Single blink
         createSingleBlink();
-        // Schedule next group after 1.5-2 seconds
+        previousBlinkRef.current = "single";
         scheduleNextGroup();
-        }
+    }
     };
 
     const scheduleNextGroup = () => {
@@ -469,23 +482,31 @@ const Hero = ({ isLoaded }) => {
     };
   }, [checkIntersection]);
 
-  useGSAP(() => {
+    // Update the ripple animation useGSAP hook
+    useGSAP(() => {
     if (!fishermanRef.current) return;
 
-    const tl = gsap.timeline({
-      repeat: -1,
-      yoyo: true,
-      autoplay: true,
-    });
+    const masterTl = gsap.timeline({ repeat: -1 });
 
-    tl.to(fishermanRef.current, {
-      scaleY: 1.05,
-      transformOrigin: "top center",
-      duration: 1.5,
-      ease: "sine.inOut",
-      delay: 0.2,
-    });
-  }, []);
+    const fishermanTl = gsap.timeline();
+    fishermanTl
+        .to(fishermanRef.current, {
+        scaleY: 1.04,
+        transformOrigin: "top center",
+        duration: 1.5,
+        ease: "sine.inOut",
+        })
+        .to(fishermanRef.current, {
+        scaleY: 1.02,
+        transformOrigin: "top center",
+        duration: 1.5,
+        ease: "sine.inOut",
+        });
+
+    masterTl.add(fishermanTl, 0);
+
+    return () => masterTl.kill();
+    }, []);
 
   // Wave animation on header rectangles
   useGSAP(() => {
@@ -738,7 +759,7 @@ const Hero = ({ isLoaded }) => {
                     fill="var(--off-teal)"
                   />
 
-                  <g id="Eye Right">
+                  <g id="Eye Right" style={{ transformOrigin: "213px 245.5px", transform: "scaleY(1.05)" }}>
                     <path
                       ref={rightEyelashRef}
                       id="Eyelash-Right"
@@ -765,7 +786,7 @@ const Hero = ({ isLoaded }) => {
                     />
                   </g>
 
-                  <g id="Eye Left">
+                  <g id="Eye Left" style={{ transformOrigin: "135px 237.5px", transform: "scaleY(1.08)" }}>
                     <path
                       id="Vector 291"
                       d="M130.002 246C125.602 243.6 125.5 237.5 127.502 235L135.001 233L146.001 235L151.501 239L148.501 246C142.101 250.8 133.5 247.908 130.002 246Z"
@@ -851,12 +872,19 @@ const Hero = ({ isLoaded }) => {
                 <clipPath id="fishermanclip">
                   <rect x="0" y="0" width="210px" height="108" />
                 </clipPath>
+                {/* <path
+                ref={rippleRef}
+                id="ripple"
+                d="M172 105.5C181.381 105.5 189.868 105.779 196.005 106.23C199.076 106.456 201.546 106.725 203.242 107.02C204.094 107.168 204.729 107.319 205.141 107.467C205.17 107.477 205.196 107.49 205.222 107.5C205.196 107.51 205.17 107.523 205.141 107.533C204.729 107.681 204.094 107.832 203.242 107.98C201.546 108.275 199.076 108.544 196.005 108.77C189.868 109.221 181.381 109.5 172 109.5C162.619 109.5 154.132 109.221 147.995 108.77C144.924 108.544 142.454 108.275 140.758 107.98C139.906 107.832 139.271 107.681 138.859 107.533C138.83 107.523 138.803 107.51 138.777 107.5C138.803 107.49 138.83 107.477 138.859 107.467C139.271 107.319 139.906 107.168 140.758 107.02C142.454 106.725 144.924 106.456 147.995 106.23C154.132 105.779 162.619 105.5 172 105.5Z"
+                stroke="#00A084"
+                opacity="0.6"
+                /> */}
                 <g
                   id="FishermanGroupWrapper"
                   clipPath="url(#fishermanclip)"
                 >
 
-                  <g id="Fisherman with Boat" ref={fishermanRef}>
+                  <g id="Fisherman with Boat" ref={fishermanRef} style={{ transform: "scaleY(1.02)" }}>
                     <path
                       id="Vector 41 (Stroke)"
                       d="M24.041 32.001C42.1258 32.5034 76.0772 35.6801 107.699 44.4121C123.51 48.7781 138.804 54.5504 151.257 62.1143C163.699 69.6718 173.438 79.1002 177.902 90.832L175.098 91.8994C170.962 81.0315 161.838 72.0522 149.699 64.6787C137.57 57.3115 122.565 51.6292 106.9 47.3037C75.5721 38.6528 41.8723 35.4967 23.957 34.999L24.041 32.001Z"

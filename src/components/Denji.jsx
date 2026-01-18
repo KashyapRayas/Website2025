@@ -19,7 +19,7 @@ const containerStyle = {
   overflow: "hidden",
   padding: "18px 18px 0 18px",
   boxSizing: "border-box",
-  border: "0px solid var(--off-teal)",
+  border: "3px solid var(--off-teal)",
 };
 
 const baseRectStyle = {

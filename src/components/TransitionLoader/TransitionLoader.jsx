@@ -188,7 +188,14 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
               ease: "expo.inOut",
             },
             "-=0.5"
-          );
+          )
+          .to(
+            target,
+            {
+              clipPath: "inset(0% 0% 0% 0% round 0px)",
+              duration: 0.5
+            }
+          )
 
         contentTlRef.current = tl;
       });
@@ -226,7 +233,14 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
         ease: "expo.inOut",
         borderRadius: "9px",
       }
-    );
+    )
+    .to(
+        ".green-box",
+        {
+            duration: 0.5,
+            borderRadius: "0px",
+        }
+    )
 
     tlRef.current = tl;
 

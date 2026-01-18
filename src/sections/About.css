@@ -11,6 +11,7 @@
         gap: 1px;
         height: 440px;
         flex-shrink: 0;
+        position: relative;
 
         .s1 {
             min-width: 94px;
@@ -47,6 +48,7 @@
         flex-direction: column;
         box-sizing: border-box;
         flex: 1;
+        position: relative;
 
         h4 {
             font-size: 13px;
@@ -138,6 +140,7 @@
         justify-content: center;
         align-items: start;
         height: 100%;
+        position: relative;
 
         h4 {
             font-size: 13px;

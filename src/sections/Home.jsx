@@ -82,7 +82,7 @@ const Home = forwardRef(({ isLoaded, handleProjectSelect }, ref) => {
         scrub: 1,
       },
     });
-  }, []);
+  }, [parallaxRef.current, ref.current]);
 
   const handleRecentEnter = useCallback(() => setRecentHovered(true), []);
   const handleRecentLeave = useCallback(() => setRecentHovered(false), []);

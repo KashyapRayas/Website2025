@@ -7,12 +7,17 @@ import Metric from '../components/metric'
 import HeroMobile from '../components/Hero/HeroMobile'
 import AnimatedMan from '../components/AnimatedMan';
 import { useGSAP } from "@gsap/react";
+import GrassOverlay from '../components/GrassOverlay';
 
-const Home = forwardRef(({ isLoaded }, ref) => { 
+const Home = forwardRef(({ isLoaded }, ref) => {
 
     const rectRef = useRef(null);
     const heroRef = useRef(null)
     const parallaxRef = useRef(null)
+    const grassTargetRef1 = useRef(null);
+    const grassTargetRef2 = useRef(null);
+    const grassTargetRef3 = useRef(null);
+    const grassTargetRef4 = useRef(null);
 
     useGSAP(() => {
         if (!rectRef.current) return;
@@ -65,24 +70,27 @@ const Home = forwardRef(({ isLoaded }, ref) => {
                         <h3>GMT +0530</h3>
                     </div>
                 </div>
-                <div className={styles.hero}>
+                <div className={styles.hero} ref={grassTargetRef3}>
                     <HeroMobile ref={heroRef} isLoaded={isLoaded}/>
                 </div>
+                <GrassOverlay targetRef={grassTargetRef3} />
                 <div className={styles.metricSuperwrapper}>
                     <div className={styles.manWrapper}>
                         <AnimatedMan isLoaded={isLoaded}/>
                     </div>
                     <div className={styles.metricWrapper}>
-                        <Metric
+                        <Metric ref={grassTargetRef1}
                             name={"PRODUCTS DESIGNED"}
                             count={11}
                             isLoaded={isLoaded}
                         />
-                        <Metric
+                        <GrassOverlay targetRef={grassTargetRef1} />
+                        <Metric ref={grassTargetRef2}
                             name={"DESIGN EXPERIENCE"}
                             count={"+" + Math.floor((new Date() - new Date("2023-10-01")) / (1000 * 60 * 60 * 24 * 365.25))}
                             isLoaded={isLoaded}
                         />
+                        <GrassOverlay targetRef={grassTargetRef2} />
                     </div>
                 </div>
 

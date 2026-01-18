@@ -53,7 +53,6 @@ const About = forwardRef((_, ref) => {
   const grassTargetRef1 = useRef(null);
   const grassTargetRef2 = useRef(null);
   const grassTargetRef3 = useRef(null);
-  const grassTargetRef4 = useRef(null);
 
   // --- Precompute Age ---
   const age = useMemo(() => {

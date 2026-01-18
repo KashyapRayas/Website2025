@@ -55,6 +55,13 @@ const Preloader = ({ onComplete, onMidway }) => {
             },
             "+=0",
         )
+        .to(
+            ".preloader-box",
+            {
+                borderRadius: "0px",
+                duration: 0.5,
+            }
+        )
 
         thirdTimeline.current = tl3;
 

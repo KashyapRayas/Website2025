@@ -56,6 +56,7 @@
 }
 
 .left .first {
+    position: relative;
   display: flex;
   justify-content: center;
   width: 100%;
@@ -69,7 +70,7 @@
   justify-content: flex-end;
   background-color: var(--off-white);
   border-radius: 9px 0 0 9px;
-  padding-bottom: 30px;
+  padding-bottom: 27px;
 }
 
 .left .first .hero .herorounder {
@@ -379,12 +380,14 @@
   width: 100%;
   height: 302px;
   border-radius: 0px 0px 0px 9px;
+  position: relative;
 }
 
 .recentImgWrapper {
   width: 300px;
   padding-top: 11px;
   pointer-events: none;
+  position: relative;
 }
 
 .recentImg {
@@ -398,6 +401,7 @@
   overflow: hidden;
     border: 0px solid var(--off-teal);
     box-sizing: border-box;
+    position: relative;
 }
 
 .img {
