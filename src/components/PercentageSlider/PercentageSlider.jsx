@@ -1,172 +1,220 @@
 import { useState, useRef, useEffect } from "react";
 import "./PercentageSlider.css";
+import PlayIcon from "/icons/Play.svg";
+import PauseIcon from "/icons/Pause.svg";
 
 // --- Configuration ---
-const FRAME_COUNT = 25; // You have 20 images
-const BASE_PATH = ""; // Ensure this matches your base path if defined in vite.config, otherwise use ""
+const FRAME_COUNT = 25;
+const BASE_PATH = "";
+const FADE_DURATION = 100;
 
-// Function to generate path: /about_imgs/1.webp ... /about_imgs/20.webp
 const currentFrame = (index) =>
   `${BASE_PATH}/about_imgs/${index + 1}.webp`;
 
-// --- Styles (Keeping your original look) ---
+// --- Styles ---
 const containerStyle = {
   width: "100%",
-  height: "max-content",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  justifyContent: "start",
   gap: "18px",
 };
 
 const squareStyle = {
   width: "100%",
-  height: "100%",
   aspectRatio: "1 / 1",
   backgroundColor: "var(--dark-green)",
   borderRadius: "9px",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  color: "white",
-  fontSize: "42px",
-  border: "0px solid var(--off-teal)",
-  boxSizing: "border-box",
-  position: "relative",
-  overflow: "hidden"
+  overflow: "hidden",
 };
 
 const canvasStyle = {
   width: "100%",
   height: "100%",
-  objectFit: "cover",
-  display: "block"
+  display: "block",
 };
 
 const PercentageSlider = () => {
-  // Initialize at 0
-  const [value, setValue] = useState(0);
+  const [frameIndex, setFrameIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [isInView, setIsInView] = useState(true);
 
+  const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const imagesRef = useRef([]);
+  const intervalRef = useRef(null);
+  const fadeRafRef = useRef(null);
+  const prevFrameRef = useRef(null);
 
-  // --- 1. Preload Images ---
+  const percentage = (frameIndex / (FRAME_COUNT - 1)) * 100;
+
+  // --- Intersection Observer for visibility ---
   useEffect(() => {
-    let loadedCount = 0;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // --- Pause when out of view ---
+  useEffect(() => {
+    if (!isInView && isPlaying) {
+      setIsPlaying(false);
+    }
+  }, [isInView, isPlaying]);
+
+  // --- Preload ---
+  useEffect(() => {
+    let loaded = 0;
     const imgs = [];
 
     for (let i = 0; i < FRAME_COUNT; i++) {
       const img = new Image();
       img.src = currentFrame(i);
 
-      img.onload = () => {
-        loadedCount++;
-        if (loadedCount === FRAME_COUNT) setImagesLoaded(true);
+      img.onload = img.onerror = () => {
+        loaded++;
+        if (loaded === FRAME_COUNT) setImagesLoaded(true);
       };
-
-      // Handle error just in case an image is missing
-      img.onerror = () => {
-        console.error(`Failed to load image: ${img.src}`);
-        loadedCount++; // Count it anyway to avoid stuck loading
-        if (loadedCount === FRAME_COUNT) setImagesLoaded(true);
-      }
 
       imgs.push(img);
     }
+
     imagesRef.current = imgs;
   }, []);
 
-  // --- 2. Render Frame Helper ---
-  const renderFrame = (index) => {
-    const canvas = canvasRef.current;
-    const img = imagesRef.current[index];
-    if (!canvas || !img || !img.complete || img.naturalWidth === 0) return;
-
-    const ctx = canvas.getContext("2d");
-
-    // Set canvas resolution to match displayed size (crisper lines)
-    // or match image native size. Let's match image native size for quality.
-    if (canvas.width !== img.naturalWidth) {
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-    }
-
-    // "Object-fit: Cover" Logic for Canvas
-    // This ensures the image fills the square without stretching,
-    // behaving exactly like CSS background-size: cover
-    const cw = canvas.width;
-    const ch = canvas.height;
+  // --- Draw helper ---
+  const drawCover = (ctx, img) => {
+    const cw = ctx.canvas.width;
+    const ch = ctx.canvas.height;
     const iw = img.naturalWidth;
     const ih = img.naturalHeight;
 
-    const canvasRatio = cw / ch;
-    const imgRatio = iw / ih;
+    const scale = Math.max(cw / iw, ch / ih);
+    const w = iw * scale;
+    const h = ih * scale;
 
-    let renderW, renderH;
-
-    if (imgRatio > canvasRatio) {
-        renderH = ch;
-        renderW = ch * imgRatio;
-    } else {
-        renderW = cw;
-        renderH = cw / imgRatio;
-    }
-
-    const offsetX = (cw - renderW) / 2;
-    const offsetY = (ch - renderH) / 2;
-
-    ctx.clearRect(0, 0, cw, ch);
-    ctx.drawImage(img, offsetX, offsetY, renderW, renderH);
+    ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
   };
 
-  // --- 3. Sync Slider to Canvas ---
-  useEffect(() => {
-    if (!imagesLoaded) return;
+  // --- Fade render ---
+  const renderFrame = (index) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
 
-    const maxIndex = FRAME_COUNT - 1;
-    // Map 0-100 to 0-19
-    const frameIndex = Math.min(
-      maxIndex,
-      Math.max(0, Math.floor((value / 100) * maxIndex))
+    const img = imagesRef.current[index];
+    if (!img) return;
+
+    if (canvas.width !== img.naturalWidth) {
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+    }
+
+    if (prevFrameRef.current === null) {
+      drawCover(ctx, img);
+      prevFrameRef.current = index;
+      return;
+    }
+
+    const prevImg = imagesRef.current[prevFrameRef.current];
+
+    if (fadeRafRef.current) {
+      cancelAnimationFrame(fadeRafRef.current);
+    }
+
+    const start = performance.now();
+
+    const animate = (now) => {
+      const t = Math.min(
+        (now - start) / (isPlaying ? FADE_DURATION : 1),
+        1
+      );
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.globalAlpha = 1 - t;
+      drawCover(ctx, prevImg);
+
+      ctx.globalAlpha = t;
+      drawCover(ctx, img);
+
+      ctx.globalAlpha = 1;
+
+      if (t < 1) {
+        fadeRafRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    fadeRafRef.current = requestAnimationFrame(animate);
+    prevFrameRef.current = index;
+  };
+
+  // --- Render on frame change ---
+  useEffect(() => {
+    if (imagesLoaded) renderFrame(frameIndex);
+  }, [frameIndex, imagesLoaded]);
+
+  // --- Autoplay ---
+  useEffect(() => {
+    if (!isPlaying || !imagesLoaded) return;
+
+    intervalRef.current = setInterval(() => {
+      setFrameIndex((i) => (i + 1) % FRAME_COUNT);
+    }, 300);
+
+    return () => clearInterval(intervalRef.current);
+  }, [isPlaying, imagesLoaded]);
+
+  const togglePlay = () => setIsPlaying((p) => !p);
+
+  const handleSliderChange = (e) => {
+    const percent = Number(e.target.value);
+    const index = Math.round(
+      (percent / 100) * (FRAME_COUNT - 1)
     );
 
-    requestAnimationFrame(() => renderFrame(frameIndex));
-  }, [value, imagesLoaded]);
-
-  const handleSliderChange = (event) => {
-    setValue(Number(event.target.value));
+    setFrameIndex(index);
+    setIsPlaying(false);
   };
 
   return (
-    <div style={containerStyle}>
+    <div ref={containerRef} style={containerStyle}>
       <div style={squareStyle}>
-
-        {/* Text shown while loading or overlaying */}
-        {(!imagesLoaded) && <span>{Math.round(value)}%</span>}
-
-        {/* The Canvas */}
-        <canvas
-            ref={canvasRef}
-            style={{
-                ...canvasStyle,
-                opacity: imagesLoaded ? 1 : 0,
-                transition: 'opacity 0.3s ease'
-            }}
-        />
+        <canvas ref={canvasRef} style={canvasStyle} />
       </div>
 
-      <input
-        type="range"
-        min="0"
-        max="100"
-        step="5" // Smooth scrubbing
-        value={value}
-        onChange={handleSliderChange}
-        className="percentage-slider"
-        style={{ "--value": `${value}%` }}
-      />
+      <div
+        style={{
+          display: "flex",
+          gap: "12px",
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div id="play-pause-button" onClick={togglePlay}>
+          <img src={isPlaying ? PauseIcon : PlayIcon} alt="" />
+        </div>
+
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={percentage}
+          onChange={handleSliderChange}
+          className="percentage-slider"
+          style={{ "--value": `${percentage}%` }}
+        />
+      </div>
     </div>
   );
 };

@@ -5,6 +5,8 @@ export function useSmoothScrollConfig() {
   const [config, setConfig] = useState({
     duration: 2,
     enabled: true,
+    smoothWheel: true,
+    smoothTouch: true,
   })
 
   useEffect(() => {
@@ -25,7 +27,7 @@ export function useSmoothScrollConfig() {
     } else if (isMac) {
       // Shorter duration for Mac (already has smooth scroll)
       setConfig({
-        duration: 1.5,
+        duration: 2,
         enabled: true,
       })
     } else {

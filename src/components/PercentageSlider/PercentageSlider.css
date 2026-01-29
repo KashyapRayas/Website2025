@@ -76,3 +76,25 @@
   cursor: pointer;
   transition: all 0.15s ease-in-out;
 }
+
+#play-pause-button {
+    width: 24px;
+    height: 24px;
+    border-radius: 3px;
+    background-color: var(--off-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    img {
+        scale: 1;
+        transition: all 0.1s ease-in-out;
+        pointer-events: none;
+    }
+}
+
+#play-pause-button:active > img {
+    scale: 0.6;
+}

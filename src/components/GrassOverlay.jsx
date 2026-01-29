@@ -1,3 +1,4 @@
+// GrassOverlay.jsx
 import React, {
   useState,
   useEffect,
@@ -10,9 +11,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ------------------------------------------------------------------
-// 1. LEAF ASSETS LIBRARY
-// ------------------------------------------------------------------
 const LEAF_VARIANTS = [
   {
     id: "leaf-1",
@@ -66,9 +64,6 @@ const LEAF_VARIANTS = [
   },
 ];
 
-// ------------------------------------------------------------------
-// UTILITIES
-// ------------------------------------------------------------------
 const random = (min, max) => Math.random() * (max - min) + min;
 
 const getAppScale = () => {
@@ -79,10 +74,11 @@ const getAppScale = () => {
   return parseFloat(value) || 1;
 };
 
-// ------------------------------------------------------------------
-// COMPONENT
-// ------------------------------------------------------------------
-const GrassOverlay = ({ targetRef, color = "#00A084" }) => {
+const GrassOverlay = ({
+  targetRef = null,
+  color = "#00A084",
+  isLoaded = true,
+}) => {
   const componentRef = useRef(null);
 
   const [layout, setLayout] = useState({
@@ -95,9 +91,6 @@ const GrassOverlay = ({ targetRef, color = "#00A084" }) => {
   const [isReady, setIsReady] = useState(false);
   const [translateY, setTranslateY] = useState("3px");
 
-  // ------------------------------------------------------------------
-  // Responsive offset (unchanged)
-  // ------------------------------------------------------------------
   useEffect(() => {
     const updateTranslate = () => {
       const w = window.innerWidth;
@@ -111,9 +104,6 @@ const GrassOverlay = ({ targetRef, color = "#00A084" }) => {
     return () => window.removeEventListener("resize", updateTranslate);
   }, []);
 
-  // ------------------------------------------------------------------
-  // Measure target — ZOOM SAFE
-  // ------------------------------------------------------------------
   useLayoutEffect(() => {
     if (!targetRef.current) return;
 
@@ -153,7 +143,9 @@ const GrassOverlay = ({ targetRef, color = "#00A084" }) => {
     });
 
     resizeObserver.observe(targetRef.current);
-    window.addEventListener("scroll", updateLayout, { passive: true });
+    window.addEventListener("scroll", updateLayout, {
+      passive: true
+    });
 
     return () => {
       resizeObserver.disconnect();
@@ -161,13 +153,12 @@ const GrassOverlay = ({ targetRef, color = "#00A084" }) => {
     };
   }, [targetRef]);
 
-  // ------------------------------------------------------------------
-  // Random leaf config
-  // ------------------------------------------------------------------
   const config = useMemo(() => {
     if (!layout.width) return null;
 
-    const shuffled = [...LEAF_VARIANTS].sort(() => 0.5 - Math.random());
+    const shuffled = [...LEAF_VARIANTS].sort(
+      () => 0.5 - Math.random()
+    );
     const topLeaf = shuffled[0];
 
     const minX = layout.width * 0.3;
@@ -186,11 +177,9 @@ const GrassOverlay = ({ targetRef, color = "#00A084" }) => {
     };
   }, [layout.width]);
 
-  // ------------------------------------------------------------------
-  // Animation
-  // ------------------------------------------------------------------
   useLayoutEffect(() => {
-    if (!isReady || !componentRef.current) return;
+    if (!isReady || !componentRef.current || !isLoaded)
+      return;
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -218,17 +207,14 @@ const GrassOverlay = ({ targetRef, color = "#00A084" }) => {
     }, componentRef);
 
     return () => ctx.revert();
-  }, [isReady, config, targetRef]);
+  }, [isReady, config, targetRef, isLoaded]);
 
   if (!isReady || !config) return null;
 
   const STRIP_HEIGHT = 20;
   const scale = getAppScale();
 
-  // ------------------------------------------------------------------
-  // RENDER
-  // ------------------------------------------------------------------
-  return (
+return (
     <div
       ref={componentRef}
       style={{
@@ -239,8 +225,6 @@ const GrassOverlay = ({ targetRef, color = "#00A084" }) => {
         height: layout.height,
         pointerEvents: "none",
         zIndex: 999,
-        transform: `scale(${scale})`,
-        transformOrigin: "top left"
       }}
     >
       <div
@@ -266,6 +250,10 @@ const GrassOverlay = ({ targetRef, color = "#00A084" }) => {
             <g
               key={item.id}
               className="grass-blade"
+              style={{
+                opacity: isLoaded ? undefined : 0,
+                pointerEvents: "none",
+              }}
               transform={`translate(${item.x}, ${STRIP_HEIGHT}) scale(${item.scale}) rotate(${item.rotation})`}
             >
               <svg

@@ -419,7 +419,7 @@ const Hero = ({ isLoaded }) => {
     };
 
     const scheduleNextGroup = () => {
-      const delay = 2 + Math.random() * 0.5;
+      const delay = 1.5 + Math.random() * 0.5;
       blinkTimeout = setTimeout(() => {
         performBlinkGroup();
       }, delay * 1000);

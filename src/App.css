@@ -1,7 +1,7 @@
 .extremes-wrapper-left {
     display: block;
     min-width: 18px;
-    padding: 0 1px 1px 0;
+    padding: 0 1px 0px 0;
     box-sizing: border-box;
     flex: 1;
     align-self: stretch;
@@ -10,10 +10,18 @@
 .extremes-wrapper-right {
     display: block;
     min-width: 18px;
-    padding: 0 0 1px 1px;
+    padding: 0 0 0px 1px;
     box-sizing: border-box;
     flex: 1;
     align-self: stretch;
+}
+
+.extremes-wrapper-left.header-extremes {
+    padding: 0 1px 1px 0;
+}
+
+.extremes-wrapper-right.header-extremes {
+    padding: 0 0 1px 1px;
 }
 
 .extremes {

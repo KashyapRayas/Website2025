@@ -9,7 +9,7 @@ import TransitionLoader from './components/TransitionLoader/TransitionLoader.jsx
 import { useSmoothScrollConfig } from './hooks/useSmoothScrollConfig'
 
 function App() {
-    const flag = true
+    const flag = false
     const scrollConfig = useSmoothScrollConfig()
     const [isAssetLoaded, setIsAssetLoad] = useState(flag)
     const [isPreloaderDone, setIsPreloaderDone] = useState(flag)
@@ -20,12 +20,9 @@ function App() {
     const [projectToLoad, setProjectToLoad] = useState(null)
     const [corrector, setCorrector] = useState(false)
 
-    // We use a ref to access the Lenis instance because useLenis()
-    // inside App returns null (since App is the parent of ReactLenis)
     const lenisRef = useRef(null)
     const skipHistoryPush = useRef(false)
 
-    // 1. Disable Native Scroll Restoration
     useEffect(() => {
         if ('scrollRestoration' in window.history) {
             window.history.scrollRestoration = 'manual';
@@ -49,38 +46,23 @@ function App() {
 
         if (transitionDirection === 'in') {
             setView('project')
-            // 2. Force scroll to top (immediate) when entering a project
-            window.scrollTo(0, 0);
-            lenisInstance?.scrollTo(0, { immediate: true });
         }
         else if (transitionDirection === 'loop') {
             setSelectedProjectName(projectToLoad)
             setView('project')
             setCorrector(true)
-            // 2. Force scroll to top (immediate) when looping projects
             window.scrollTo(0, 0);
             lenisInstance?.scrollTo(0, { immediate: true });
         }
         else {
             setView('landing')
-            // For landing, we stay at current scroll position until
-            // handleTransitionComplete triggers the smooth scroll to #WORK
         }
     }, [transitionDirection, projectToLoad]);
 
     const handleTransitionComplete = useCallback(() => {
         setIsTransitioning(false)
         setCorrector(false)
-
-        const lenisInstance = lenisRef.current?.lenis;
-
-        if (transitionDirection === "out") {
-            const isSmall = window.innerWidth <= 1201;
-            setTimeout(() => {
-                lenisInstance?.scrollTo("#WORK", { duration: 2, offset: isSmall ? -60 : 0 });
-            }, 500);
-        }
-    }, [transitionDirection]);
+    }, []);
 
     const handleProjectSelect = (projectData) => {
         if (!skipHistoryPush.current) {
@@ -108,6 +90,7 @@ function App() {
         }
         setTransitionDirection('out')
         setIsTransitioning(true)
+        console.log('Going back to landing')
     }, []);
 
     const handlePreloaderComplete = useCallback(() => {

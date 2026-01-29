@@ -1,8 +1,14 @@
-import { useEffect, useState, useRef, forwardRef, useMemo, useCallback } from "react";
-import "./About.css";
+import {
+  useEffect,
+  useState,
+  useRef,
+  forwardRef,
+  useMemo,
+  useCallback,
+} from "react";
+import styles from "./About.module.css";
 import lego_210 from "/lego_210.svg";
 import star from "/star.svg";
-import AnimatedArrow from "../components/AnimatedArrow.jsx";
 import AnimatedDownwardSmiley from "../components/AnimatedDownwardSmiley.jsx";
 import checked from "/checked.svg";
 import unchecked from "/unchecked.svg";
@@ -16,48 +22,61 @@ import GrassOverlay from "../components/GrassOverlay.jsx";
 
 gsap.registerPlugin(CustomEase, ScrollTrigger);
 
-// --- Small Reusable Components ---
 const ListItem = ({ icon, text, span }) => (
-  <div className="item">
-    <div className="wrapper">
+  <div className={styles.item}>
+    <div className={styles.wrapper}>
       <img src={icon} alt="" />
     </div>
-    <h2 className={icon === checked ? "checked" : "unchecked"}>
+    <h2 className={icon === checked ? styles.checked : styles.unchecked}>
       {text} {span && <span>{span}</span>}
     </h2>
   </div>
 );
 
 const ExperienceBlock = ({ company, experiences }) => (
-  <div className="experience-wrapper">
-    <div className="company">
+  <div className={styles.experienceWrapper}>
+    <div className={styles.company}>
       <img src={star} alt="" />
       <h4>{company}</h4>
     </div>
     {experiences.map(({ role, date }, i) => (
-      <div className="experience" key={i}>
+      <div className={styles.experience} key={i}>
         <h3>{role}</h3>
-        <div className="line"></div>
+        <div className={styles.line}></div>
         <h3>{date}</h3>
       </div>
     ))}
   </div>
 );
 
-// --- About Component ---
 const About = forwardRef((_, ref) => {
   const [resumeHovered, setResumeHovered] = useState(false);
   const cellRef = useRef(null);
   const legRef = useRef(null);
-  const rectRef = useRef(null);
   const grassTargetRef1 = useRef(null);
   const grassTargetRef2 = useRef(null);
   const grassTargetRef3 = useRef(null);
+  const headingRef = useRef(null);
 
-  // --- Precompute Age ---
+  useGSAP(() => {
+    if (!headingRef.current) return;
+
+    gsap.to(headingRef.current, {
+      scrollTrigger: {
+        trigger: headingRef.current,
+        start: "top 60%",
+        end: "bottom top",
+        toggleClass: {
+          targets: headingRef.current,
+          className: styles.headingActive,
+        },
+      },
+    });
+  }, []);
+
   const age = useMemo(() => {
     const today = new Date();
-    const birthDate = new Date(2001, 11, 27); // Dec index=11
+    const birthDate = new Date(2001, 11, 27);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
     const dayDiff = today.getDate() - birthDate.getDate();
@@ -65,7 +84,6 @@ const About = forwardRef((_, ref) => {
     return age;
   }, []);
 
-  // --- Scroll Trigger for leg animation ---
   useEffect(() => {
     if (!cellRef.current) return;
     const trigger = ScrollTrigger.create({
@@ -77,11 +95,9 @@ const About = forwardRef((_, ref) => {
     return () => trigger.kill();
   }, []);
 
-  // --- Hover handlers ---
   const handleEnter = useCallback(() => setResumeHovered(true), []);
   const handleLeave = useCallback(() => setResumeHovered(false), []);
 
-  // --- Data Lists ---
   const currentEnjoy = [
     { text: "Films, Severance & The Office", span: "[ US ]" },
     { text: "Arc Raiders" },
@@ -97,7 +113,7 @@ const About = forwardRef((_, ref) => {
     { text: "Play Death Stranding 2" },
     { text: "Mod a Casio watch" },
     { text: "Finish reading - The Courage To Be Disliked" },
-    { text: "Pursue a HCI Master’s" },
+    { text: "Pursue a HCI Master's" },
     { text: "Work at Google or Nothing" },
   ];
 
@@ -119,128 +135,140 @@ const About = forwardRef((_, ref) => {
   ];
 
   return (
-    <section id="ABOUT" ref={ref}>
+    <section id="ABOUT" className={styles.about} ref={ref}>
       <div className="extremes-wrapper-left">
         <div className="extremes"></div>
       </div>
 
-      <div className="middle">
-        {/* --- RIGHT SIDE --- */}
-        <div className="right">
-          <div className="heading">
-            <span>{"<"}</span>ABOUT<span>{"/>"}</span>
+      <div className={styles.middle}>
+        <div className={styles.right}>
+          <div className={styles.heading} ref={headingRef}>
+            <span className={`${styles.headingBracket}`}>
+              {"<"}
+            </span>
+            ABOUT
+            <span className={`${styles.headingBracket}`}>
+              {"/>"}
+            </span>
           </div>
 
-          <div className="first">
+          <div className={styles.rightFirst}>
             <div>
-                <div className="iconWrapper">
-                    <h4>{">"}</h4>
-                </div>
-                <h4>OBJECTIVE</h4>
+              <div className={styles.iconWrapper}>
+                <h4>{">"}
+                </h4>
+              </div>
+              <h4>OBJECTIVE</h4>
             </div>
-            <h3>
-              Ever since I was a kid<span>,</span> I knew I wanted to{" "}
-              <span>write emails</span> and work{" "}
-              <span>cross functionally</span> across teams<span>.</span>
+            <h3 className={styles.objh3}>
+              Ever since I was a kid<span>,</span> I knew I wanted to
+              <span> write emails</span> and work
+              <span> cross functionally</span> across teams
+              <span>.</span>
             </h3>
           </div>
 
-          <div className="second" ref={grassTargetRef1}>
+          <div
+            className={styles.rightSecond}
+            ref={grassTargetRef1}
+          >
             <div>
-                <div className="iconWrapper">
-                    <h4>{">"}</h4>
-                </div>
-                <h4>DESCRIPTIVE</h4>
+              <div className={styles.iconWrapper}>
+                <h4 className={styles.desch4}>
+                  {">"}
+                </h4>
+              </div>
+              <h4>DESCRIPTIVE</h4>
             </div>
-            <h3>
-              Hi there <span>[ again ]</span> I’m Kashyap Rayas <span>[ {age} M ]</span>,
-              Product Designer by trade and professional overthinker by nature. I love shaping
-              products that work beautifully and make sense fast. With a background in computer
-              science and design, I thrive at the intersection of technology and creativity.
+            <h3 className={styles.desch3}>
+              Hi there <span>[ again ]</span> I'm Kashyap Rayas{" "}
+              <span>[ {age} M ]</span>, Product Designer by trade and
+              professional overthinker by nature. I love shaping products
+              that work beautifully and make sense fast. With a background in
+              computer science and design, I thrive at the intersection of
+              technology and creativity.
               <br />
               <br />
-              At present, I’m working at Viga ET as a UI/UX Engineer, where I
+              At present, I'm working at Viga ET as a UI/UX Engineer, where I
               oversee design systems and user experiences for a suite of apps
               tailored for the filmmaking industry.
             </h3>
           </div>
           <GrassOverlay targetRef={grassTargetRef1}></GrassOverlay>
 
-            {/* <a
-                href="mailto:kashyap.rayas@gmail.com"
-                className="resume"
-                onMouseEnter={handleEnter}
-                onMouseLeave={handleLeave}
-            >
-                <AnimatedArrow isActive={!resumeHovered} />
-                <h4>
-                VIEW <span>RESUME</span>
-                </h4>
-                <AnimatedArrow isActive={resumeHovered} />
-            </a> */}
-
-            <div className="third-wrapper-new" ref={grassTargetRef2}>
-                    <div className="third">
-                        <div>
-                            <div className="iconWrapper">
-                                <h4>{">"}</h4>
-                            </div>
-                            <h4>THE UNDERGROUND MAN</h4>
-                        </div>
-                        <h3>
-                            It is clear to me now that, owing to my unbounded vanity and to the high standard I set for myself, I often looked at myself with furious discontent, which verged on loathing, and so I inwardly attributed the same feeling to everyone.
-                        </h3>
-                    </div>
-                    <div className="s2">
-                        <AnimatedDownwardSmiley isActive={true} />
-                    </div>
+          <div
+            className={styles.thirdWrapperNew}
+            ref={grassTargetRef2}
+          >
+            <div className={styles.rightThird}>
+              <div>
+                <div className={styles.iconWrapper}>
+                  <h4>{">"}
+                  </h4>
+                </div>
+                <h4>THE UNDERGROUND MAN</h4>
+              </div>
+              <h3>
+                It is clear to me now that, owing to my unbounded vanity and
+                to the high standard I set for myself, I often looked at
+                myself with furious discontent, which verged on loathing, and
+                so I inwardly attributed the same feeling to everyone.
+              </h3>
             </div>
-            <GrassOverlay targetRef={grassTargetRef2}></GrassOverlay>
+            <div className={styles.rightS2}>
+              <AnimatedDownwardSmiley isActive={true} />
+            </div>
+          </div>
+          <GrassOverlay targetRef={grassTargetRef2}></GrassOverlay>
         </div>
 
-        {/* --- LEFT SIDE --- */}
-        <div className="left">
-          <div className="first" ref={cellRef}>
-            <img className="s1" src={lego_210} alt="" />
-            <div className="about-img-wrapper">
+        <div className={styles.left}>
+          <div className={styles.leftFirst} ref={cellRef}>
+            <img
+              className={styles.leftFirstS1}
+              src={lego_210}
+              alt=""
+            />
+            <div className={styles.aboutImgWrapper}>
               <PercentageSlider />
             </div>
-            <div className="cell">
+            <div className={styles.leftFirstCell}>
               <AnimatedLegWiggle ref={legRef} />
             </div>
           </div>
 
-            <div className="third-new">
-                <div className="third-left">
-                    <h4>THINGS I CURRENTLY ENJOY</h4>
-                    <div className="list">
-                    {currentEnjoy.map((item, i) => (
-                        <ListItem key={i} icon={star} text={item.text} span={item.span} />
-                    ))}
-                    </div>
-                </div>
-                <div className="third-right" ref={grassTargetRef3}>
-                    <h4>THINGS I HOPE TO COMPLETE</h4>
-                    <div className="list">
-                    {goals.map((item, i) => (
-                        <ListItem
-                        key={i}
-                        icon={item.checked ? checked : unchecked}
-                        text={item.text}
-                        span={item.span}
-                        />
-                    ))}
-                    </div>
-                </div>
-                <GrassOverlay targetRef={grassTargetRef3}></GrassOverlay>
+          <div className={styles.thirdNew}>
+            <div className={styles.thirdLeft}>
+              <h4>THINGS I CURRENTLY ENJOY</h4>
+              <div className={styles.list}>
+                {currentEnjoy.map((item, i) => (
+                  <ListItem
+                    key={i}
+                    icon={star}
+                    text={item.text}
+                    span={item.span}
+                  />
+                ))}
+              </div>
             </div>
-
-          {/* <div className="second">
-            <h4>EXPERIENCE</h4>
-            {experiences.map((exp, i) => (
-              <ExperienceBlock key={i} company={exp.company} experiences={exp.roles} />
-            ))}
-          </div> */}
+            <div
+              className={styles.thirdRight}
+              ref={grassTargetRef3}
+            >
+              <h4>THINGS I HOPE TO COMPLETE</h4>
+              <div className={styles.list}>
+                {goals.map((item, i) => (
+                  <ListItem
+                    key={i}
+                    icon={item.checked ? checked : unchecked}
+                    text={item.text}
+                    span={item.span}
+                  />
+                ))}
+              </div>
+            </div>
+            <GrassOverlay targetRef={grassTargetRef3}></GrassOverlay>
+          </div>
         </div>
       </div>
 

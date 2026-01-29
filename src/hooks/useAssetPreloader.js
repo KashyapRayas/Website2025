@@ -119,7 +119,9 @@ export const useAssetPreloader = () => {
     const phase1Promises = [];
 
     // --- PHASE 1: Collect Static & Core assets ---
-    STATIC_IMAGE_ASSETS.forEach((asset) => assetsToLoad.add(BASE_PATH + asset));
+    STATIC_IMAGE_ASSETS.forEach((asset) =>
+      assetsToLoad.add(BASE_PATH + asset)
+    );
 
     // ✅ Load the projects index dynamically
     let projectsIndex;
@@ -176,7 +178,9 @@ export const useAssetPreloader = () => {
 
     // --- PHASE 2: Discover additional images in JSONs ---
     const discoveredImages = new Set();
-    loadedJsonData.forEach((data) => scanForImages(data, discoveredImages));
+    loadedJsonData.forEach((data) =>
+      scanForImages(data, discoveredImages)
+    );
 
     const newImagesToLoad = Array.from(discoveredImages).filter(
       (url) => !assetsToLoad.has(BASE_PATH + url)

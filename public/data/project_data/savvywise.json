@@ -30,7 +30,7 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/sw_8.webp",
+            "url": "/project_imgs/sw_3.webp",
             "caption": "An interface revolving under a model dropdown"
         },
         {
@@ -40,28 +40,33 @@
         },
         {
             "type": "img",
-            "url": "/project_imgs/sw_3.webp",
+            "url": "/project_imgs/sw_4.webp",
             "caption": "Home"
         },
         {
             "type": "img",
-            "url": "/project_imgs/sw_4.webp",
+            "url": "/project_imgs/sw_5.webp",
             "caption": "Tax research model - color coded to yellow"
         },
         {
             "type": "img",
-            "url": "/project_imgs/sw_5.webp",
-            "caption": "Other research model - color coded to orange"
-        },
-        {
-            "type": "img",
             "url": "/project_imgs/sw_6.webp",
-            "caption": "General task model"
+            "caption": "Color coded banner in chat"
         },
         {
             "type": "img",
             "url": "/project_imgs/sw_7.webp",
-            "caption": "Workflows"
+            "caption": "Banner integrated into document editor"
+        },
+        {
+            "type": "img",
+            "url": "/project_imgs/sw_8.webp",
+            "caption": "Other research model - color coded to orange"
+        },
+        {
+            "type": "img",
+            "url": "/project_imgs/sw_9.webp",
+            "caption": "General task model"
         }
     ],
     "details": {

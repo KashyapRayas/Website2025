@@ -2,37 +2,12 @@
   width: 100%;
       align-self: stretch;
   /* min-height: calc(100dvh - 60px); */
-  max-height: 900px;
+  /* max-height: 900px; */
       display: flex;
     justify-content: center;
     gap: 0;
     padding: 0 0 1px 0;
     box-sizing: border-box;
-}
-
-.extremesWrapperLeft {
-    display: block;
-    min-width: 18px;
-    padding: 0 1px 1px 0;
-    box-sizing: border-box;
-    flex: 1;
-    align-self: stretch;
-}
-
-.extremesWrapperRight {
-    display: block;
-    min-width: 18px;
-    padding: 0 0 1px 1px;
-    box-sizing: border-box;
-    flex: 1;
-    align-self: stretch;
-}
-
-.extremes {
-    width: 100%;
-    height: 100%;
-    border-radius: 9px;
-    background-color: var(--light-off-teal);
 }
 
 .home > .middle {
@@ -60,7 +35,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 571px;
+  height: 620px;
 }
 
 .left .first .hero {
@@ -169,17 +144,22 @@
     justify-content: start;
     overflow: hidden;
     transition: all 0.2s ease-in-out;
-        h4 {
-        font-weight: 800;
-        color: var(--off-black-06);
-    }
+}
+
+.left .third div .iconWrapper .chevronh4 {
+    font-size: 13px;
+    width: 100%;
+    text-wrap: wrap;
+    margin: 0;
+    font-weight: 800;
+    color: var(--off-black-06);
 }
 
 .left .third:hover > div .iconWrapper{
     width: 18px;
 }
 
-.left .third h4 {
+.left .third .desch4 {
   font-size: 13px;
   width: 100%;
   text-wrap: wrap;
@@ -188,7 +168,7 @@
   margin: 0;
 }
 
-.left .third h3 {
+.left .third .desch3 {
   font-size: 15px;
   width: 100%;
   text-wrap: wrap;
@@ -229,7 +209,7 @@
     z-index: 5;
 }
 
-.right .first h1 {
+.right .first .heroText {
   margin: 0;
   padding: 0;
   color: var(--off-black);
@@ -254,7 +234,7 @@
   color: var(--dark-green);
 }
 
-.right .first h2 {
+.right .first .heroCaption {
   color: var(--off-black-06);
   font-weight: 400;
   line-height: 150%;
@@ -283,7 +263,7 @@
   color: var(--dark-green);
 }
 
-.right .first .time h3 {
+.right .first .time .timeh3 {
   margin: 0;
   padding: 0;
   font-weight: 200;
@@ -292,12 +272,13 @@
   translate: 0 1px;
 }
 
-.right .first .time h3 span {
-  color: var(--off-black-06);
-  padding-left: 9px;
-}
 
-.right .first .time h3:nth-child(3) {
+.right .first .time .timeh32 {
+    margin: 0;
+  padding: 0;
+  font-weight: 200;
+  font-size: 13px;
+  translate: 0 1px;
   color: var(--dark-green);
 }
 
@@ -335,14 +316,13 @@
   opacity: 1;
 }
 
-.secondInnerwrapper h4 {
+.secondInnerwrapper .recenth4 {
   font-size: 13px;
   width: 100%;
   text-wrap: wrap;
   font-weight: 400;
   color: var(--off-black-06);
   margin: 0;
-  transition: all 0.3s ease-in-out;
 }
 
 .homeRounder1 {
@@ -394,12 +374,12 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   background-color: var(--off-teal);
-  border-radius: 9px;
+  border-radius: 7.5px;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-    border: 0px solid var(--off-teal);
+    border: 2.1px solid var(--off-teal);
     box-sizing: border-box;
     position: relative;
 }
@@ -433,12 +413,18 @@
   transition: all 0.3s ease-in-out;
 }
 
-.title h3 {
+.title .titleh3Wrapper {
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    padding: 0 14px 0 0;
+}
+
+.title .titleh3 {
   margin: 0;
   padding: 0;
   font-weight: 700;
   font-size: 24px;
-  padding: 0 14px 0 0;
   color: var(--off-black);
 }
 

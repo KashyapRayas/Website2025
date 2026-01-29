@@ -18,7 +18,7 @@ import PLUS from "./digits/PLUS";
 
 const digitComponents = [D0, D1, D2, D3, D4, D5, D6, D7, D8, D9];
 
-const Digit = ({ number, isLoaded }) => {
+const Digit = ({ number, isLoaded, delay=0 }) => {
   const container = useRef();
   const sortedPaths = useRef([]);
 
@@ -44,6 +44,7 @@ const Digit = ({ number, isLoaded }) => {
           duration: 0.5,
           ease: "power2.out",
           stagger: 0.08,
+          delay: delay
         });
       }
     },

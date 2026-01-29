@@ -87,8 +87,8 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, isPreloaderDo
 
     return (
         <div id="main-content" style={currentStyle}>
-            <HeaderComponent setLinkHovered={setLinkHovered} lenis={lenis} />
-            <HomeComponent linkHovered={linkHovered} isLoaded={isPreloaderDone} handleProjectSelect={onProjectSelect} ref={homeRef}/>
+            <HeaderComponent setLinkHovered={setLinkHovered} lenis={lenis} isLoaded={isPreloaderDone} />
+            <HomeComponent linkHovered={linkHovered} isLoaded={isPreloaderDone} isLoadedforHero={!isIncomingTransition && isPreloaderDone} handleProjectSelect={onProjectSelect} ref={homeRef}/>
             <Work ref={workRef} handleProjectSelect={onProjectSelect}/>
             <About ref={aboutRef} />
             <Contact ref={contactRef} />

@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import Digit from "./Digit";
 
-const Metric = forwardRef(({ name, count, isLoaded }, ref) => {
+const Metric = forwardRef(({ name, count, isLoaded}, ref) => {
   return (
     <div
       ref={ref}

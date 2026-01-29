@@ -11,13 +11,13 @@ import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLenis } from "lenis/react";
 
+
 import styles from "./Hero.module.css";
 
 import figma_apply from "/icons/figma_apply.png";
 import figma_cancel from "/icons/figma_cancel.png";
 import figma_search from "/icons/figma_search.png";
 import box_anchor from "/box_anchor.svg";
-import { transformRawPath } from "gsap/utils/paths";
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
@@ -435,7 +435,7 @@ const Hero = ({ isLoaded }) => {
 
     const scheduleNextGroup = () => {
         // Random delay between 1.5-2 seconds
-        const delay = 2 + Math.random() * 0.5;
+        const delay = 1.5 + Math.random() * 0.5;
         blinkTimeout = setTimeout(() => {
         performBlinkGroup();
         }, delay * 1000);

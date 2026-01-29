@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import "./Project.css";
 import ProjectBigText from "../components/ProjectBigText";
 import ProjectParaText from "../components/ProjectParaText";
@@ -11,13 +11,11 @@ import star from "/star.svg";
 import { useLenis } from "lenis/react";
 import GrassOverlay from "../components/GrassOverlay";
 
-const BASE_PATH = ""; // Change this if your site runs from a different base path
+const BASE_PATH = "";
 
-// Helper: build correct JSON URL path from project name
 const getProjectDataPath = (projectName) => {
   if (!projectName) return null;
   const filename = projectName.toLowerCase().replace(/\s/g, "_");
-  // All JSON files are now in /public/data/project_data/
   return `${BASE_PATH}/data/project_data/${filename}.json`;
 };
 
@@ -28,11 +26,12 @@ const Project = ({
   onNextProjectSelect,
 }) => {
   const [projectData, setProjectData] = useState(null);
-  const [projectsData, setProjectsData] = useState(null); // formerly imported
+  const [projectsData, setProjectsData] = useState(null);
   const [hovered, setHovered] = useState(false);
   const lenis = useLenis();
+  const grassTargetRef1 = useRef(null);
+  const grassTargetRef2 = useRef(null);
 
-  // Styles
   const initialStyle = useMemo(
     () => ({
       position: "absolute",
@@ -62,7 +61,6 @@ const Project = ({
 
   const currentStyle = isIncomingTransition ? initialStyle : finalStyle;
 
-  // ✅ Load master "projects.json"
   useEffect(() => {
     const loadProjectsList = async () => {
       try {
@@ -77,7 +75,6 @@ const Project = ({
     loadProjectsList();
   }, []);
 
-  // ✅ Load selected project data from public/data/project_data/
   useEffect(() => {
     if (!selectedProjectName) {
       setProjectData(null);
@@ -108,7 +105,6 @@ const Project = ({
     return () => controller.abort();
   }, [selectedProjectName]);
 
-  // ✅ Determine "next project"
   const nextProject = useMemo(() => {
     if (!projectData?.details?.projectTitle || !projectsData?.projects)
       return null;
@@ -135,7 +131,6 @@ const Project = ({
     };
   }, [projectData, projectsData]);
 
-  // ✅ Prefetch next project's images
   useEffect(() => {
     if (!nextProject?.nextWorkTitle) return;
     const nextFile = nextProject.nextWorkTitle
@@ -159,7 +154,6 @@ const Project = ({
       .catch(() => {});
   }, [nextProject]);
 
-  // ✅ Loading fallback
   if (!projectData) {
     return (
       <div id="project-content" style={currentStyle}>
@@ -203,9 +197,13 @@ const Project = ({
                 )}
               </div>
 
-              <div className={"project-title"}>
+              <div className={"project-title"} ref={grassTargetRef1}>
                 {details.projectTitle || selectedProjectName}
               </div>
+              <GrassOverlay
+                key={selectedProjectName}
+                targetRef={grassTargetRef1}
+              />
 
               <div className={"details-wrapper"}>
                 <div className={"details-left"}>
@@ -220,7 +218,7 @@ const Project = ({
                       </div>
                     </div>
                   </div>
-                  <div className={"detail"}>
+                  <div className={"detail"} ref={grassTargetRef2}>
                     <h3>COMPANY</h3>
                     <div className={"list"}>
                       <div className={"item"}>
@@ -231,6 +229,10 @@ const Project = ({
                       </div>
                     </div>
                   </div>
+                  <GrassOverlay
+                    key={selectedProjectName}
+                    targetRef={grassTargetRef2}
+                  />
                 </div>
 
                 <div className={"detail"}>
@@ -270,32 +272,32 @@ const Project = ({
                   </div>
                 </div>
               )}
-            <div className="rounder">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="9"
-                height="9"
-                viewBox="0 0 9 9"
-                fill="none"
-              >
-                    <path
+              <div className="rounder">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="9"
+                  height="9"
+                  viewBox="0 0 9 9"
+                  fill="none"
+                >
+                  <path
                     d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z"
                     fill="var(--off-teal)"
-                    />
+                  />
                 </svg>
                 <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="9"
-                    height="9"
-                    viewBox="0 0 9 9"
-                    fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="9"
+                  height="9"
+                  viewBox="0 0 9 9"
+                  fill="none"
                 >
-                    <path
+                  <path
                     d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z"
                     fill="var(--off-teal)"
-                    />
+                  />
                 </svg>
-                </div>
+              </div>
             </div>
           </div>
 

@@ -55,7 +55,7 @@ const AnimatedMan = ({isLoaded}) => {
                     duration: 0.3,
                     ease: "power2.out",
                     stagger: 0.04,
-                    delay: 0.3,
+                    delay: 0,
                 }
             );
 

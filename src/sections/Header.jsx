@@ -1,20 +1,20 @@
 import './Header.css'
 import LinkButton from '../components/LinkButton/LinkButton';
 
-const Header = ({setLinkHovered, lenis}) => {
+const Header = ({setLinkHovered, lenis, isLoaded}) => {
     return (
             <header>
-                <div className={"extremes-wrapper-left"}>
+                <div className={"extremes-wrapper-left header-extremes"}>
                     <div className={"extremes"}></div>
                 </div>
 
                 <div className={"middle"}>
                     <div className={"right"} onMouseEnter={() => setLinkHovered(true)} onMouseLeave={() => setLinkHovered(false)}>
-                        <LinkButton isActive={true} linkName={"HOME"} linkTo={"#HOME"} lenis={lenis}/>
-                        <LinkButton linkName={"WORK"} linkTo={"#WORK"} lenis={lenis}/>
-                        <LinkButton linkName={"ABOUT"} linkTo={"#ABOUT"} lenis={lenis}/>
-                        {/* <LinkButton linkName={"LAB"} linkTo={"#LAB"} lenis={lenis}/> */}
-                        <LinkButton linkName={"CONTACT"} linkTo={"#CONTACT"} lenis={lenis}/>
+                        <LinkButton isActive={true} linkName={"HOME"} linkTo={"#HOME"} lenis={lenis} isLoaded={isLoaded}/>
+                        <LinkButton linkName={"WORK"} linkTo={"#WORK"} lenis={lenis} isLoaded={isLoaded}/>
+                        <LinkButton linkName={"ABOUT"} linkTo={"#ABOUT"} lenis={lenis} isLoaded={isLoaded}/>
+                        {/* <LinkButton linkName={"LAB"} linkTo={"#LAB"} lenis={lenis} isLoaded={isLoaded}/> */}
+                        <LinkButton linkName={"CONTACT"} linkTo={"#CONTACT"} lenis={lenis} isLoaded={isLoaded}/>
                         <div className={"cell"}></div>
                     </div>
                     <div className={"left"}>
@@ -49,7 +49,7 @@ const Header = ({setLinkHovered, lenis}) => {
                     </div>
                 </div>
 
-                <div className={"extremes-wrapper-right"}>
+                <div className={"extremes-wrapper-right header-extremes"}>
                     <div className={"extremes"}></div>
                 </div>
             </header>

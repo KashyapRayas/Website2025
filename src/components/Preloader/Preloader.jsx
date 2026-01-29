@@ -55,13 +55,6 @@ const Preloader = ({ onComplete, onMidway }) => {
             },
             "+=0",
         )
-        .to(
-            ".preloader-box",
-            {
-                borderRadius: "0px",
-                duration: 0.5,
-            }
-        )
 
         thirdTimeline.current = tl3;
 
@@ -84,7 +77,7 @@ const Preloader = ({ onComplete, onMidway }) => {
             yPercent: 155,
             duration: 0.8, // Slightly longer to accommodate stagger feel
             ease: "power2.out",
-            stagger: 0.05 // Delay between each word
+            stagger: 0.03 // Delay between each word
         }, "<0");
 
         // We target the specific span class inside the bottom quote
@@ -92,7 +85,7 @@ const Preloader = ({ onComplete, onMidway }) => {
             yPercent: -155,
             duration: 0.8,
             ease: "power2.out",
-            stagger: 0.05
+            stagger: 0.02
         }, "-=0.4"); // Overlap slightly with the top quote animation
 
 

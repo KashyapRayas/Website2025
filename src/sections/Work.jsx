@@ -11,6 +11,10 @@ import AnimatedArrow from "../components/AnimatedArrow";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import GrassOverlay from "../components/GrassOverlay";
+import ScrollTrigger from "gsap/ScrollTrigger";
+import PixelLock from '/pixelLock.svg'
+
+gsap.registerPlugin(ScrollTrigger);
 
 const BASE_PATH = "";
 const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
@@ -31,17 +35,16 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const handShadowRef = useRef(null);
   const grassTargetRef1 = useRef(null);
   const grassTargetRef2 = useRef(null);
+  const headingRef = useRef(null);
 
   gsap.config({ force3D: true });
 
-  // ✅ 1. Fetch Data
   useEffect(() => {
     const loadProjects = async () => {
       try {
         const res = await fetch(PROJECTS_JSON_URL);
         if (!res.ok) throw new Error("Failed to fetch projects.json");
         const data = await res.json();
-        // We set the state to the ARRAY specifically
         setProjectsData(data.projects || []);
       } catch (err) {
         console.error("[ERROR] Could not load projects.json:", err);
@@ -56,7 +59,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     return selectedIndex ?? 0;
   }, [hoveredIndex, selectedIndex]);
 
-  // ✅ 2. Fix activeProject access (remove .projects)
   const activeProject = useMemo(() => {
     if (!projectsData || projectsData.length === 0) return {};
     if (activeIndex < 0 || activeIndex >= projectsData.length) return {};
@@ -71,7 +73,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     return img;
   };
 
-  // ✅ 3. Preload Images (Check if projectsData exists first)
   useEffect(() => {
     if (!projectsData || projectsData.length === 0) return;
     const sources = projectsData.map((p) =>
@@ -81,7 +82,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     sources.forEach((src) => getOrLoadImage(src));
   }, [projectsData]);
 
-  // --- Resize Logic ---
   useEffect(() => {
     const handleResize = () => {
       const canvas = canvasRef.current;
@@ -89,7 +89,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
       const parent = canvas.parentElement;
       const rect = parent.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      const dpr = Math.min(window.devicePixelRatio || 1, 4);
 
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
@@ -98,6 +98,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
       ctx.scale(dpr, dpr);
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
+      ctx.filter = "contrast(1.05) brightness(1.02)";
       ctxRef.current = ctx;
 
       if (activeProject) {
@@ -116,7 +117,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [activeProject]);
 
-  // --- Draw Helper ---
   const draw = (ctx, img, width, height) => {
     if (!img || !img.naturalWidth) return;
     ctx.globalAlpha = 1;
@@ -136,7 +136,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     ctx.drawImage(img, x, y, nw, nh);
   };
 
-  // --- Draw Effect ---
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -169,7 +168,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     }
   }, [activeProject]);
 
-  // --- GSAP Handlers ---
   useGSAP(() => {
     if (!projectsData || !handRef.current) return;
     gsap.to(handRef.current, {
@@ -184,10 +182,9 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     });
 
     gsap.globalTimeline.add(() => {
-        // distinct from immediate execution to allow layout to settle
-        import("gsap/ScrollTrigger").then(st => st.ScrollTrigger.refresh());
+      import("gsap/ScrollTrigger").then(st => st.ScrollTrigger.refresh());
     }, 0.5);
-  }, [projectsData]);
+  }, [projectsData, handRef.current]);
 
   useGSAP(() => {
     if (!projectsData || !handShadowRef.current) return;
@@ -199,6 +196,21 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
         start: "top bottom",
         end: "top top",
         scrub: 1,
+      },
+    });
+  }, [projectsData]);
+
+  useGSAP(() => {
+    if (!headingRef.current) return;
+    gsap.to(headingRef.current, {
+      scrollTrigger: {
+        trigger: headingRef.current,
+        start: "top 60%",
+        end: "bottom top",
+        toggleClass: {
+          targets: headingRef.current,
+          className: "heading--active",
+        },
       },
     });
   }, [projectsData]);
@@ -220,7 +232,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     [handleProjectSelect]
   );
 
-  // Pop effect on canvas
   useGSAP(() => {
     if (!canvasRef.current) return;
     const tl = gsap.timeline();
@@ -235,7 +246,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     });
   }, [activeIndex]);
 
-  // ✅ 4. Loading State Guard
   if (!projectsData) {
     return (
       <section id="WORK" ref={ref}>
@@ -254,11 +264,28 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
       <div className="middle">
         <div className="right">
-          <div className="heading">
-            <span>{"<"}</span>WORK<span>{"/>"}</span>
+          <div className="heading" ref={headingRef}>
+            <span className="heading-bracket left">{"<"}</span>
+            WORK
+            <span className="heading-bracket right">{"/>"}</span>
+          </div>
+          <div
+            className={"project locked"}
+            onClick={() => console.log("It ain't here yet!")}
+          >
+            <div className="title">
+              <img
+                src={PixelLock}
+                alt=""
+                style={{ paddingRight: "6px", paddingTop: "2px" }}
+              />
+              <h3>MOVIE COLAB VR</h3>
+            </div>
+            <div className="description locked">
+              <p>Case study coming soon! VR screening room for remote film review</p>
+            </div>
           </div>
 
-          {/* ✅ 5. Fixed Loop: Iterate directly over projectsData array */}
           {projectsData.map((project, index) => {
             const isActive = hoveredIndex === index || selectedIndex === index;
             return (
@@ -275,7 +302,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                   <AnimatedArrow isActive={hoveredIndex === index} />
                 </div>
                 <div className="description">
-                  <p>{project.description}</p>
+                  <p className="description-text">{project.description}</p>
                 </div>
               </div>
             );
@@ -341,7 +368,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
             <div className="img-wrapper">
               <div className="hand-shadow-wrapper">
-                {/* Hand Shadow SVG */}
                 <svg
                   ref={handShadowRef}
                   className="hand-shadow"
@@ -367,10 +393,9 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                   />
                 </div>
               </div>
-
             </div>
 
-            <div className="rounder"  ref={grassTargetRef2}>
+            <div className="rounder" ref={grassTargetRef2}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="9"
