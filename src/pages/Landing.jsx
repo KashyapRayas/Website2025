@@ -11,7 +11,7 @@ import About from '../sections/About.jsx';
 import Contact from '../sections/Contact.jsx';
 import Footer from '../sections/Footer.jsx';
 
-const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, isPreloaderDone}) => {
+const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, onModifierDeckSelect, isPreloaderDone}) => {
     const [linkHovered, setLinkHovered] = useState(false);
     const homeRef = useRef(null);
     const aboutRef = useRef(null);
@@ -88,7 +88,7 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, isPreloaderDo
     return (
         <div id="main-content" style={currentStyle}>
             <HeaderComponent setLinkHovered={setLinkHovered} lenis={lenis} isLoaded={isPreloaderDone} />
-            <HomeComponent linkHovered={linkHovered} isLoaded={isPreloaderDone} isLoadedforHero={!isIncomingTransition && isPreloaderDone} handleProjectSelect={onProjectSelect} ref={homeRef}/>
+            <HomeComponent linkHovered={linkHovered} isLoaded={isPreloaderDone} isLoadedforHero={!isIncomingTransition && isPreloaderDone} handleProjectSelect={onProjectSelect} ref={homeRef} onModifierDeckSelect={onModifierDeckSelect}/>
             <Work ref={workRef} handleProjectSelect={onProjectSelect}/>
             <About ref={aboutRef} />
             <Contact ref={contactRef} />

@@ -25,10 +25,11 @@ const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
 gsap.registerPlugin(CustomEase);
 
 const Home = forwardRef(
-  ({ isLoaded, handleProjectSelect, isLoadedforHero }, ref) => {
+  ({ isLoaded, handleProjectSelect, onModifierDeckSelect, isLoadedforHero }, ref) => {
     const [projects, setProjects] = useState(null);
     const [recentHovered, setRecentHovered] = useState(false);
     const [recentSelected, setRecentSelected] = useState(false);
+    const [deckHovered, setDeckHovered] = useState(false);
     const rectRef = useRef(null);
     const heroRef = useRef(null);
     const parallaxRef = useRef(null);
@@ -296,6 +297,12 @@ const Home = forwardRef(
               <div className={styles.s1}></div>
             </div>
             <GrassOverlay isLoaded={isLoaded} targetRef={grassTargetRef4} />
+
+            <div className={styles.fourth}>
+                <div className={styles.cardWrapper}>
+
+                </div>
+            </div>
           </div>
 
           <div className={styles.left}>
@@ -391,6 +398,37 @@ const Home = forwardRef(
                 the spaces between what is real and what
                 is yet to be designed.
               </h3>
+            </div>
+
+            <div className={styles.fourth}>
+                <div className={styles.top}>
+                    <Metric
+                        name={"CARDS COLLECTED"}
+                        count={3}
+                        isLoaded={isLoaded}
+                        delay={0}
+                    />
+                    <div className={styles.cell}>
+                        Cards in a deck act as modifiers. Together, they form a system that defines the bearer’s traits.
+                    </div>
+                </div>
+                <a
+                    href="#"
+                    className={styles.second}
+                    onMouseEnter={() => setDeckHovered(true)}
+                    onMouseLeave={() => setDeckHovered(false)}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        onModifierDeckSelect();
+                    }}
+                >
+                    <AnimatedArrow isActive={!deckHovered} />
+                    <h4>
+                    VIEW
+                    <span> MODIFIER DECK</span>
+                    </h4>
+                    <AnimatedArrow isActive={deckHovered} />
+                </a>
             </div>
           </div>
         </div>

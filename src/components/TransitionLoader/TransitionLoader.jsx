@@ -20,108 +20,38 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
   ];
   const [word, setWord] = useState("Cheer");
 
-  // Hardcoded spans for each word
   const wordSpans = {
     Vision: (
-      <>
-        <span>V</span>
-        <span>i</span>
-        <span>s</span>
-        <span>i</span>
-        <span>o</span>
-        <span>n</span>
-      </>
+      <><span>V</span><span>i</span><span>s</span><span>i</span><span>o</span><span>n</span></>
     ),
     Verve: (
-      <>
-        <span>V</span>
-        <span>e</span>
-        <span>r</span>
-        <span>v</span>
-        <span>e</span>
-      </>
+      <><span>V</span><span>e</span><span>r</span><span>v</span><span>e</span></>
     ),
     Wit: (
-      <>
-        <span>W</span>
-        <span>i</span>
-        <span>t</span>
-      </>
+      <><span>W</span><span>i</span><span>t</span></>
     ),
     Cheer: (
-      <>
-        <span>C</span>
-        <span>h</span>
-        <span>e</span>
-        <span>e</span>
-        <span>r</span>
-      </>
+      <><span>C</span><span>h</span><span>e</span><span>e</span><span>r</span></>
     ),
     Humility: (
-      <>
-        <span>H</span>
-        <span>u</span>
-        <span>m</span>
-        <span>i</span>
-        <span>l</span>
-        <span>i</span>
-        <span>t</span>
-        <span>y</span>
-      </>
+      <><span>H</span><span>u</span><span>m</span><span>i</span><span>l</span><span>i</span><span>t</span><span>y</span></>
     ),
     Benevolence: (
-      <>
-        <span>B</span>
-        <span>e</span>
-        <span>n</span>
-        <span>e</span>
-        <span>v</span>
-        <span>o</span>
-        <span>l</span>
-        <span>e</span>
-        <span>n</span>
-        <span>c</span>
-        <span>e</span>
-      </>
+      <><span>B</span><span>e</span><span>n</span><span>e</span><span>v</span><span>o</span><span>l</span><span>e</span><span>n</span><span>c</span><span>e</span></>
     ),
     Nimbleness: (
-      <>
-        <span>N</span>
-        <span>i</span>
-        <span>m</span>
-        <span>b</span>
-        <span>l</span>
-        <span>e</span>
-        <span>n</span>
-        <span>e</span>
-        <span>s</span>
-        <span>s</span>
-      </>
+      <><span>N</span><span>i</span><span>m</span><span>b</span><span>l</span><span>e</span><span>n</span><span>e</span><span>s</span><span>s</span></>
     ),
     Probity: (
-      <>
-        <span>P</span>
-        <span>r</span>
-        <span>o</span>
-        <span>b</span>
-        <span>i</span>
-        <span>t</span>
-        <span>y</span>
-      </>
+      <><span>P</span><span>r</span><span>o</span><span>b</span><span>i</span><span>t</span><span>y</span></>
     ),
     Wiles: (
-      <>
-        <span>W</span>
-        <span>i</span>
-        <span>l</span>
-        <span>e</span>
-        <span>s</span>
-      </>
+      <><span>W</span><span>i</span><span>l</span><span>e</span><span>s</span></>
     ),
   };
 
   useGSAP(() => {
-    gsap.set("#transition-loader", { display: "flex", zIndex: 2 });
+    gsap.set("#transition-loader", { display: "flex", zIndex: 10 });
 
     const completeAnimation = () => {
       gsap.set("#transition-loader", { display: "none" });
@@ -140,20 +70,24 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
       }
       setWord(randomWord);
 
-      const isIn = direction === "in" || direction === "loop";
-      const target = isIn ? "#project-content" : "#main-content";
+      // Determine the target ID based on the direction from App.jsx
+      let target;
+      if (direction === "in" || direction === "loop") {
+        target = "#project-content";
+      } else if (direction === "modifier_in") {
+        target = "#modifierDeck-content";
+      } else {
+        target = "#main-content";
+      }
 
-      gsap.set(target, { zIndex: 3 });
+      gsap.set(target, { zIndex: 11 });
 
-      // Force a small delay to ensure React has rendered the new spans
       gsap.delayedCall(0.3, () => {
         if (!boopRef.current) return;
 
-        // Query spans fresh from the DOM
         const spans = boopRef.current.querySelectorAll("span");
 
         if (!spans || spans.length === 0) {
-          console.warn("No spans found");
           completeAnimation();
           return;
         }
@@ -189,13 +123,10 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
             },
             "-=0.5"
           )
-          .to(
-            target,
-            {
-              clipPath: "inset(0% 0% 0% 0% round 0px)",
-              duration: 0.5
-            }
-          )
+          .to(target, {
+            clipPath: "inset(0% 0% 0% 0% round 0px)",
+            duration: 0.5,
+          });
 
         contentTlRef.current = tl;
       });
@@ -216,10 +147,12 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
       onComplete: midwayAnimation,
     });
 
-    if (direction === "in") {
+    // Handle initial z-index depth based on where we are coming from
+    if (direction === "in" || direction === "modifier_in") {
       tl.set("#main-content", { zIndex: 1 });
-    } else {
-      tl.set("#project-content", { zIndex: 1 });
+    } else if (direction === "out") {
+      // When going back to landing, lower the priority of the sub-pages
+      tl.set(["#project-content", "#modifierDeck-content"], { zIndex: 1 });
     }
 
     tl.fromTo(
@@ -228,31 +161,20 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
       {
         width: "100%",
         height: "100%",
-        border: "0px",
         duration: 2,
         ease: "expo.inOut",
         borderRadius: "9px",
       }
-    )
-    .to(
-        ".green-box",
-        {
-            duration: 0.5,
-            borderRadius: "0px",
-        }
-    )
+    ).to(".green-box", {
+      duration: 0.5,
+      borderRadius: "0px",
+    });
 
     tlRef.current = tl;
 
     return () => {
-      if (tlRef.current) {
-        tlRef.current.kill();
-        tlRef.current = null;
-      }
-      if (contentTlRef.current) {
-        contentTlRef.current.kill();
-        contentTlRef.current = null;
-      }
+      if (tlRef.current) tlRef.current.kill();
+      if (contentTlRef.current) contentTlRef.current.kill();
     };
   }, [direction, onComplete, onMidway]);
 
