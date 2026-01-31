@@ -125,7 +125,7 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
           )
           .to(target, {
             clipPath: "inset(0% 0% 0% 0% round 0px)",
-            duration: 0.5,
+            duration: 0.1,
           });
 
         contentTlRef.current = tl;
@@ -166,7 +166,7 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
         borderRadius: "9px",
       }
     ).to(".green-box", {
-      duration: 0.5,
+      duration: 0.1,
       borderRadius: "0px",
     });
 

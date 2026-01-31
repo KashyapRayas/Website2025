@@ -18,11 +18,12 @@ import Hero from "../components/Hero/Hero";
 import AnimatedMan from "../components/AnimatedMan";
 import { useGSAP } from "@gsap/react";
 import GrassOverlay from "../components/GrassOverlay";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const BASE_PATH = "";
 const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
 
-gsap.registerPlugin(CustomEase);
+gsap.registerPlugin(ScrollTrigger, CustomEase);
 
 const Home = forwardRef(
   ({ isLoaded, handleProjectSelect, onModifierDeckSelect, isLoadedforHero }, ref) => {
@@ -80,7 +81,7 @@ const Home = forwardRef(
     }, [rectRef.current]);
 
     useGSAP(() => {
-      if (!parallaxRef.current || !ref.current) return;
+      if (!parallaxRef.current || !homeRef.current) return;
       gsap.to(parallaxRef.current, {
         y: 60,
         ease: "none",
@@ -88,11 +89,14 @@ const Home = forwardRef(
           trigger: ref.current,
           endTrigger: parallaxRef.current,
           start: "top top",
-          end: "top top",
+          end: "bottom top",
           scrub: 1,
         },
       });
-    }, [parallaxRef.current, ref.current]);
+        gsap.globalTimeline.add(() => {
+      import("gsap/ScrollTrigger").then(st => st.ScrollTrigger.refresh());
+    }, 0.5);
+    }, [homeRef.current, parallaxRef.current]);
 
     const handleRecentEnter = useCallback(
       () => setRecentHovered(true),

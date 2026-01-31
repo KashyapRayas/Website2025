@@ -1,4 +1,4 @@
-import { useRef, forwardRef } from "react";
+import { useRef, forwardRef, useState } from "react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import styles from "./HomeMobile.module.css";
@@ -8,11 +8,11 @@ import HeroMobile from "../components/Hero/HeroMobile";
 import AnimatedMan from "../components/AnimatedMan";
 import { useGSAP } from "@gsap/react";
 import GrassOverlay from "../components/GrassOverlay";
-import TextReveal from "../components/TextReveal";
+import AnimatedArrow from "../components/AnimatedArrow";
 
 gsap.registerPlugin(CustomEase);
 
-const Home = forwardRef(({ isLoaded, isLoadedforHero }, ref) => {
+const Home = forwardRef(({ isLoaded, isLoadedforHero, onModifierDeckSelect }, ref) => {
   const rectRef = useRef(null);
   const heroRef = useRef(null);
   const parallaxRef = useRef(null);
@@ -20,6 +20,7 @@ const Home = forwardRef(({ isLoaded, isLoadedforHero }, ref) => {
   const grassTargetRef2 = useRef(null);
   const grassTargetRef3 = useRef(null);
   const starContainerRef = useRef(null);
+const [deckHovered, setDeckHovered] = useState(false);
 
   useGSAP(() => {
     if (!rectRef.current) return;
@@ -51,26 +52,6 @@ const Home = forwardRef(({ isLoaded, isLoadedforHero }, ref) => {
     });
   }, []);
 
-  // Opacity animations for star
-  useGSAP(() => {
-    if (!isLoaded) return;
-
-    if (starContainerRef.current) {
-      gsap.fromTo(
-        starContainerRef.current,
-        {
-          opacity: 0,
-        },
-        {
-          opacity: 1,
-          duration: 1,
-          ease: "power2.out",
-        },
-        1.2
-      );
-    }
-  }, { dependencies: [isLoaded] });
-
   return (
     <section id="HOME" ref={ref} className={styles.home}>
       <div className="extremes-wrapper-left">
@@ -80,19 +61,15 @@ const Home = forwardRef(({ isLoaded, isLoadedforHero }, ref) => {
       <div className={styles.middle}>
         <div className={styles.topFirst}>
           <h1 className={styles.topFirstH1}>
-            <TextReveal isLoaded={isLoaded}>
               Unconventional <span>ideas</span>
               <span>,</span> minimalist <span>execution</span>
               <span>.</span>
-            </TextReveal>
           </h1>
           <h2 className={styles.topFirstH2}>
-            <TextReveal delay={0.3} isLoaded={isLoaded}>
               Hello! I'm <span> Kashyap Rayas.</span> I
               architect 0-1 products that are intuitive
               for users and straightforward for
               developers.
-            </TextReveal>
           </h2>
           <div className={styles.time}>
             <div
@@ -114,13 +91,9 @@ const Home = forwardRef(({ isLoaded, isLoadedforHero }, ref) => {
               </svg>
             </div>
             <h3 className={styles.timeh3}>
-              <TextReveal delay={1.2} isLoaded={isLoaded}>
                 LOCAL TIME <Clock />
-              </TextReveal>
             </h3>
-            <TextReveal delay={1.2} isLoaded={isLoaded}>
-              <h3 className={styles.timeh32}>GMT +0530</h3>
-            </TextReveal>
+            <h3 className={styles.timeh32}>GMT +0530</h3>
           </div>
         </div>
 
@@ -157,6 +130,41 @@ const Home = forwardRef(({ isLoaded, isLoadedforHero }, ref) => {
             />
             <GrassOverlay targetRef={grassTargetRef2} />
           </div>
+        </div>
+        <div className={styles.fourthTop}>
+            <div className={styles.cardWrapper}>
+
+            </div>
+        </div>
+        <div className={styles.fourth}>
+                <div className={styles.top}>
+                    <Metric
+                        name={"CARDS COLLECTED"}
+                        count={3}
+                        isLoaded={isLoaded}
+                        delay={0}
+                    />
+                    <div className={styles.cell}>
+                        Cards in a deck act as modifiers. Together, they form a system that defines the bearer’s traits.
+                    </div>
+                </div>
+                <a
+                    href="#"
+                    className={styles.second}
+                    onMouseEnter={() => setDeckHovered(true)}
+                    onMouseLeave={() => setDeckHovered(false)}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        onModifierDeckSelect();
+                    }}
+                >
+                    <AnimatedArrow isActive={!deckHovered} />
+                    <h4>
+                    VIEW
+                    <span> MODIFIER DECK</span>
+                    </h4>
+                    <AnimatedArrow isActive={deckHovered} />
+                </a>
         </div>
       </div>
 
