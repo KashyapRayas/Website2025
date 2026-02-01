@@ -13,6 +13,7 @@ import { useGSAP } from "@gsap/react";
 import GrassOverlay from "../components/GrassOverlay";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import PixelLock from '/pixelLock.svg'
+import star from '/star.svg'
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -204,7 +205,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     if (!headingRef.current) return;
     gsap.to(headingRef.current, {
       scrollTrigger: {
-        trigger: headingRef.current,
+        trigger: "#WORK",
         start: "top 60%",
         end: "bottom top",
         toggleClass: {
@@ -264,11 +265,39 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
       <div className="middle">
         <div className="right">
-          <div className="heading" ref={headingRef}>
-            <span className="heading-bracket left">{"<"}</span>
-            WORK
-            <span className="heading-bracket right">{"/>"}</span>
-          </div>
+            <div className="headingWrapper">
+                <div className="heading" ref={headingRef}>
+                    <span className="heading-bracket left">{"<"}</span>
+                    WORK
+                    <span className="heading-bracket right">{"/>"}</span>
+                </div>
+                <div className="rounder" ref={grassTargetRef2}>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="9"
+                    height="9"
+                    viewBox="0 0 9 9"
+                    fill="none"
+                >
+                    <path
+                    d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z"
+                    fill="var(--off-teal)"
+                    />
+                </svg>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="9"
+                    height="9"
+                    viewBox="0 0 9 9"
+                    fill="none"
+                >
+                    <path
+                    d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z"
+                    fill="var(--off-teal)"
+                    />
+                </svg>
+                </div>
+            </div>
           <div
             className={"project locked"}
             onClick={() => console.log("It ain't here yet!")}
@@ -283,6 +312,20 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
             </div>
             <div className="description locked">
               <p>Case study coming soon! VR screening room for remote film review</p>
+            </div>
+            <div className="tags">
+                <div className="tag">
+                    <img src={star} alt="" />
+                    Virtual Reality
+                </div>
+                <div className="tag">
+                    <img src={star} alt="" />
+                    AI Integrated
+                </div>
+                <div className="tag">
+                    <img src={star} alt="" />
+                    Film Production
+                </div>
             </div>
           </div>
 
@@ -303,6 +346,14 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                 </div>
                 <div className="description">
                   <p className="description-text">{project.description}</p>
+                </div>
+                <div className="tags">
+                    {project.tags?.map((tag, tagIndex) => (
+                    <div className="tag" key={tagIndex}>
+                        <img src={star} alt="" />
+                        {tag}
+                    </div>
+                    ))}
                 </div>
               </div>
             );
