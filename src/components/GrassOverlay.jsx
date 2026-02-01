@@ -7,6 +7,7 @@ import React, {
   useMemo
 } from "react";
 import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -177,7 +178,7 @@ const GrassOverlay = ({
     };
   }, [layout.width]);
 
-  useLayoutEffect(() => {
+  useGSAP(() => {
     if (!isReady || !componentRef.current || !isLoaded)
       return;
 

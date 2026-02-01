@@ -1,21 +1,21 @@
 .home {
   width: 100%;
-      align-self: stretch;
-      display: flex;
-    justify-content: center;
-    gap: 0;
-    padding: 0 0 1px 0;
-    box-sizing: border-box;
+  align-self: stretch;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  padding: 0 0 1px 0;
+  box-sizing: border-box;
 }
 
 .home > .middle {
-    position: relative;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 1px;
-    align-self: stretch;
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1px;
+  align-self: stretch;
 }
 
 .left {
@@ -29,7 +29,7 @@
 }
 
 .left .first {
-    position: relative;
+  position: relative;
   display: flex;
   justify-content: center;
   width: 100%;
@@ -37,7 +37,7 @@
 }
 
 .left .first .hero {
-    position: relative;
+  position: relative;
   width: 100%;
   display: flex;
   justify-content: flex-end;
@@ -84,23 +84,24 @@
 
 .left .second .s1 .chestWindow {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   background-color: var(--off-black);
   border-radius: 9px;
   width: 375px;
   height: 100%;
   box-sizing: border-box;
   border: 3px solid var(--off-teal);
+  overflow: hidden;
 }
 
 .left .second .s1 .chestWindow svg {
   position: absolute;
-  bottom: 0;
+  bottom: 0px;
   left: 154px;
 }
 
 .left .second .s2 {
-    position: relative;
+  position: relative;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -114,7 +115,7 @@
 
 .left .third {
   width: 100%;
-    height: 100%;
+  height: 100%;
   background-color: var(--off-white);
   padding: 30px;
   border-radius: 9px;
@@ -127,34 +128,34 @@
 }
 
 .left .third div {
-    display: flex;
-    width: 100%;
-    gap: 0px;
-    align-items: center;
-    justify-content: start;
+  display: flex;
+  width: 100%;
+  gap: 0px;
+  align-items: center;
+  justify-content: start;
 }
 
 .left .third div .iconWrapper {
-    width: 0px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    overflow: hidden;
-    transition: all 0.2s ease-in-out;
+  width: 0px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
 }
 
 .left .third div .iconWrapper .chevronh4 {
-    font-size: 13px;
-    width: 100%;
-    text-wrap: wrap;
-    margin: 0;
-    font-weight: 800;
-    color: var(--off-black-06);
+  font-size: 13px;
+  width: 100%;
+  text-wrap: wrap;
+  margin: 0;
+  font-weight: 800;
+  color: var(--off-black-06);
 }
 
-.left .third:hover > div .iconWrapper{
-    width: 18px;
+.left .third:hover > div .iconWrapper {
+  width: 18px;
 }
 
 .left .third .desch4 {
@@ -199,12 +200,12 @@
 }
 
 .right .first .manWrapper {
-    position: absolute;
-    width: 36px;
-    height: 48px;
-    left: 392px;
-    bottom: -12px;
-    z-index: 5;
+  position: absolute;
+  width: 36px;
+  height: 48px;
+  left: 392px;
+  bottom: -12px;
+  z-index: 5;
 }
 
 .right .first .heroText {
@@ -270,9 +271,8 @@
   translate: 0 1px;
 }
 
-
 .right .first .time .timeh32 {
-    margin: 0;
+  margin: 0;
   padding: 0;
   font-weight: 200;
   font-size: 13px;
@@ -338,7 +338,7 @@
 }
 
 .metricSuperwrapper {
-    position: relative;
+  position: relative;
   top: 0;
   left: 0;
   width: calc(100% - 361px);
@@ -377,9 +377,9 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
-    border: 2.1px solid var(--off-teal);
-    box-sizing: border-box;
-    position: relative;
+  border: 2.1px solid var(--off-teal);
+  box-sizing: border-box;
+  position: relative;
 }
 
 .img {
@@ -412,10 +412,10 @@
 }
 
 .title .titleh3Wrapper {
-    width: max-content;
-    margin: 0;
-    padding: 0;
-    padding: 0 14px 0 0;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  padding: 0 14px 0 0;
 }
 
 .title .titleh3 {
@@ -474,21 +474,99 @@
 }
 
 .right .fourth {
-    height: 245px;
-    min-height: 245px;
-    width: 100%;
-    background-color: var(--off-white);
-    padding: 18px;
-    border-radius: 9px;
-    box-sizing: border-box;
+  height: 245px;
+  min-height: 245px;
+  width: 100%;
+  background-color: var(--off-white);
+  padding: 18px;
+  border-radius: 9px;
+  box-sizing: border-box;
 }
 
 .right .fourth .cardWrapper {
-    width: 100%;
-    height: 100%;
-    border-radius: 6px;
-    box-sizing: border-box;
-    background-color: var(--dark-green);
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background-color: var(--dark-green);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1200px;
+  overflow: hidden;
+}
+
+.homeCardDeck {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+
+.homeCard {
+  position: absolute;
+  width: 180px;
+  aspect-ratio: 41/58;
+  perspective: 1000px;
+}
+
+.homeCard:nth-child(1) {
+  transform: translateX(-120px) translateY(45px);
+}
+
+.homeCard:nth-child(2) {
+  transform: translateX(0) translateY(30px);
+}
+
+.homeCard:nth-child(3) {
+  transform: translateX(120px) translateY(45px);
+}
+
+.homeCardInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(180deg);
+}
+
+.homeCardFront,
+.homeCardBack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 4px;
+  overflow: hidden;
+  border-radius: 9px;
+}
+
+.homeCardFront {
+  background-color: var(--off-white);
+  transform: rotateY(0deg);
+}
+
+.homeCardBack {
+  background-color: var(--off-black);
+  transform: rotateY(180deg);
+}
+
+.cardImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.glimmer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  transition: opacity 0.3s ease;
 }
 
 .left .fourth {
@@ -501,24 +579,24 @@
 }
 
 .left .fourth .top {
-    display: flex;
-    gap: 1px;
-    width: 100%;
+  display: flex;
+  gap: 1px;
+  width: 100%;
 }
 
 .left .fourth .top .cell {
-    background-color: var(--off-white);
-    width: 100%;
-    height: 150px;
-    border-radius: 9px;
-    box-sizing: border-box;
-    padding: 30px;
-    display: flex;
-    justify-content: start;
-    align-items: end;
-    font-size: 15px;
-    color: var(--off-black-06);
-    font-weight: 400;
+  background-color: var(--off-white);
+  width: 100%;
+  height: 150px;
+  border-radius: 9px;
+  box-sizing: border-box;
+  padding: 30px;
+  display: flex;
+  justify-content: start;
+  align-items: end;
+  font-size: 15px;
+  color: var(--off-black-06);
+  font-weight: 400;
 }
 
 .left .fourth .second {
@@ -561,7 +639,7 @@
 }
 
 @media screen and (min-width: 1700px) {
-    .middle {
-        max-width: 1400px;
-    }
+  .middle {
+    max-width: 1400px;
+  }
 }
