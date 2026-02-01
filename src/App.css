@@ -71,6 +71,9 @@ section > .middle {
         width: 100%;
         min-width: 9px;
     }
+    .extremes {
+        background-color: var(--light-off-teal);
+    }
 }
 
 @media screen and (max-width: 480px) {

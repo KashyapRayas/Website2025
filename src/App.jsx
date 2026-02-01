@@ -10,7 +10,7 @@ import TransitionLoader from './components/TransitionLoader/TransitionLoader.jsx
 import { useSmoothScrollConfig } from './hooks/useSmoothScrollConfig'
 
 function App() {
-  const flag = true
+  const flag = false
   const scrollConfig = useSmoothScrollConfig()
   const [isAssetLoaded, setIsAssetLoad] = useState(flag)
   const [isPreloaderDone, setIsPreloaderDone] = useState(flag)

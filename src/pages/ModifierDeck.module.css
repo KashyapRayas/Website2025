@@ -150,7 +150,17 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-sizing: border-box;
 }
+
+.navLink:hover {
+    background-color: var(--off-white);
+    color: var(--off-black-06);
+    font-size: 12.7px;
+}
+
+
 
 .cell {
   background: var(--off-white);

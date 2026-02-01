@@ -74,20 +74,24 @@ const HomeCard = memo(({ index, containerHover }) => {
         if (tl) tl.kill(); // kill any previous
         tl = buildAnimation(); // new one each time
         hasPlayed = true;
+        hasEntered.current = true;
         },
         onEnterBack: () => {
         if (hasPlayed) return;
         if (tl) tl.kill();
         tl = buildAnimation();
         hasPlayed = true;
+        hasEntered.current = true;
         },
         onLeave: () => {
         gsap.set(cardRef.current, { rotateY: 180, z: 0 });
         hasPlayed = false;
+        hasEntered.current = false;
         },
         onLeaveBack: () => {
         gsap.set(cardRef.current, { rotateY: 180, z: 0 });
         hasPlayed = false;
+        hasEntered.current = false;
         },
         invalidateOnRefresh: true,
     });
@@ -115,7 +119,7 @@ const HomeCard = memo(({ index, containerHover }) => {
     if (index === 0) baseRotateY = containerHover ? -15 : -5;
     if (index === 2) baseRotateY = containerHover ? 15 : 5;
 
-    const activeDepth = index === 1 ? 50 : 30;
+    const activeDepth = index === 1 ? 30 : 18;
     const idleDepth = index === 1 ? 0 : -10;
 
     if (hoverPos.active) {
@@ -153,11 +157,14 @@ const HomeCard = memo(({ index, containerHover }) => {
             className={styles.glimmer}
             style={{
               opacity: hoverPos.active ? 1 : 0,
-              background: `linear-gradient(105deg, transparent ${
-                (hoverPos.x + 0.5) * 100 - 40
-              }%, rgba(255,255,255,0.4) ${
-                (hoverPos.x + 0.5) * 100
-              }%, transparent ${(hoverPos.x + 0.5) * 100 + 40}%)`,
+            background: `linear-gradient(
+                    105deg,
+                    transparent ${((0.5 - hoverPos.x) * 100) - 45}%,
+                    rgba(255, 255, 255, 0.05) ${((0.5 - hoverPos.x) * 100) - 30}%,
+                    rgba(255, 255, 255, 0.4) ${((0.5 - hoverPos.x) * 100)}%,
+                    rgba(255, 255, 255, 0.05) ${((0.5 - hoverPos.x) * 100) + 30}%,
+                    transparent ${((0.5 - hoverPos.x) * 100) + 45}%
+                )`,
             }}
           />
         </div>
