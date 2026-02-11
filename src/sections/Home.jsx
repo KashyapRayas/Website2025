@@ -30,7 +30,7 @@ const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
 /* ------------------------------------------------------------------ */
 /* HomeCard – self‑contained GSAP + ScrollTrigger                      */
 /* ------------------------------------------------------------------ */
-const HomeCard = memo(({ index, containerHover }) => {
+const HomeCard = memo(({ index, containerHover, deckHovered }) => {
   const cardRef = useRef(null);
   const hasEntered = useRef(false);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0, active: false });
@@ -122,14 +122,25 @@ const HomeCard = memo(({ index, containerHover }) => {
     const activeDepth = index === 1 ? 30 : 18;
     const idleDepth = index === 1 ? 0 : -10;
 
+    let rotateZ = 0;
+    if(deckHovered) {
+        if (index === 0) {
+            rotateZ = -6;
+        }
+        if (index === 2) {
+            rotateZ = 6;
+        }
+    }
+
     if (hoverPos.active) {
       return {
         transform: `perspective(1000px)
                     rotateY(${baseRotateY + hoverPos.x * 20}deg)
                     rotateX(${hoverPos.y * -20}deg)
+                    rotateZ(${rotateZ}deg)
                     translateZ(${activeDepth}px)`,
         zIndex: index === 1 ? 10 : 5,
-        transition: "transform 0.1s ease-out",
+        transition: "transform 0.1s ease-out, rotateZ 0.4s ease-out",
       };
     }
 
@@ -137,11 +148,12 @@ const HomeCard = memo(({ index, containerHover }) => {
       transform: `perspective(1000px)
                   rotateY(${baseRotateY}deg)
                   rotateX(0deg)
+                  rotateZ(${rotateZ}deg)
                   translateZ(${idleDepth}px)`,
-      transition: "transform 0.7s cubic-bezier(0.23, 1, 0.32, 1)",
+      transition: "transform 0.7s cubic-bezier(0.23, 1, 0.32, 1), rotateZ 0.4s ease-out",
       zIndex: index === 1 ? 10 : 5,
     };
-  }, [hoverPos, containerHover, index]);
+  }, [hoverPos, containerHover, index, deckHovered]);
 
   return (
     <div
@@ -247,7 +259,7 @@ const Home = forwardRef(
           scrub: 1,
         },
       });
-    }, [homeRef.current, parallaxRef.current]);
+    }, [homeRef.current]);
 
     const handleRecentEnter = useCallback(() => setRecentHovered(true), []);
     const handleRecentLeave = useCallback(() => setRecentHovered(false), []);
@@ -403,7 +415,7 @@ const Home = forwardRef(
                           {firstProject.name}
                         </h3>
                       </div>
-                      <AnimatedArrow isActive={recentHovered} />
+                      <AnimatedArrow isActive={recentHovered}/>
                     </div>
                     <p className={styles.description}>
                       {firstProject.description}
@@ -431,7 +443,7 @@ const Home = forwardRef(
               >
                 <div className={styles.homeCardDeck}>
                   {[0, 1, 2].map((i) => (
-                    <HomeCard key={i} index={i} containerHover={cardsHovered} />
+                    <HomeCard key={i} index={i} containerHover={cardsHovered} deckHovered={deckHovered}/>
                   ))}
                 </div>
               </div>
@@ -503,10 +515,15 @@ const Home = forwardRef(
                 <div className={styles.iconWrapper}>
                   <h4 className={styles.chevronh4}>{">"}</h4>
                 </div>
-                <h4 className={styles.desch4}>MY INNIE'S NOTE</h4>
+                <h4 className={styles.desch4}>NARRATOR'S NOTE</h4>
               </div>
               <h3 className={styles.desch3}>
-                I refine the product. The product refines me. I have decided to dedicate my life to learn the architecture of things, quietly nurturing the engineer within. I speak little. Often, I am elsewhere, wandering the spaces between what is real and what is yet to be designed.
+                For the past {["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "Nnine", "ten"][
+                Math.floor(
+                    (new Date() - new Date("2023-10-01")) /
+                    (1000 * 60 * 60 * 24 * 365.25)
+                )
+                ]} years, Kashyap has immersed himself in the world of product design, nurturing his dream of becoming a leading design engineer. He is shy and known to daydream from time to time.
               </h3>
             </div>
 
@@ -519,9 +536,8 @@ const Home = forwardRef(
                   delay={0}
                 />
                 <div className={styles.cell}>
-                  Cards in a deck act as modifiers. Together, they form a system that defines the bearer’s traits.
+                    With every feat accomplished, a new card is forged and added to his database.                </div>
                 </div>
-              </div>
               <a
                 href="#"
                 className={styles.second}

@@ -42,11 +42,10 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
   };
 
   const captionStyle = {
-    fontWeight: "500",
-    fontSize: "14px",
-    color: "var(--off-black-06)",
+    fontWeight: "400",
+    fontSize: "15px",
+    color: "var(--off-black)",
     width: "100%",
-    textAlign: "center",
     margin: 0
   };
 
@@ -71,6 +70,8 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
         `}
       </style>
 
+      {caption !== "" && <h3 style={captionStyle}>{caption}</h3>}
+
       <div
         style={imgWrapperStyle}
         className="project-image-wrapper"
@@ -85,8 +86,6 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
           decoding='async'
         />
       </div>
-
-      {caption !== "" && <h3 style={captionStyle}>{caption}</h3>}
 
       <Lightbox
         open={open}

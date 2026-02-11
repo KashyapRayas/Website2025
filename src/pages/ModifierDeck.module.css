@@ -33,6 +33,70 @@
     border-radius: 0px 0px 9px 9px;
 }
 
+.left .third {
+  width: 100%;
+  height: 100%;
+  background-color: var(--off-white);
+  padding: 30px;
+  border-radius: 9px;
+  gap: 30px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  box-sizing: border-box;
+  align-self: stretch;
+  position: relative;
+}
+
+.left .third div {
+  display: flex;
+  width: 100%;
+  gap: 0px;
+  align-items: center;
+  justify-content: start;
+}
+
+.left .third div .iconWrapper {
+  width: 0px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+}
+
+.left .third div .iconWrapper .chevronh4 {
+  font-size: 13px;
+  width: 100%;
+  text-wrap: wrap;
+  margin: 0;
+  font-weight: 800;
+  color: var(--off-black-06);
+}
+
+.left .third:hover > div .iconWrapper {
+  width: 18px;
+}
+
+.left .third .desch4 {
+  font-size: 13px;
+  width: 100%;
+  text-wrap: wrap;
+  font-weight: 400;
+  color: var(--off-black-06);
+  margin: 0;
+}
+
+.left .third .desch3 {
+  font-size: 15px;
+  width: 100%;
+  text-wrap: wrap;
+  font-weight: 400;
+  color: var(--off-black-06);
+  margin: 0;
+}
+
 .right {
   width: 100%;
   background-color: var(--off-white);
@@ -64,6 +128,7 @@
   flex-direction: column;
   align-items: center;
   perspective: 1200px;
+  gap: 15px;
 }
 
 .cardInner {
@@ -115,13 +180,27 @@
   transition: all 0.4s ease;
 }
 
+.rect {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(194, 233, 231, 0), rgba(194, 233, 231, 1), rgba(194, 233, 231, 0));
+}
+
+.unlockLabel {
+  color: var(--off-teal);
+  font-size: 13px;
+  font-weight: 500;
+  padding-top: 9px;
+  text-align: center;
+}
+
 .cardLabel {
-  margin-top: 20px;
   color: var(--light-off-teal);
   font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 1px;
+  font-weight: 400;
+  text-align: center;
 }
+
 
 .stickyDiv {
   position: sticky;
@@ -160,8 +239,6 @@
     font-size: 12.7px;
 }
 
-
-
 .cell {
   background: var(--off-white);
   flex: 1;
@@ -199,6 +276,7 @@
     .middle {
         flex-direction: column;
         position: relative;
+        max-width: 500px;
     }
 
     .left {
@@ -209,18 +287,15 @@
         height: max-content;
         z-index: 999;
     }
-}
 
-@media screen and (max-width: 800px) {
-  .cardsGrid {
-    grid-template-columns: 246px;
-  }
-}
+    .cardsGrid {
+        grid-template-columns: 246px;
+    }
 
-@media screen and (max-width: 440px) {
     .contentBlock {
         padding: 60px 0px;
     }
+
     .right {
         padding: 18px;
     }

@@ -314,7 +314,7 @@ const Project = ({
                     />
                   );
                 case "bigtext":
-                  return <ProjectBigText key={index} text={item.text} />;
+                  return <ProjectBigText key={index} text1={item.text1} text2={item.text2} text3={item.text3} points={item.points? item.points : null}/>;
                 case "para":
                   return <ProjectParaText key={index} text={item.text} />;
                 case "headingpara":

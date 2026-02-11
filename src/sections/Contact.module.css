@@ -172,6 +172,7 @@
 @media screen and (max-width: 1200px) {
   .middle {
     flex-direction: column;
+    max-width: 500px;
   }
 
   .left {

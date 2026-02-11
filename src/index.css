@@ -9,6 +9,13 @@
 
 @font-face {
     font-family: "Stara";
+    src: url("./assets/fonts/Stara-MediumItalic.otf");
+    font-weight: 500;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Stara";
     src: url("./assets/fonts/Stara-SemiBold.otf") format("opentype");
     font-weight: 600;
     font-display: swap;
@@ -40,7 +47,7 @@
     --light-off-teal: #ECF8F5;
     --off-white: #FBFFFD;
 
-    --off-black-06: rgba(39, 66, 66, 0.6);
+    --off-black-06: rgba(17, 35, 34, 0.6);
 
 }
 

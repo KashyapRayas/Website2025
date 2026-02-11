@@ -6,16 +6,31 @@ import { useLenis } from "lenis/react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
-const TOTAL_CARDS = 15;
-const UNLOCKED_COUNT = 3;
+const TOTAL_CARDS = 42;
 
-const Card = ({ index, isLocked, triggerFlip }) => {
+const Card = ({ index, isLocked, triggerFlip, cardData }) => {
   const cardRef = useRef(null);
+  const unlockLabelRef = useRef(null);
+  const cardLabelRef = useRef(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0, active: false });
   const [hasFinishedIntro, setHasFinishedIntro] = useState(false);
 
-  const frontImage = `/cards/card${index + 1}.jpg`;
+  const frontImage = cardData?.img || `/cards/card${index + 1}.jpg`;
   const backImage = `/cards/cardBack.jpg`;
+
+  useEffect(() => {
+    if (triggerFlip && !isLocked && cardData) {
+      setTimeout(() => {
+        if (unlockLabelRef.current) {
+          unlockLabelRef.current.textContent =
+            cardData.unlockLabel || "?";
+        }
+        if (cardLabelRef.current) {
+          cardLabelRef.current.textContent = cardData.cardLabel || "?";
+        }
+      }, index * 100);
+    }
+  }, [triggerFlip, isLocked, cardData, index]);
 
   useGSAP(() => {
     if (triggerFlip) {
@@ -37,11 +52,15 @@ const Card = ({ index, isLocked, triggerFlip }) => {
         duration: 0.6,
         ease: "power2.out",
       })
-        .to(cardRef.current, {
-          rotateY: isLocked ? 180 : 0,
-          duration: 0.4,
-          ease: "back.out(1.2)",
-        })
+        .to(
+          cardRef.current,
+          {
+            rotateY: isLocked ? 180 : 0,
+            duration: 0.4,
+            ease: "back.out(1.2)",
+          },
+          0
+        )
         .to(
           cardRef.current,
           {
@@ -52,7 +71,7 @@ const Card = ({ index, isLocked, triggerFlip }) => {
           "-=0.2"
         );
     }
-  }, [triggerFlip, isLocked]);
+  }, [triggerFlip, isLocked, index]);
 
   const handleMouseMove = (e) => {
     if (!hasFinishedIntro) return;
@@ -90,7 +109,6 @@ const Card = ({ index, isLocked, triggerFlip }) => {
 
     const xPos = (0.5 - hoverPos.x) * 100;
 
-
     return {
       opacity: 1,
       background: `linear-gradient(
@@ -114,7 +132,7 @@ const Card = ({ index, isLocked, triggerFlip }) => {
         <div className={styles.cardFront}>
           <img
             src={frontImage}
-            alt={`Card ${index + 1}`}
+            alt={cardData?.name || `Card ${index + 1}`}
             className={styles.cardImg}
           />
           <div className={styles.glimmer} style={glimmerStyle}></div>
@@ -124,8 +142,12 @@ const Card = ({ index, isLocked, triggerFlip }) => {
           <div className={styles.glimmer} style={glimmerStyle}></div>
         </div>
       </div>
-      <div className={styles.cardLabel}>
-        {isLocked ? "LOCKED" : `ID: 00${index + 1}`}
+      <div className={styles.unlockLabel} ref={unlockLabelRef}>
+        {isLocked ? "?" : "?"}
+      </div>
+      <div className={styles.rect}></div>
+      <div className={styles.cardLabel} ref={cardLabelRef}>
+        {isLocked ? "?" : "?"}
       </div>
     </div>
   );
@@ -134,13 +156,34 @@ const Card = ({ index, isLocked, triggerFlip }) => {
 const ModifierDeck = ({ handleBack, isIncomingTransition }) => {
   const lenis = useLenis();
   const [startSequence, setStartSequence] = useState(false);
+  const [cardsData, setCardsData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!isIncomingTransition) {
+    fetch("/data/cards.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setCardsData(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error loading cards data:", error);
+        setIsLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!isIncomingTransition && cardsData) {
       const timer = setTimeout(() => setStartSequence(true), 600);
       return () => clearTimeout(timer);
     }
-  }, [isIncomingTransition]);
+  }, [isIncomingTransition, cardsData]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const UNLOCKED_COUNT = cardsData?.cards?.length || 0;
 
   return (
     <div
@@ -182,6 +225,18 @@ const ModifierDeck = ({ handleBack, isIncomingTransition }) => {
                   <span className={styles.count}>/{TOTAL_CARDS}</span>
                 </span>
               </div>
+              <div className={styles.third}>
+                <div>
+                  <div className={styles.iconWrapper}>
+                    <h4 className={styles.chevronh4}>{">"}</h4>
+                  </div>
+                  <h4 className={styles.desch4}>ABOUT MODIFIER DECK</h4>
+                </div>
+                <h3 className={styles.desch3}>
+                  Completing a task or achievement forges a new card,
+                  enhancing Kashyap's traits.
+                </h3>
+              </div>
               <div className={styles.rounder}>
                 <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
                   <path
@@ -207,6 +262,7 @@ const ModifierDeck = ({ handleBack, isIncomingTransition }) => {
                     index={i}
                     isLocked={i >= UNLOCKED_COUNT}
                     triggerFlip={startSequence}
+                    cardData={cardsData?.cards[i]}
                   />
                 ))}
               </div>

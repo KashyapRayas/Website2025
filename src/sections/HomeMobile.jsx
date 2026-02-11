@@ -232,8 +232,7 @@ const Home = forwardRef(
                 delay={0}
               />
               <div className={styles.cell}>
-                Cards in a deck act as modifiers. Together, they form a system
-                that defines the bearer’s traits.
+                With every feat accomplished, a new card is forged and added to his database.
               </div>
             </div>
 

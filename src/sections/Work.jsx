@@ -9,13 +9,14 @@ import {
 import "./Work.css";
 import AnimatedArrow from "../components/AnimatedArrow";
 import gsap from "gsap";
+import { CustomEase } from "gsap/CustomEase";
 import { useGSAP } from "@gsap/react";
 import GrassOverlay from "../components/GrassOverlay";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import PixelLock from '/pixelLock.svg'
 import star from '/star.svg'
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, CustomEase);
 
 const BASE_PATH = "";
 const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
@@ -37,6 +38,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const grassTargetRef1 = useRef(null);
   const grassTargetRef2 = useRef(null);
   const headingRef = useRef(null);
+  const starRefsMap = useRef({});
 
   gsap.config({ force3D: true });
 
@@ -216,6 +218,51 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     });
   }, [projectsData]);
 
+    useGSAP(() => {
+    if (!projectsData) return;
+
+    // Kill and reset ALL stars first
+    Object.entries(starRefsMap.current).forEach(([projIndex, starArray]) => {
+        if (Array.isArray(starArray)) {
+        starArray.forEach((star) => {
+            if (star) {
+            gsap.killTweensOf(star);
+            gsap.set(star, { rotate: 0 });
+            }
+        });
+        }
+    });
+
+    // Only animate stars for active project
+    if (activeIndex < 0) return;
+
+    const starRefs = starRefsMap.current[activeIndex];
+    if (!starRefs || starRefs.length === 0) return;
+
+    CustomEase.create("wave", "M0,0 C0.6,0, 0.3,1.4, 1,1");
+
+    const tl = gsap.timeline();
+
+    starRefs.forEach((starEl, idx) => {
+        if (starEl) {
+        tl.to(
+            starEl,
+            {
+            rotate: "360deg",
+            duration: 3,
+            ease: "wave",
+            repeat: -1,
+            },
+            idx * 0.8
+        );
+        }
+    });
+
+    return () => {
+        tl.kill();
+    };
+    }, [activeIndex, projectsData]);
+
   const handleMouseEnter = useCallback((index) => setHoveredIndex(index), []);
   const handleMouseLeave = useCallback(() => {
     if (typeof window === "undefined") {
@@ -350,7 +397,18 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                 <div className="tags">
                     {project.tags?.map((tag, tagIndex) => (
                     <div className="tag" key={tagIndex}>
-                        <img src={star} alt="" />
+                        <img
+                          ref={(el) => {
+                            if (el) {
+                              if (!starRefsMap.current[index]) {
+                                starRefsMap.current[index] = [];
+                              }
+                              starRefsMap.current[index][tagIndex] = el;
+                            }
+                          }}
+                          src={star}
+                          alt=""
+                        />
                         {tag}
                     </div>
                     ))}

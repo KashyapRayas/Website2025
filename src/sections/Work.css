@@ -153,6 +153,8 @@
     flex-direction: column;
     gap: 1px;
     position: relative;
+    justify-content: start;
+    align-items: start;
 
     .headingWrapper {
         width: 100%;

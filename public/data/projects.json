@@ -6,7 +6,7 @@
         "img": "/project_imgs/sw_1.webp",
         "tags": [
             "Web App",
-            "Tax Tech",
+            "Fin Tech",
             "AI Integrated"
         ]
         },
@@ -47,15 +47,6 @@
         "tags": [
             "Community Challenge",
             "Design for Mobile"
-        ]
-        },
-        {
-        "name": "VIGA CRM",
-        "description": "Centralized web management for your organization and VigaET suite subscriptions",
-        "img": "/project_imgs/vc_1.webp",
-        "tags": [
-            "Web App",
-            "Org Management"
         ]
         }
     ]
