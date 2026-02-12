@@ -11,9 +11,13 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Contact = forwardRef(({}, ref) => {
   const [contactHovered, setContactHovered] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
   const grassTargetRef1 = useRef(null);
   const grassTargetRef2 = useRef(null);
   const headingRef = useRef(null);
+  const sectionRef = useRef(null);
+  const firstH4Ref = useRef(null);
+  const muteButtonRef = useRef(null);
 
   useGSAP(() => {
     if (!headingRef.current) return;
@@ -29,10 +33,52 @@ const Contact = forwardRef(({}, ref) => {
         },
       },
     });
-  }, []);
+
+    if (!sectionRef.current || hasAnimated) return;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 70%",
+        once: true,
+        onEnter: () => setHasAnimated(true),
+      },
+    });
+
+    tl.call(
+      () => {
+        if (muteButtonRef.current) {
+          muteButtonRef.current.textContent = "[ Unmutes ]";
+        }
+      },
+      null,
+      1
+    );
+
+    if (firstH4Ref.current) {
+      const words = firstH4Ref.current.querySelectorAll(".word");
+      tl.to(
+        words,
+        {
+          opacity: 1,
+          duration: 0.15,
+          stagger: 0.1,
+        },
+        1.5
+      );
+    }
+  }, [hasAnimated]);
 
   return (
-    <section id="CONTACT" className={styles.contact} ref={ref}>
+    <section
+      id="CONTACT"
+      className={styles.contact}
+      ref={(el) => {
+        sectionRef.current = el;
+        if (typeof ref === "function") ref(el);
+        else if (ref) ref.current = el;
+      }}
+    >
       <div className="extremes-wrapper-left">
         <div className="extremes"></div>
       </div>
@@ -40,19 +86,30 @@ const Contact = forwardRef(({}, ref) => {
       <div className={styles.middle}>
         <div className={styles.right}>
           <div className={styles.heading} ref={headingRef}>
-            <span className={styles.headingBracket}>
-              {"<"}
-            </span>
+            <span className={styles.headingBracket}>{"<"}</span>
             CONTACT
-            <span className={styles.headingBracket}>
-              {"/>"}
-            </span>
+            <span className={styles.headingBracket}>{"/>"}</span>
           </div>
 
           <div className={styles.first}>
-            <h4 className={styles.firstH4}>
-              <span>[ Unmutes ]</span>
-              <br /> Nothing from my side.
+            <h4 className={styles.firstH4} ref={firstH4Ref}>
+              <span ref={muteButtonRef}>[ Muted ]</span>
+              <br />{" "}
+              <span className="word" style={{ opacity: 0 }}>
+                Nothing
+              </span>{" "}
+              <span className="word" style={{ opacity: 0 }}>
+                from
+              </span>{" "}
+              <span className="word" style={{ opacity: 0 }}>
+                my
+              </span>{" "}
+              <span className="word" style={{ opacity: 0 }}>
+                side
+              </span>{" "}
+              <span className="word" style={{ opacity: 0 }}>
+                ..
+              </span>
             </h4>
             <h3 className={styles.firstH3}>
               I'm always up for a chat, about Chainsaw Man's

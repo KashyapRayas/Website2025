@@ -169,7 +169,7 @@ const PercentageSlider = () => {
 
     intervalRef.current = setInterval(() => {
       setFrameIndex((i) => (i + 1) % FRAME_COUNT);
-    }, 300);
+    }, 200);
 
     return () => clearInterval(intervalRef.current);
   }, [isPlaying, imagesLoaded]);

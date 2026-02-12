@@ -326,7 +326,7 @@
   background-color: var(--off-white);
   padding: 30px;
   border-radius: 9px;
-  gap: 18px;
+  gap: 60px;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -389,7 +389,7 @@
   background-color: var(--off-white);
   padding: 30px;
   border-radius: 9px;
-  gap: 18px;
+  gap: 60px;
   display: flex;
   justify-content: space-between;
   flex-direction: column;

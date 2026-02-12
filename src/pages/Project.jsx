@@ -378,7 +378,7 @@ const Project = ({
           <div className={"extremes"}></div>
         </div>
       </section>
-      <Contact />
+      <Contact key={selectedProjectName}/>
       <Footer inProject={true} lenis={lenis} />
     </div>
   );

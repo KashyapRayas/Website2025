@@ -54,7 +54,6 @@ const Home = forwardRef(
       });
     }, []);
 
-    /* ✅ Card Flip Animation + ScrollTrigger + Stagger */
     useEffect(() => {
     if (!cardWrapperRef.current) return;
 
@@ -98,20 +97,12 @@ const Home = forwardRef(
         master.restart();
         hasPlayed = true;
         },
-        onLeave: () => {
-        gsap.set(cards, { rotateY: 180, z: 0 });
-        hasPlayed = false; // allow replay next entry
-        },
-        onLeaveBack: () => {
-        gsap.set(cards, { rotateY: 180, z: 0 });
-        hasPlayed = false;
-        },
         invalidateOnRefresh: true,
     });
 
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
     }, []);
-
+    
     return (
       <section id="HOME" ref={ref} className={styles.home}>
         <div className="extremes-wrapper-left">

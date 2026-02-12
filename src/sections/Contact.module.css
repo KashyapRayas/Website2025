@@ -83,7 +83,7 @@
   background-color: var(--off-white);
   padding: 30px;
   border-radius: 9px;
-  gap: 6px;
+  gap: 60px;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -102,14 +102,16 @@
   line-height: 120%;
 }
 
-.firstH4 span {
-  display: inline;
-}
-
-.firstH4 span {
+.firstH4 span:not(:global(.word)) {
   display: inline;
   color: var(--dark-green);
   font-weight: 400;
+}
+
+.firstH4 :global(.word) {
+  display: inline;
+  color: var(--off-black);
+  font-weight: 600;
 }
 
 .firstH3 {
@@ -119,10 +121,6 @@
   font-weight: 400;
   color: var(--off-black-06);
   margin: 0;
-}
-
-.firstH3 span {
-  display: inline;
 }
 
 .firstH3 span {
@@ -157,10 +155,6 @@
 
 .second h4 span {
   display: inline;
-}
-
-.second h4 span {
-  display: inline;
   color: var(--dark-green);
 }
 
@@ -182,7 +176,7 @@
 }
 
 @media screen and (min-width: 1700px) {
-    .middle {
-        max-width: 1400px;
-    }
+  .middle {
+    max-width: 1400px;
+  }
 }

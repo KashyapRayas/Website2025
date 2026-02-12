@@ -390,9 +390,10 @@
   aspect-ratio: 4 / 3;
   object-fit: cover;
   object-position: center;
-  image-rendering: pixelated;
   opacity: 0.9;
   transition: all 0.3s ease-in-out;
+  image-rendering: auto;
+  will-change: auto;
 }
 
 .secondInnerwrapper:hover .img,
@@ -580,12 +581,14 @@
   box-sizing: border-box;
   width: 100%;
   height: 245px;
+  position: relative;
 }
 
 .left .fourth .top {
   display: flex;
   gap: 1px;
   width: 100%;
+  position: relative;
 }
 
 .left .fourth .top .cell {
@@ -601,6 +604,7 @@
   font-size: 15px;
   color: var(--off-black-06);
   font-weight: 400;
+  position: relative;
 }
 
 .left .fourth .second {

@@ -67,8 +67,9 @@ const HomeCard = memo(({ index, containerHover, deckHovered }) => {
 
     const trigger = ScrollTrigger.create({
         trigger: cardRef.current,
-        start: "top bottom",
+        start: "top center",
         end: "bottom top",
+        once: true,
         onEnter: () => {
         if (hasPlayed) return;
         if (tl) tl.kill(); // kill any previous
@@ -83,16 +84,16 @@ const HomeCard = memo(({ index, containerHover, deckHovered }) => {
         hasPlayed = true;
         hasEntered.current = true;
         },
-        onLeave: () => {
-        gsap.set(cardRef.current, { rotateY: 180, z: 0 });
-        hasPlayed = false;
-        hasEntered.current = false;
-        },
-        onLeaveBack: () => {
-        gsap.set(cardRef.current, { rotateY: 180, z: 0 });
-        hasPlayed = false;
-        hasEntered.current = false;
-        },
+        // onLeave: () => {
+        // gsap.set(cardRef.current, { rotateY: 180, z: 0 });
+        // hasPlayed = false;
+        // hasEntered.current = false;
+        // },
+        // onLeaveBack: () => {
+        // gsap.set(cardRef.current, { rotateY: 180, z: 0 });
+        // hasPlayed = false;
+        // hasEntered.current = false;
+        // },
         invalidateOnRefresh: true,
     });
 
@@ -213,6 +214,10 @@ const Home = forwardRef(
     const grassTargetRef2 = useRef(null);
     const grassTargetRef3 = useRef(null);
     const grassTargetRef4 = useRef(null);
+
+    useEffect(()=>{
+
+    }, [])
 
     useEffect(() => {
       const loadProjects = async () => {
@@ -481,7 +486,7 @@ const Home = forwardRef(
                   />
                 </div>
               </div>
-              <GrassOverlay isLoaded={isLoaded} targetRef={grassTargetRef1} />
+              <GrassOverlay isLoaded={isLoaded} targetRef={leftSecondS2Ref} />
               <div className={styles.s1}>
                 <div className={styles.chestWindow}>
                   <svg
@@ -535,9 +540,10 @@ const Home = forwardRef(
                   isLoaded={isLoaded}
                   delay={0}
                 />
-                <div className={styles.cell}>
+                <div className={styles.cell} ref={grassTargetRef1}>
                     With every feat accomplished, a new card is forged and added to his database.                </div>
                 </div>
+                <GrassOverlay isLoaded={isLoaded} targetRef={grassTargetRef1}></GrassOverlay>
               <a
                 href="#"
                 className={styles.second}

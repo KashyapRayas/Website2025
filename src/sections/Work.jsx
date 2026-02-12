@@ -32,15 +32,12 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
   const imagesRef = useRef({});
   const canvasRef = useRef(null);
-  const ctxRef = useRef(null);
   const handRef = useRef(null);
   const handShadowRef = useRef(null);
   const grassTargetRef1 = useRef(null);
   const grassTargetRef2 = useRef(null);
   const headingRef = useRef(null);
   const starRefsMap = useRef({});
-
-  gsap.config({ force3D: true });
 
   useEffect(() => {
     const loadProjects = async () => {
@@ -84,92 +81,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     if (!sources.includes(FALLBACK_IMG_SRC)) sources.push(FALLBACK_IMG_SRC);
     sources.forEach((src) => getOrLoadImage(src));
   }, [projectsData]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-
-      const parent = canvas.parentElement;
-      const rect = parent.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 4);
-
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-
-      const ctx = canvas.getContext("2d", { alpha: false });
-      ctx.scale(dpr, dpr);
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-      ctx.filter = "contrast(1.05) brightness(1.02)";
-      ctxRef.current = ctx;
-
-      if (activeProject) {
-        const src = activeProject.img
-          ? BASE_PATH + activeProject.img
-          : FALLBACK_IMG_SRC;
-        const img = imagesRef.current[src];
-        if (img && img.complete) {
-          draw(ctx, img, rect.width, rect.height);
-        }
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [activeProject]);
-
-  const draw = (ctx, img, width, height) => {
-    if (!img || !img.naturalWidth) return;
-    ctx.globalAlpha = 1;
-    ctx.clearRect(0, 0, width, height);
-    const r = width / height;
-    const ir = img.naturalWidth / img.naturalHeight;
-    let nw, nh;
-    if (ir > r) {
-      nh = height;
-      nw = height * ir;
-    } else {
-      nw = width;
-      nh = width / ir;
-    }
-    const x = (width - nw) / 2;
-    const y = (height - nh) / 2;
-    ctx.drawImage(img, x, y, nw, nh);
-  };
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = ctxRef.current || canvas.getContext("2d");
-    const rect = canvas.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-
-    const targetSrc = activeProject.img
-      ? BASE_PATH + activeProject.img
-      : FALLBACK_IMG_SRC;
-
-    const img = getOrLoadImage(targetSrc);
-
-    const doDraw = () => {
-      draw(ctx, img, width, height);
-    };
-
-    if (img.complete && img.naturalWidth > 0) {
-      doDraw();
-    } else {
-      img.onload = () => {
-        const currentSrc = activeProject.img
-          ? BASE_PATH + activeProject.img
-          : FALLBACK_IMG_SRC;
-        if (img.src.includes(currentSrc)) {
-          doDraw();
-        }
-      };
-    }
-  }, [activeProject]);
 
   useGSAP(() => {
     if (!projectsData || !handRef.current) return;
@@ -314,9 +225,14 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
         <div className="right">
             <div className="headingWrapper">
                 <div className="heading" ref={headingRef}>
-                    <span className="heading-bracket left">{"<"}</span>
-                    WORK
-                    <span className="heading-bracket right">{"/>"}</span>
+                    <div className="workHeadingWrapper">
+                        <span className="heading-bracket left">{"<"}</span>
+                        WORKS
+                        <span className="heading-bracket right">{"/>"}</span>
+                    </div>
+                    <div className="descHeading">
+                        A collection of Kashyap's curated works. Choose one below to view.
+                    </div>
                 </div>
                 <div className="rounder" ref={grassTargetRef2}>
                 <svg
@@ -495,11 +411,17 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
               </div>
               <div className="work-img-wrapper">
                 <div className="canvas-wrapper">
-                  <canvas
+                  <img
                     ref={canvasRef}
                     className="work-img"
-                    style={{ width: "100%", height: "100%" }}
-                  />
+                    src={
+                        activeProject.img
+                        ? BASE_PATH + activeProject.img
+                        : FALLBACK_IMG_SRC
+                    }
+                    alt={activeProject.name || ""}
+                    draggable={false}
+                    />
                 </div>
               </div>
             </div>
@@ -542,4 +464,4 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   );
 });
 
-export default Work;
+export default Work
