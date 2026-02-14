@@ -12,6 +12,7 @@
   display: flex;
   gap: 1px;
   width: 100%;
+  max-width: 1400px;
 }
 
 /* --- LEFT SIDE --- */
@@ -164,6 +165,7 @@
 
 /* --- RESPONSIVE --- */
 @media screen and (max-width: 1200px) {
+
   .middle {
     flex-direction: column;
     max-width: 500px;
@@ -172,11 +174,5 @@
   .left {
     width: 100%;
     flex: 0 0 300px;
-  }
-}
-
-@media screen and (min-width: 1700px) {
-  .middle {
-    max-width: 1400px;
   }
 }

@@ -235,6 +235,12 @@ const ModifierDeck = ({ handleBack, isIncomingTransition }) => {
                 <h3 className={styles.desch3}>
                   Completing a task or achievement forges a new card,
                   enhancing Kashyap's traits.
+                  <br/>
+                </h3>
+              </div>
+                <div className={styles.third}>
+                <h3 className={styles.desch3}>
+                    The Answer to the Ultimate Question of Life, the Universe, and Everything was 42 — the number of cards in this deck.
                 </h3>
               </div>
               <div className={styles.rounder}>

@@ -12,6 +12,7 @@
   display: flex;
   gap: 1px;
   width: 100%;
+  max-width: 1400px;
 }
 
 /* --- LEFT SIDE --- */
@@ -56,6 +57,41 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+}
+
+.second {
+  width: 100%;
+  background-color: var(--light-off-teal);
+  padding: 30px;
+  border-radius: 9px;
+  gap: 0;
+  display: flex;
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-decoration: none;
+  position: relative;
+}
+
+.second h4 {
+  font-size: 24px;
+  text-wrap: wrap;
+  margin: 0;
+  color: var(--off-black);
+  font-weight: 600;
+  padding: 0 14px 0 0;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.second h4 span {
+  display: inline;
+  color: var(--dark-green);
+}
+
+.second:hover {
+  background-color: var(--off-white);
 }
 
 .thirdNew {
@@ -462,6 +498,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+    max-width: 500px;
   }
 
   .left {
@@ -497,16 +534,8 @@
   .leftFirstCell {
     flex: 0 0 60px;
   }
-}
 
-@media screen and (min-width: 1700px) {
-    .middle {
-        max-width: 1400px;
-    }
-}
-
-@media screen and (max-width: 1200px) {
-    .middle {
-        max-width: 500px;
-    }
+  .rightSecond {
+    gap: 18px;
+  }
 }

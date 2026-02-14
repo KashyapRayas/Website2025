@@ -31,7 +31,7 @@ const Footer = ({ inProject = false, lenis, isMobile }) => {
             <h3>
               KASHYAP RAYAS &copy; {CURRENT_YEAR}
               <br />
-              <span>ALL RIGHTS RESERVED</span>
+              <span>ALL LEFTS RESERVED</span>
             </h3>
 
             <div className="right-links">

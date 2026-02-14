@@ -15,6 +15,7 @@ header > .middle {
     align-items: flex-start;
     gap: 1px;
     width: 100%;
+    max-width: 1400px;
 }
 
 header > .middle > .left {

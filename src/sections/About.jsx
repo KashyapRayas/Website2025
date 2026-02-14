@@ -19,6 +19,7 @@ import { useGSAP } from "@gsap/react";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import GrassOverlay from "../components/GrassOverlay.jsx";
+import AnimatedArrow from "../components/AnimatedArrow.jsx";
 
 gsap.registerPlugin(CustomEase, ScrollTrigger);
 
@@ -110,11 +111,11 @@ const About = forwardRef((_, ref) => {
 
   const goals = [
     { text: "Design a VR experience", checked: true },
+    { text: "Finish reading - The Courage To Be Disliked", checked: true },
     { text: "Play Death Stranding 2" },
     { text: "Mod a Casio watch" },
-    { text: "Finish reading - The Courage To Be Disliked" },
     { text: "Pursue a HCI Master's" },
-    { text: "Work at Google or Nothing" },
+    { text: "Learn Cardistry" },
   ];
 
   const experiences = [
@@ -181,19 +182,25 @@ const About = forwardRef((_, ref) => {
               <h4>DESCRIPTIVE</h4>
             </div>
             <h3 className={styles.desch3}>
-              Hi there <span>[ again ]</span> I'm Kashyap Rayas{" "}
+              <span>[ ready's intro ]</span> He's Kashyap Rayas{" "}
               <span>[ {age} M ]</span>, Product Designer by trade and
-              professional overthinker by nature. I love shaping products
-              that work beautifully and make sense fast. With a background in
-              computer science and design, I thrive at the intersection of
-              technology and creativity.
+              professional overthinker by nature.
+              Based in India <span>[ but a US Citizen ]</span> He cares a lot about things most
+              people won’t even notice. Sometimes a little too much. But that’s also
+              why the products he shapes feel effortless and make sense fast.
+
               <br />
               <br />
-              At present, I'm working at Viga ET as a UI/UX Engineer, where I
-              oversee design systems and user experiences for a suite of apps
-              tailored for the filmmaking industry.
+              With a background in computer science and design, he works comfortably where
+              technology meets creativity — logic on one side, intuition on the other.
+              <br />
+              <br />
+              Right now, he’s at VigaET as a UI/UX Engineer, leading design & product strategy
+              for a suite of apps made for the film production industry.
             </h3>
           </div>
+
+
           <GrassOverlay targetRef={grassTargetRef1}></GrassOverlay>
 
           <div
@@ -237,9 +244,23 @@ const About = forwardRef((_, ref) => {
             </div>
           </div>
 
+            <a
+                href="mailto:kashyap.rayas@gmail.com"
+                className={styles.second}
+                onMouseEnter={() => setResumeHovered(true)}
+                onMouseLeave={() => setResumeHovered(false)}
+                ref={grassTargetRef1}
+            >
+                <AnimatedArrow isActive={!resumeHovered} />
+                <h4>
+                VIEW KASHYAP'S <span>RESUME</span>
+                </h4>
+                <AnimatedArrow isActive={resumeHovered} />
+            </a>
+
           <div className={styles.thirdNew}>
             <div className={styles.thirdLeft}>
-              <h4>THINGS I CURRENTLY ENJOY</h4>
+              <h4>THINGS HE CURRENTLY ENJOYS</h4>
               <div className={styles.list}>
                 {currentEnjoy.map((item, i) => (
                   <ListItem
@@ -255,7 +276,7 @@ const About = forwardRef((_, ref) => {
               className={styles.thirdRight}
               ref={grassTargetRef3}
             >
-              <h4>THINGS I HOPE TO COMPLETE</h4>
+              <h4>THINGS HE HOPES TO COMPLETE</h4>
               <div className={styles.list}>
                 {goals.map((item, i) => (
                   <ListItem

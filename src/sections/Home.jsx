@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   memo,
+  use,
 } from "react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
@@ -30,7 +31,7 @@ const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
 /* ------------------------------------------------------------------ */
 /* HomeCard – self‑contained GSAP + ScrollTrigger                      */
 /* ------------------------------------------------------------------ */
-const HomeCard = memo(({ index, containerHover, deckHovered }) => {
+const HomeCard = memo(({ index, containerHover, deckHovered}) => {
   const cardRef = useRef(null);
   const hasEntered = useRef(false);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0, active: false });
@@ -193,7 +194,7 @@ const HomeCard = memo(({ index, containerHover, deckHovered }) => {
 /* Home main component                                                 */
 /* ------------------------------------------------------------------ */
 const Home = forwardRef(
-  ({ isLoaded, handleProjectSelect, onModifierDeckSelect, isLoadedforHero }, ref) => {
+  ({ isLoaded, handleProjectSelect, onModifierDeckSelect, isLoadedforHero, returnedFrom }, ref) => {
     const [projects, setProjects] = useState(null);
     const [recentHovered, setRecentHovered] = useState(false);
     const [recentSelected, setRecentSelected] = useState(false);
@@ -204,6 +205,7 @@ const Home = forwardRef(
     const heroRef = useRef(null);
     const parallaxRef = useRef(null);
     const homeRef = useRef(null);
+    const narratorRef = useRef(null);
 
     const leftSecondS2Ref = useRef(null);
     const secondInnerRef = useRef(null);
@@ -215,9 +217,66 @@ const Home = forwardRef(
     const grassTargetRef3 = useRef(null);
     const grassTargetRef4 = useRef(null);
 
-    useEffect(()=>{
+    const narratorMessage = useMemo(() => {
 
-    }, [])
+    const modifierDialogues = [
+        "The deck grows heavier. So does he.",
+        "The collection expands. So does his resolve.",
+        "He carries more now and carries it well.",
+        "He’s building a hand he believes in.",
+        "The deck grows. So does his discipline.",
+        "He’s assembling something steady, isn’t he.",
+        "He keeps forging interesting cards.",
+        "The more he unlocks, the more deliberate he becomes.",
+        "He unlocked it. Now he has to live up to it.",
+        "It suits him, though he doesn’t realize why yet.",
+        "He reached for a heavier card this time.",
+        "He’s not afraid of harder cards now.",
+        "The collection is gaining structure.",
+        "That card will matter later.",
+        "He’s stacking identity, not just achievement.",
+        "The deck is beginning to resemble resolve.",
+        "He’s assembling something coherent.",
+        "He’s shaping who he’ll be remembered as.",
+
+        // "The traits are beginning to compound.",
+    ];
+
+    const projectDialogues = [
+        "He builds like he’s solving something personal.",
+        "Every project leaves a fingerprint.",
+        "Work is how he thinks out loud.",
+        "Interesting… he handled that differently.",
+        "That’s growth.",
+        "He’s asking better questions.",
+        "You can feel the evolution, can’t you.",
+        "You can tell he wrestled with this.",
+        "He’s designing the way he thinks.",
+        "The ambition outpaces the polish.",
+        "He sees it. He just hasn’t mastered it yet.",
+        "He’s aware of what’s missing.",
+        "He’s outgrowing his old limits.",
+        "He’s building taste faster than technique.",
+        "He’s not satisfied with this. That’s a good sign.",
+        "The growth is uneven. That’s normal.",
+        "There’s rawness here. That’s not weakness.",
+        "He’s closer to mastery than he was yesterday."
+    ];
+
+    if (returnedFrom === "modifier_deck") {
+        return modifierDialogues[
+        Math.floor(Math.random() * modifierDialogues.length)
+        ];
+    }
+
+    if (returnedFrom === "project") {
+        return projectDialogues[
+        Math.floor(Math.random() * projectDialogues.length)
+        ];
+    }
+
+    return "This is the loud version of him.";
+    }, [returnedFrom]);
 
     useEffect(() => {
       const loadProjects = async () => {
@@ -274,6 +333,25 @@ const Home = forwardRef(
       setRecentSelected(true);
     }, [handleProjectSelect, firstProject]);
 
+        /* — narrator word reveal — */
+    useGSAP(() => {
+        if (!narratorRef.current) return;
+
+        const words = narratorRef.current?.querySelectorAll(".narrator-word");
+        gsap.fromTo(words,
+            {
+                opacity: 0,
+            },
+            {
+            opacity: 1,
+            duration: 0.15,
+            stagger: 0.1,
+            delay: 0,
+            ease: "none",
+        });
+
+    }, [returnedFrom, narratorRef.current]);
+
     if (!projects) {
       return (
         <section id="HOME" ref={ref} className={styles.home}>
@@ -305,9 +383,25 @@ const Home = forwardRef(
                 <span>.</span>
               </h1>
               <h2 className={styles.heroCaption}>
-                Hello! I'm <span>Kashyap Rayas.</span> I architect 0‑1 products
-                that are intuitive for users and straightforward for developers.
+                Well hello there! I'm <span>Kashyap Rayas.</span> I architect 0‑1 products
+                that are intuitive for users and straightforward for developers. I als- <span>[ muted ]</span>
               </h2>
+                <div className={styles.botText}>
+                    <h2 className={styles.heroCaption2}>
+                        <span className={styles.narrator}>Narrator:</span>{" "}
+                         <span ref={narratorRef}>
+                            {narratorMessage.split(" ").map((word, i) => (
+                            <span
+                                key={`${word}-${i}`}
+                                className={"narrator-word"}
+                                style={{ opacity: 0 }}
+                                >
+                                {word}{" "}
+                                </span>
+                                ))}
+                            </span>
+                    </h2>
+                </div>
               <div className={styles.time}>
                 <div>
                   <svg
@@ -541,7 +635,7 @@ const Home = forwardRef(
                   delay={0}
                 />
                 <div className={styles.cell} ref={grassTargetRef1}>
-                    With every feat accomplished, a new card is forged and added to his database.                </div>
+                    With every feat accomplished, a new card is forged and registered in his database.                </div>
                 </div>
                 <GrassOverlay isLoaded={isLoaded} targetRef={grassTargetRef1}></GrassOverlay>
               <a

@@ -14,6 +14,7 @@ footer > .middle {
     width: 100%;
     height: 100%;
     gap: 0px;
+    max-width: 1400px;
 }
 
 footer > .middle > .right {
@@ -100,9 +101,10 @@ footer > .middle > .left {
     min-width: 636px;
     max-width: 636px;
     height: 100%;
-    position: relative;
     border-radius: 0px 9px 9px 0px;
     overflow: hidden;
+    position: relative;
+
     img {
         height: 140px;
         width: 100%;
@@ -117,10 +119,23 @@ footer > .middle > .left {
 
     footer > .middle {
         flex-direction: column;
+        max-width: 500px;
     }
 
     footer > .middle > .left {
-        display: none;
+        width: 100%;
+        height: 140px;
+        overflow: hidden;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    footer > .middle > .left img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        display: block;
+        /* object-position: left; */
     }
 
     footer > .middle > .right {
@@ -136,6 +151,13 @@ footer > .middle > .left {
 
     footer > .middle > .right > .wrapper > .right-links {
         align-items: start;
+        width: 100%;
+        justify-content: space-between;
+        flex-direction: row;
+    }
+
+    .right-links .work {
+        flex-direction: row-reverse;
     }
 
 }

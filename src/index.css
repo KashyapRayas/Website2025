@@ -51,6 +51,10 @@
 
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 @media (prefers-contrast: more) {
     :root {
         --off-black-06: var(--off-black);

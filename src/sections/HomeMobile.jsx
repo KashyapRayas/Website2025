@@ -1,4 +1,4 @@
-import { useRef, forwardRef, useState, useEffect } from "react";
+import { useRef, forwardRef, useState, useEffect, useMemo } from "react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -14,7 +14,7 @@ import AnimatedArrow from "../components/AnimatedArrow";
 gsap.registerPlugin(CustomEase, ScrollTrigger);
 
 const Home = forwardRef(
-  ({ isLoaded, isLoadedforHero, onModifierDeckSelect }, ref) => {
+  ({ isLoaded, isLoadedforHero, onModifierDeckSelect, returnedFrom }, ref) => {
     const rectRef = useRef(null);
     const heroRef = useRef(null);
     const parallaxRef = useRef(null);
@@ -23,8 +23,70 @@ const Home = forwardRef(
     const grassTargetRef3 = useRef(null);
     const starContainerRef = useRef(null);
     const [deckHovered, setDeckHovered] = useState(false);
+    const narratorRef = useRef(null);
 
     const cardWrapperRef = useRef(null);
+
+    const narratorMessage = useMemo(() => {
+
+    const modifierDialogues = [
+        "The deck grows heavier. So does he.",
+        "The collection expands. So does his resolve.",
+        "He carries more now and carries it well.",
+        "He’s building a hand he believes in.",
+        "The deck grows. So does his discipline.",
+        "He’s assembling something steady, isn’t he.",
+        "He keeps forging interesting cards.",
+        "The more he unlocks, the more deliberate he becomes.",
+        "He unlocked it. Now he has to live up to it.",
+        "It suits him, though he doesn’t realize why yet.",
+        "He reached for a heavier card this time.",
+        "He’s not afraid of harder cards now.",
+        "The collection is gaining structure.",
+        "That card will matter later.",
+        "He’s stacking identity, not just achievement.",
+        "The deck is beginning to resemble resolve.",
+        "He’s assembling something coherent.",
+        "He’s shaping who he’ll be remembered as.",
+
+        // "The traits are beginning to compound.",
+    ];
+
+    const projectDialogues = [
+        "He builds like he’s solving something personal.",
+        "Every project leaves a fingerprint.",
+        "Work is how he thinks out loud.",
+        "Interesting… he handled that differently.",
+        "That’s growth.",
+        "He’s asking better questions.",
+        "You can feel the evolution, can’t you.",
+        "You can tell he wrestled with this.",
+        "He’s designing the way he thinks.",
+        "The ambition outpaces the polish.",
+        "He sees it. He just hasn’t mastered it yet.",
+        "He’s aware of what’s missing.",
+        "He’s outgrowing his old limits.",
+        "He’s building taste faster than technique.",
+        "He’s not satisfied with this. That’s a good sign.",
+        "The growth is uneven. That’s normal.",
+        "There’s rawness here. That’s not weakness.",
+        "He’s closer to mastery than he was yesterday."
+    ];
+
+    if (returnedFrom === "modifier_deck") {
+        return modifierDialogues[
+        Math.floor(Math.random() * modifierDialogues.length)
+        ];
+    }
+
+    if (returnedFrom === "project") {
+        return projectDialogues[
+        Math.floor(Math.random() * projectDialogues.length)
+        ];
+    }
+
+    return "This is the loud version of him.";
+    }, [returnedFrom]);
 
     useGSAP(() => {
       if (!rectRef.current) return;
@@ -102,7 +164,25 @@ const Home = forwardRef(
 
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
     }, []);
-    
+
+    useGSAP(() => {
+        if (!narratorRef.current) return;
+
+        const words = narratorRef.current?.querySelectorAll(".narrator-word-mobile");
+        gsap.fromTo(words,
+            {
+                opacity: 0,
+            },
+            {
+            opacity: 1,
+            duration: 0.15,
+            stagger: 0.1,
+            delay: returnedFrom ? 4 : 0,
+            ease: "none",
+        });
+
+    }, [returnedFrom]);
+
     return (
       <section id="HOME" ref={ref} className={styles.home}>
         <div className="extremes-wrapper-left">
@@ -116,10 +196,26 @@ const Home = forwardRef(
               <span>,</span> minimalist <span>execution</span>
               <span>.</span>
             </h1>
-            <h2 className={styles.topFirstH2}>
-              Hello! I'm <span>Kashyap Rayas.</span> I architect 0-1 products
-              that are intuitive for users and straightforward for developers.
-            </h2>
+                <h2 className={styles.topFirstH2}>
+                    Well hello there! I'm <span>Kashyap Rayas.</span> I architect 0‑1 products
+                    that are intuitive for users and straightforward for developers. I als- <span>[ muted ]</span>
+                </h2>
+                    <div className={styles.botTextH2}>
+                        <h2 className={styles.topFirstH22}>
+                            <span className={styles.narrator}>Narrator:</span>{" "}
+                                <span ref={narratorRef}>
+                                {narratorMessage.split(" ").map((word, i) => (
+                                <span
+                                    key={`${word}-${i}`}
+                                    className={"narrator-word-mobile"}
+                                    style={{ opacity: 0 }}
+                                    >
+                                    {word}{" "}
+                                    </span>
+                                    ))}
+                                </span>
+                        </h2>
+                    </div>
             <div className={styles.time}>
               <div
                 ref={starContainerRef}
@@ -223,7 +319,7 @@ const Home = forwardRef(
                 delay={0}
               />
               <div className={styles.cell}>
-                With every feat accomplished, a new card is forged and added to his database.
+                With every feat accomplished, a new card is forged and registered in his database.
               </div>
             </div>
 
@@ -239,7 +335,7 @@ const Home = forwardRef(
             >
               <AnimatedArrow isActive={!deckHovered} />
               <h4>
-                VIEW <span>MODIFIER DECK</span>
+                VIEW <span>MOD DECK</span>
               </h4>
               <AnimatedArrow isActive={deckHovered} />
             </a>

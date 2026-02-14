@@ -200,6 +200,7 @@
         gap: 9px;
         font-size: 15px;
         color: var(--dark-green);
+        font-weight: 400;
         .workHeadingWrapper {
             width: 100%;
             display: flex;
@@ -224,7 +225,7 @@
     }
     .heading.heading--active {
         background-color: var(--off-white);
-        color: var(--off-black);
+        color: var(--off-black-06);
         .workHeadingWrapper {
             color: var(--off-black);
         }

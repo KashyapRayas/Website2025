@@ -95,6 +95,34 @@
   padding: 0;
 }
 
+.botTextH2 {
+    display: flex;
+    height: 100px;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+.topFirstH22 {
+  color: var(--off-black-06);
+  font-weight: 400;
+  line-height: 150%;
+  font-size: 18px;
+  width: 100%;
+  text-wrap: wrap;
+  margin: 0;
+  padding: 0;
+}
+
+.topFirstH22 .narrator {
+    color: var(--off-black);
+    opacity: 1;
+}
+
+.topFirstH22 span {
+  color: var(--off-black-06);
+}
+
 .topFirstH2 span {
   color: var(--off-black);
 }
