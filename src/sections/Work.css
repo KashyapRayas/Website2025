@@ -13,7 +13,7 @@
         position: sticky;
         top: 0px;
         width: 100%;
-        height: 607px;
+        height: 625px;
         background-color: var(--off-teal);
         box-sizing: border-box;
 
@@ -38,7 +38,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 116px;
+            height: 132px;
             display: flex;
             gap: 1px;
             padding-bottom: 1px;
@@ -46,9 +46,6 @@
 
             .cell {
                 width: 100%;
-                height: 100%;
-                background-color: var(--off-white);
-                border-radius: 9px;
             }
             .window {
                 min-width: 375px;
@@ -90,7 +87,7 @@
         .hand-shadow {
             position: relative;
             left: 271px;
-            top: -70px;
+            top: -86px;
         }
 
         .work-img-wrapper {
@@ -162,6 +159,7 @@
 
     .headingWrapper {
         width: 100%;
+        height: 132px;
         position: sticky;
         top: 0;
         background-color: var(--off-teal);
@@ -188,6 +186,7 @@
 
     .heading {
         width: 100%;
+        height: 100%;
         display: flex;
         justify-content: flex-start;
         align-items: start;

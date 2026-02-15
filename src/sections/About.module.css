@@ -350,6 +350,7 @@
 .rightFirst .objh3 span:nth-child(3) {
   font-family: "Lora", serif;
   font-weight: 600;
+  font-style: italic;
 }
 
 .rightFirst:hover > div .iconWrapper {
