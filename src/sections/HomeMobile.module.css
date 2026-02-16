@@ -174,6 +174,9 @@
   box-sizing: border-box;
   position: relative;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .manWrapper {
@@ -194,12 +197,109 @@
   width: 100%;
   height: 301px;
   border-radius: 9px;
+  position: relative;
+}
+
+.metricSuperwrapper .third {
+  width: 100%;
+  background-color: var(--off-white);
+  padding: 30px;
+  border-radius: 9px;
+  gap: 30px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  box-sizing: border-box;
+  align-self: stretch;
+  position: relative;
+}
+
+.metricSuperwrapper .third div {
+  display: flex;
+  width: 100%;
+  gap: 0px;
+  align-items: start;
+  justify-content: start;
+}
+
+.metricSuperwrapper .third .stars {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 18px;
+}
+
+.metricSuperwrapper .third .stars svg {
+    width: 18px;
+    height: 18px;
+    color: var(--off-black);
+}
+
+.metricSuperwrapper .third .stars svg:nth-child(6),
+.metricSuperwrapper .third .stars svg:nth-child(7) {
+    color: var(--light-off-teal);
+}
+
+.metricSuperwrapper .third .stars svg:nth-child(4),
+.metricSuperwrapper .third .stars svg:nth-child(5) {
+    color: var(--off-teal);
+}
+
+.metricSuperwrapper .third .stars svg:nth-child(3),
+.metricSuperwrapper .third .stars svg:nth-child(2) {
+    color: var(--dark-green);
+}
+
+.metricSuperwrapper .third div .iconWrapper {
+  width: 0px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+}
+
+.metricSuperwrapper .third div .iconWrapper .chevronh4 {
+  font-size: 13px;
+  width: 100%;
+  text-wrap: wrap;
+  margin: 0;
+  font-weight: 800;
+  color: var(--off-black-06);
+}
+
+.metricSuperwrapper .third:hover > div .iconWrapper {
+  width: 18px;
+}
+
+.metricSuperwrapper .third .desch4 {
+  font-size: 13px;
+  width: 100%;
+  text-wrap: wrap;
+  font-weight: 400;
+  color: var(--off-black-06);
+  margin: 0;
+}
+
+.metricSuperwrapper .third .spacer {
+    width: 100%;
+    height: 100%;
+}
+.metricSuperwrapper .third .desch3 {
+  font-size: 15px;
+  width: 100%;
+  text-wrap: wrap;
+  font-weight: 400;
+  color: var(--off-black-06);
+  margin: 0;
 }
 
 .middle .fourth {
   display: flex;
   gap: 1px;
-  flex-direction: column;
+  flex-direction: column-reverse;
   box-sizing: border-box;
   width: 100%;
   height: 245px;

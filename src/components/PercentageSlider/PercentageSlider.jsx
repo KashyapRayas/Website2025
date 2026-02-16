@@ -24,7 +24,7 @@ const squareStyle = {
   width: "100%",
   aspectRatio: "1 / 1",
   backgroundColor: "var(--dark-green)",
-  borderRadius: "9px",
+  borderRadius: "6px",
   overflow: "hidden",
 };
 

@@ -260,19 +260,39 @@ const ModifierDeck = ({ handleBack, isIncomingTransition }) => {
             </div>
           </div>
           <div className={styles.right}>
-            <div className={styles.contentBlock}>
-              <div className={styles.cardsGrid}>
-                {[...Array(TOTAL_CARDS)].map((_, i) => (
-                  <Card
-                    key={i}
-                    index={i}
-                    isLocked={i >= UNLOCKED_COUNT}
-                    triggerFlip={startSequence}
-                    cardData={cardsData?.cards[i]}
-                  />
-                ))}
-              </div>
-            </div>
+                <div className={styles.third}>
+                    <div>
+                        <div className={styles.iconWrapper}>
+                            <h4 className={styles.chevronh4}>{">"}</h4>
+                        </div>
+                        <h4 className={styles.desch4}>ABOUT MODIFIER DECK</h4>
+                    </div>
+                    <h3 className={styles.desch3}>
+                        Completing a task or achievement forges a new card,
+                        enhancing Kashyap's traits.
+                        <br/>
+                    </h3>
+                </div>
+                <div className={styles.third}>
+                <h3 className={styles.desch3}>
+                    The Answer to the Ultimate Question of Life, the Universe, and Everything was 42 — the number of cards in this deck.
+                </h3>
+                </div>
+                <div className={styles.contentBlockWrapper}>
+                    <div className={styles.contentBlock}>
+                    <div className={styles.cardsGrid}>
+                        {[...Array(TOTAL_CARDS)].map((_, i) => (
+                        <Card
+                            key={i}
+                            index={i}
+                            isLocked={i >= UNLOCKED_COUNT}
+                            triggerFlip={startSequence}
+                            cardData={cardsData?.cards[i]}
+                        />
+                        ))}
+                    </div>
+                    </div>
+                </div>
           </div>
         </div>
         <div className={"extremes-wrapper-right"}>

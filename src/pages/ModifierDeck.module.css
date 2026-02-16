@@ -98,11 +98,83 @@
 }
 
 .right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.right .third {
+
+    width: 100%;
+    height: 100%;
+    background-color: var(--off-white);
+    padding: 30px;
+    border-radius: 9px;
+    gap: 30px;
+    display: none;
+    justify-content: space-between;
+    flex-direction: column;
+    box-sizing: border-box;
+    align-self: stretch;
+    position: relative;
+}
+
+.right .third div {
+  display: flex;
   width: 100%;
-  background-color: var(--off-white);
-  padding: 30px;
-  box-sizing: border-box;
-  border-radius: 9px;
+  gap: 0px;
+  align-items: center;
+  justify-content: start;
+}
+
+.right .third div .iconWrapper {
+  width: 0px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+}
+
+.right .third div .iconWrapper .chevronh4 {
+  font-size: 13px;
+  width: 100%;
+  text-wrap: wrap;
+  margin: 0;
+  font-weight: 800;
+  color: var(--off-black-06);
+}
+
+.right .third:hover > div .iconWrapper {
+  width: 18px;
+}
+
+.right .third .desch4 {
+  font-size: 13px;
+  width: 100%;
+  text-wrap: wrap;
+  font-weight: 400;
+  color: var(--off-black-06);
+  margin: 0;
+}
+
+.right .third .desch3 {
+  font-size: 15px;
+  width: 100%;
+  text-wrap: wrap;
+  font-weight: 400;
+  color: var(--off-black-06);
+  margin: 0;
+}
+
+.contentBlockWrapper {
+    width: 100%;
+    background-color: var(--off-white);
+    padding: 30px;
+    box-sizing: border-box;
+    border-radius: 9px;
 }
 
 .contentBlock {
@@ -263,7 +335,7 @@
 
 .rounder {
   position: absolute;
-  bottom: -9px;
+  bottom: -10px;
   display: flex;
   width: 100%;
   height: 9px;
@@ -272,6 +344,14 @@
 }
 
 @media screen and (max-width: 1200px) {
+
+    .left .third {
+        display: none;
+    }
+
+    .right .third {
+        display: flex;
+    }
 
     .middle {
         flex-direction: column;
@@ -296,7 +376,7 @@
         padding: 60px 0px;
     }
 
-    .right {
+    .contentBlockWrapper {
         padding: 18px;
     }
 }
