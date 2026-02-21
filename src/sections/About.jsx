@@ -57,6 +57,7 @@ const About = forwardRef((_, ref) => {
   const grassTargetRef1 = useRef(null);
   const grassTargetRef2 = useRef(null);
   const grassTargetRef3 = useRef(null);
+  const grassTargetRef4 = useRef(null);
   const headingRef = useRef(null);
 
   useGSAP(() => {
@@ -200,7 +201,6 @@ const About = forwardRef((_, ref) => {
             </h3>
           </div>
 
-
           <GrassOverlay targetRef={grassTargetRef1}></GrassOverlay>
 
           <div
@@ -249,7 +249,7 @@ const About = forwardRef((_, ref) => {
                 className={styles.second}
                 onMouseEnter={() => setResumeHovered(true)}
                 onMouseLeave={() => setResumeHovered(false)}
-                ref={grassTargetRef1}
+                ref={grassTargetRef4}
             >
                 <AnimatedArrow isActive={!resumeHovered} />
                 <h4>
@@ -257,6 +257,8 @@ const About = forwardRef((_, ref) => {
                 </h4>
                 <AnimatedArrow isActive={resumeHovered} />
             </a>
+
+            <GrassOverlay targetRef={grassTargetRef4}></GrassOverlay>
 
           <div className={styles.thirdNew}>
             <div className={styles.thirdLeft}>

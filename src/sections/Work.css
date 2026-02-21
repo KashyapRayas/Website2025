@@ -68,7 +68,7 @@
             position: relative;
             padding: 30px;
             width: 100%;
-            height: calc(100% - 116px);
+            height: calc(100% - 132px);
             box-sizing: border-box;
             border-radius: 9px;
             background-color: var(--off-white);

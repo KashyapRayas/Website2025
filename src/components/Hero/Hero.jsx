@@ -11,7 +11,6 @@ import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLenis } from "lenis/react";
 
-
 import styles from "./Hero.module.css";
 
 import figma_apply from "/icons/figma_apply.png";
@@ -21,7 +20,6 @@ import box_anchor from "/box_anchor.svg";
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
-// Create the named ease once
 (() => {
   try {
     CustomEase.create("wave", "M0,0 C0.6,0, 0.1,1.4, 1,1");
@@ -44,7 +42,6 @@ const fonts = Object.freeze([
 
 const Hero = ({ isLoaded }) => {
   const lenis = useLenis();
-
 
   gsap.config({
     force3D: true,
@@ -82,8 +79,10 @@ const Hero = ({ isLoaded }) => {
 
   const stopTimerRef = useRef(null);
   const isScrollingRef = useRef(false);
+  const isIdleRef = useRef(false);
+  const fontMenuHoveredRef = useRef(false);
+  const isLoadedRef = useRef(false);
 
-  const rippleRef = useRef(null);
   const previousBlinkRef = useRef("single");
 
   // Timelines
@@ -110,6 +109,16 @@ const Hero = ({ isLoaded }) => {
     }
   }, []);
 
+  const handleFontMenuEnter = useCallback(() => {
+    fontMenuHoveredRef.current = true;
+    setFontMenuHovered(true);
+  }, []);
+
+  const handleFontMenuLeave = useCallback(() => {
+    fontMenuHoveredRef.current = false;
+    setFontMenuHovered(false);
+  }, []);
+
   const checkIntersection = useCallback(() => {
     const lineEl = fishingLineRef.current;
     if (!lineEl) return;
@@ -130,6 +139,20 @@ const Hero = ({ isLoaded }) => {
       }
     }
   }, [setActiveFont]);
+
+  // Reset iris translation back to neutral
+  const resetIrisTranslation = useCallback(() => {
+    gsap.to(
+      [leftIrisRef.current, rightIrisRef.current].filter(Boolean),
+      {
+        x: 0,
+        y: 0,
+        duration: 0.4,
+        ease: "power2.out",
+        overwrite: "auto",
+      }
+    );
+  }, []);
 
   // Eye animations
   const animateEyesLeft = useCallback(() => {
@@ -208,6 +231,7 @@ const Hero = ({ isLoaded }) => {
     });
   }, []);
 
+  // Scroll-driven eye direction + idle tracking
   useEffect(() => {
     if (!lenis) return;
 
@@ -219,6 +243,8 @@ const Hero = ({ isLoaded }) => {
 
       if (v > VELOCITY_EPS && !isScrollingRef.current) {
         isScrollingRef.current = true;
+        isIdleRef.current = false;
+        resetIrisTranslation();
         animateEyesLeft();
       }
 
@@ -226,6 +252,9 @@ const Hero = ({ isLoaded }) => {
       stopTimerRef.current = setTimeout(() => {
         if (isScrollingRef.current) {
           isScrollingRef.current = false;
+          const stillBlocked =
+            fontMenuHoveredRef.current || !isLoadedRef.current;
+          isIdleRef.current = !stillBlocked;
           animateEyesRight();
         }
       }, STOP_DELAY);
@@ -236,23 +265,88 @@ const Hero = ({ isLoaded }) => {
       lenis.off("scroll", onLenisScroll);
       if (stopTimerRef.current) clearTimeout(stopTimerRef.current);
     };
-  }, [lenis, animateEyesLeft, animateEyesRight]);
+  }, [lenis, animateEyesLeft, animateEyesRight, resetIrisTranslation]);
 
+  // Font hover / loading state → eye direction + idle flag
   useEffect(() => {
-    const goLeft = fontMenuHovered || !isLoaded;
-    if (goLeft) animateEyesLeft();
-    else animateEyesRight();
-  }, [fontMenuHovered, isLoaded, animateEyesLeft, animateEyesRight]);
+    isLoadedRef.current = isLoaded;
+
+    const goLeft = fontMenuHoveredRef.current || !isLoaded;
+    const idle = !goLeft && !isScrollingRef.current;
+
+    isIdleRef.current = idle;
+
+    if (goLeft) {
+      resetIrisTranslation();
+      animateEyesLeft();
+    } else {
+      animateEyesRight();
+    }
+  }, [
+    fontMenuHovered,
+    isLoaded,
+    animateEyesLeft,
+    animateEyesRight,
+    resetIrisTranslation,
+  ]);
+
+  // Cursor-tracking iris translation (only when idle)
+  useEffect(() => {
+    if (!leftIrisRef.current || !rightIrisRef.current) return;
+
+    const irisConfig = [
+      { ref: leftIrisRef, maxMove: 0.6 },
+      { ref: rightIrisRef, maxMove: 0.9 },
+    ];
+
+    const getIrisCenter = (el) => {
+      const rect = el.getBoundingClientRect();
+      return {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+      };
+    };
+
+    const handleMouseMove = (e) => {
+      if (!isIdleRef.current) return;
+
+      irisConfig.forEach(({ ref, maxMove }) => {
+        const iris = ref.current;
+        if (!iris) return;
+
+        const center = getIrisCenter(iris);
+
+        const dx = e.clientX - center.x;
+        const dy = e.clientY - center.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        const scale = Math.min(dist, maxMove * 20) / (maxMove * 20);
+        const x = (dx / dist) * scale * maxMove;
+        const y = (dy / dist) * scale * maxMove;
+
+        gsap.to(iris, {
+          x: isNaN(x) ? 0 : x,
+          y: isNaN(y) ? 0 : y,
+          duration: 0.6,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   // Blinking animation
-    useGSAP(() => {
+  useGSAP(() => {
     const eyelids = [
-        rightEyelidRef.current,
-        rightEyelidBottomRef.current,
-        rightEyelashRef.current,
-        leftEyelidRef.current,
-        leftEyelidBottomRef.current,
-        leftEyelashRef.current,
+      rightEyelidRef.current,
+      rightEyelidBottomRef.current,
+      rightEyelashRef.current,
+      leftEyelidRef.current,
+      leftEyelidBottomRef.current,
+      leftEyelashRef.current,
     ];
 
     if (eyelids.some((el) => !el)) return;
@@ -260,196 +354,185 @@ const Hero = ({ isLoaded }) => {
     let blinkTimeout;
 
     const createSingleBlink = () => {
-        const blinkTl = gsap.timeline();
+      const blinkTl = gsap.timeline();
 
-        // Close eyes
-        blinkTl
+      blinkTl
         .to(
-            rightEyelidRef.current,
-            {
+          rightEyelidRef.current,
+          {
             attr: {
-                d: "M237.5 251C224 244.5 206.5 243.5 202 244V233.5H236.5L237.5 251Z",
+              d: "M237.5 251C224 244.5 206.5 243.5 202 244V233.5H236.5L237.5 251Z",
             },
             duration: 0.1,
             ease: "power2.in",
-            },
-            0
+          },
+          0
         )
         .to(
-            rightEyelidBottomRef.current,
-            {
+          rightEyelidBottomRef.current,
+          {
             attr: {
-                d: "M237 251.5C217.8 245.9 200.333 246.5 194 247.5C195.6 262.7 217 264.833 227.5 264C237.5 261.6 238 254.667 237 251.5Z",
+              d: "M237 251.5C217.8 245.9 200.333 246.5 194 247.5C195.6 262.7 217 264.833 227.5 264C237.5 261.6 238 254.667 237 251.5Z",
             },
             duration: 0.1,
             ease: "power2.in",
-            },
-            0
+          },
+          0
         )
         .to(
-            rightEyelashRef.current,
-            {
+          rightEyelashRef.current,
+          {
             attr: {
-                d: "M201.064 244.56L194.349 246.589C194.136 246.717 194.3 247.041 194.529 246.945L203.027 246.589C203.658 246.326 204.321 246.67 205 246.589C221 247.5 229 249.5 232.784 252.178C232.914 252.367 233.15 252.449 233.367 252.377L236.771 251.242C237.113 251.128 237.222 250.696 236.973 250.434C224.5 245 210.973 244 203 244C202.306 244.208 202 244 201.064 244.56Z",
+              d: "M201.064 244.56L194.349 246.589C194.136 246.717 194.3 247.041 194.529 246.945L203.027 246.589C203.658 246.326 204.321 246.67 205 246.589C221 247.5 229 249.5 232.784 252.178C232.914 252.367 233.15 252.449 233.367 252.377L236.771 251.242C237.113 251.128 237.222 250.696 236.973 250.434C224.5 245 210.973 244 203 244C202.306 244.208 202 244 201.064 244.56Z",
             },
             duration: 0.1,
             ease: "power2.in",
-            },
-            0
+          },
+          0
         )
         .to(
-            leftEyelidRef.current,
-            {
+          leftEyelidRef.current,
+          {
             attr: {
-                d: "M124 236.5C138.5 235 148.5 237.5 152.5 240.5C153.3 236.1 152.167 231 151.5 229.5L124 225V236.5Z",
+              d: "M124 236.5C138.5 235 148.5 237.5 152.5 240.5C153.3 236.1 152.167 231 151.5 229.5L124 225V236.5Z",
             },
             duration: 0.1,
             ease: "power2.in",
-            },
-            0
+          },
+          0
         )
         .to(
-            leftEyelidBottomRef.current,
-            {
+          leftEyelidBottomRef.current,
+          {
             attr: {
-                d: "M149.5 243C143.1 239 128.5 239 121.5 240C125.1 251.2 137.333 252.333 143 251.5C148.6 248.7 149.333 245 149.5 243Z",
+              d: "M149.5 243C143.1 239 128.5 239 121.5 240C125.1 251.2 137.333 252.333 143 251.5C148.6 248.7 149.333 245 149.5 243Z",
             },
             duration: 0.1,
             ease: "power2.in",
-            },
-            0
+          },
+          0
         )
         .to(
-            leftEyelashRef.current,
-            {
+          leftEyelashRef.current,
+          {
             attr: {
-                d: "M119.965 237.201C133.5 234.5 147 237 152.5 239.5V240.5C141.5 241.5 133.5 239.5 127.135 239.5C124.922 240.399 123.604 238.422 121.5 240L119.843 237.929C119.659 237.699 119.715 237.358 119.965 237.201Z",
+              d: "M119.965 237.201C133.5 234.5 147 237 152.5 239.5V240.5C141.5 241.5 133.5 239.5 127.135 239.5C124.922 240.399 123.604 238.422 121.5 240L119.843 237.929C119.659 237.699 119.715 237.358 119.965 237.201Z",
             },
             duration: 0.1,
             ease: "power2.in",
-            },
-            0
+          },
+          0
         )
-        // Brief pause while closed
         .to({}, { duration: 0.05 })
-        // Open eyes
         .to(
-            rightEyelidRef.current,
-            {
+          rightEyelidRef.current,
+          {
             attr: {
-                d: "M237.5 250C225 236 206 239 202 241V232.5H236.5L237.5 250Z",
+              d: "M237.5 250C225 236 206 239 202 241V232.5H236.5L237.5 250Z",
             },
             duration: 0.12,
             ease: "power2.out",
-            },
-            ">"
+          },
+          ">"
         )
         .to(
-            rightEyelidBottomRef.current,
-            {
+          rightEyelidBottomRef.current,
+          {
             attr: {
-                d: "M237 251.5C238 260.5 213 275.5 194 247.5C195.6 262.7 217 264.833 227.5 264C237.5 261.6 238 254.667 237 251.5Z",
+              d: "M237 251.5C238 260.5 213 275.5 194 247.5C195.6 262.7 217 264.833 227.5 264C237.5 261.6 238 254.667 237 251.5Z",
             },
             duration: 0.12,
             ease: "power2.out",
-            },
-            "<"
+          },
+          "<"
         )
         .to(
-            rightEyelashRef.current,
-            {
+          rightEyelashRef.current,
+          {
             attr: {
-                d: "M201.068 241.56L194.353 245.589C194.14 245.717 194.304 246.041 194.532 245.945L203.051 242.396C203.682 242.133 204.35 241.948 205.029 241.867C221.141 239.96 229.929 247.037 232.787 251.178C232.918 251.367 233.154 251.449 233.371 251.377L236.775 250.242C237.117 250.128 237.226 249.696 236.977 249.435C225.94 237.81 210.43 238.445 203.031 240.663C202.337 240.871 201.689 241.188 201.068 241.56Z",
+              d: "M201.068 241.56L194.353 245.589C194.14 245.717 194.304 246.041 194.532 245.945L203.051 242.396C203.682 242.133 204.35 241.948 205.029 241.867C221.141 239.96 229.929 247.037 232.787 251.178C232.918 251.367 233.154 251.449 233.371 251.377L236.775 250.242C237.117 250.128 237.226 249.696 236.977 249.435C225.94 237.81 210.43 238.445 203.031 240.663C202.337 240.871 201.689 241.188 201.068 241.56Z",
             },
             duration: 0.12,
             ease: "power2.out",
-            },
-            "<"
+          },
+          "<"
         )
         .to(
-            leftEyelidRef.current,
-            {
+          leftEyelidRef.current,
+          {
             attr: {
-                d: "M124 235C138.5 229.5 148.5 236.5 152.5 239.5C153.3 235.1 152.167 231 151.5 229.5L124 225V235Z",
+              d: "M124 235C138.5 229.5 148.5 236.5 152.5 239.5C153.3 235.1 152.167 231 151.5 229.5L124 225V235Z",
             },
             duration: 0.12,
             ease: "power2.out",
-            },
-            "<"
+          },
+          "<"
         )
         .to(
-            leftEyelidBottomRef.current,
-            {
+          leftEyelidBottomRef.current,
+          {
             attr: {
-                d: "M149.5 243C148.417 256 129.5 249.396 121.5 240C125.1 251.2 137.333 252.333 143 251.5C149 248.5 149.333 245 149.5 243Z",
+              d: "M149.5 243C148.417 256 129.5 249.396 121.5 240C125.1 251.2 137.333 252.333 143 251.5C149 248.5 149.333 245 149.5 243Z",
             },
             duration: 0.12,
             ease: "power2.out",
-            },
-            "<"
+          },
+          "<"
         )
         .to(
-            leftEyelashRef.current,
-            {
+          leftEyelashRef.current,
+          {
             attr: {
-                d: "M119.965 237.201C132.666 229.219 147.56 234.067 152.5 239.5V240.5C142.95 234.399 133.118 234.631 127.135 236.5C124.922 237.399 123.604 238.422 121.5 240L119.843 237.929C119.659 237.699 119.715 237.358 119.965 237.201Z",
+              d: "M119.965 237.201C132.666 229.219 147.56 234.067 152.5 239.5V240.5C142.95 234.399 133.118 234.631 127.135 236.5C124.922 237.399 123.604 238.422 121.5 240L119.843 237.929C119.659 237.699 119.715 237.358 119.965 237.201Z",
             },
             duration: 0.12,
             ease: "power2.out",
-            },
-            "<"
+          },
+          "<"
         );
 
-        return blinkTl;
+      return blinkTl;
     };
 
     const performBlinkGroup = () => {
-    let isDoubleBlink;
+      let isDoubleBlink;
 
-    // Determine probability based on previous blink
-    if (previousBlinkRef.current === "double") {
-        // After double blink, more likely to do single blink (70% single, 30% double)
+      if (previousBlinkRef.current === "double") {
         isDoubleBlink = Math.random() < 0.3;
-    } else {
-        // After single blink, more likely to do double blink (40% single, 60% double)
+      } else {
         isDoubleBlink = Math.random() < 0.6;
-    }
+      }
 
-    if (isDoubleBlink) {
-        // First blink
+      if (isDoubleBlink) {
         createSingleBlink();
 
-        // Second blink after short delay (0.3 seconds)
         blinkTimeout = setTimeout(() => {
-        createSingleBlink();
-        previousBlinkRef.current = "double";
-        scheduleNextGroup();
+          createSingleBlink();
+          previousBlinkRef.current = "double";
+          scheduleNextGroup();
         }, 300);
-    } else {
-        // Single blink
+      } else {
         createSingleBlink();
         previousBlinkRef.current = "single";
         scheduleNextGroup();
-    }
+      }
     };
 
     const scheduleNextGroup = () => {
-        // Random delay between 1.5-2 seconds
-        const delay = 1.5 + Math.random() * 0.5;
-        blinkTimeout = setTimeout(() => {
+      const delay = 1.5 + Math.random() * 0.5;
+      blinkTimeout = setTimeout(() => {
         performBlinkGroup();
-        }, delay * 1000);
+      }, delay * 1000);
     };
 
-    // Start first group after initial delay
     blinkTimeout = setTimeout(() => {
-        performBlinkGroup();
+      performBlinkGroup();
     }, (1.5 + Math.random() * 0.5) * 1000);
 
     return () => {
-        if (blinkTimeout) clearTimeout(blinkTimeout);
+      if (blinkTimeout) clearTimeout(blinkTimeout);
     };
-    }, []);
+  }, []);
 
   // Fishing line up/down and intersection checking
   useGSAP(() => {
@@ -482,31 +565,31 @@ const Hero = ({ isLoaded }) => {
     };
   }, [checkIntersection]);
 
-    // Update the ripple animation useGSAP hook
-    useGSAP(() => {
+  // Fisherman bob animation
+  useGSAP(() => {
     if (!fishermanRef.current) return;
 
     const masterTl = gsap.timeline({ repeat: -1 });
 
     const fishermanTl = gsap.timeline();
     fishermanTl
-        .to(fishermanRef.current, {
+      .to(fishermanRef.current, {
         scaleY: 1.04,
         transformOrigin: "top center",
         duration: 1.5,
         ease: "sine.inOut",
-        })
-        .to(fishermanRef.current, {
+      })
+      .to(fishermanRef.current, {
         scaleY: 1.02,
         transformOrigin: "top center",
         duration: 1.5,
         ease: "sine.inOut",
-        });
+      });
 
     masterTl.add(fishermanTl, 0);
 
     return () => masterTl.kill();
-    }, []);
+  }, []);
 
   // Wave animation on header rectangles
   useGSAP(() => {
@@ -615,8 +698,8 @@ const Hero = ({ isLoaded }) => {
 
       <div
         className={styles["font-menu"]}
-        onMouseEnter={() => setFontMenuHovered(true)}
-        onMouseLeave={() => setFontMenuHovered(false)}
+        onMouseEnter={handleFontMenuEnter}
+        onMouseLeave={handleFontMenuLeave}
       >
         <div className={styles["top"]}>
           <div className={styles["top-top"]}>
@@ -759,7 +842,13 @@ const Hero = ({ isLoaded }) => {
                     fill="var(--off-teal)"
                   />
 
-                  <g id="Eye Right" style={{ transformOrigin: "213px 245.5px", transform: "scaleY(1.05)" }}>
+                  <g
+                    id="Eye Right"
+                    style={{
+                      transformOrigin: "213px 245.5px",
+                      transform: "scaleY(1.05)",
+                    }}
+                  >
                     <path
                       ref={rightEyelashRef}
                       id="Eyelash-Right"
@@ -786,7 +875,13 @@ const Hero = ({ isLoaded }) => {
                     />
                   </g>
 
-                  <g id="Eye Left" style={{ transformOrigin: "135px 237.5px", transform: "scaleY(1.08)" }}>
+                  <g
+                    id="Eye Left"
+                    style={{
+                      transformOrigin: "135px 237.5px",
+                      transform: "scaleY(1.08)",
+                    }}
+                  >
                     <path
                       id="Vector 291"
                       d="M130.002 246C125.602 243.6 125.5 237.5 127.502 235L135.001 233L146.001 235L151.501 239L148.501 246C142.101 250.8 133.5 247.908 130.002 246Z"
@@ -872,19 +967,15 @@ const Hero = ({ isLoaded }) => {
                 <clipPath id="fishermanclip">
                   <rect x="0" y="0" width="210px" height="108" />
                 </clipPath>
-                {/* <path
-                ref={rippleRef}
-                id="ripple"
-                d="M172 105.5C181.381 105.5 189.868 105.779 196.005 106.23C199.076 106.456 201.546 106.725 203.242 107.02C204.094 107.168 204.729 107.319 205.141 107.467C205.17 107.477 205.196 107.49 205.222 107.5C205.196 107.51 205.17 107.523 205.141 107.533C204.729 107.681 204.094 107.832 203.242 107.98C201.546 108.275 199.076 108.544 196.005 108.77C189.868 109.221 181.381 109.5 172 109.5C162.619 109.5 154.132 109.221 147.995 108.77C144.924 108.544 142.454 108.275 140.758 107.98C139.906 107.832 139.271 107.681 138.859 107.533C138.83 107.523 138.803 107.51 138.777 107.5C138.803 107.49 138.83 107.477 138.859 107.467C139.271 107.319 139.906 107.168 140.758 107.02C142.454 106.725 144.924 106.456 147.995 106.23C154.132 105.779 162.619 105.5 172 105.5Z"
-                stroke="#00A084"
-                opacity="0.6"
-                /> */}
                 <g
                   id="FishermanGroupWrapper"
                   clipPath="url(#fishermanclip)"
                 >
-
-                  <g id="Fisherman with Boat" ref={fishermanRef} style={{ transform: "scaleY(1.02)" }}>
+                  <g
+                    id="Fisherman with Boat"
+                    ref={fishermanRef}
+                    style={{ transform: "scaleY(1.02)" }}
+                  >
                     <path
                       id="Vector 41 (Stroke)"
                       d="M24.041 32.001C42.1258 32.5034 76.0772 35.6801 107.699 44.4121C123.51 48.7781 138.804 54.5504 151.257 62.1143C163.699 69.6718 173.438 79.1002 177.902 90.832L175.098 91.8994C170.962 81.0315 161.838 72.0522 149.699 64.6787C137.57 57.3115 122.565 51.6292 106.9 47.3037C75.5721 38.6528 41.8723 35.4967 23.957 34.999L24.041 32.001Z"
@@ -893,8 +984,7 @@ const Hero = ({ isLoaded }) => {
                     <g
                       id="Group 31"
                       style={{
-                        transform:
-                          "rotate(2deg) translateY(-5px)",
+                        transform: "rotate(2deg) translateY(-5px)",
                       }}
                     >
                       <path
