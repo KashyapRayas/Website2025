@@ -39,7 +39,7 @@ const Contact = forwardRef(({}, ref) => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top 70%",
+        start: "top 50%",
         once: true,
         onEnter: () => setHasAnimated(true),
       },
