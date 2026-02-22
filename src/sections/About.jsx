@@ -186,7 +186,7 @@ const About = forwardRef((_, ref) => {
               <span>[ ready's intro ]</span> He's Kashyap Rayas{" "}
               <span>[ {age} M ]</span>, Product Designer by trade and
               professional overthinker by nature.
-              Based in India <span>[ but a US Citizen ]</span> He cares a lot about things most
+              Based in India <span>[ born in the US ]</span> He cares a lot about things most
               people won’t even notice. Sometimes a little too much. But that’s also
               why the products he shapes feel effortless and make sense fast.
 
@@ -245,7 +245,7 @@ const About = forwardRef((_, ref) => {
           </div>
 
             <a
-                href="mailto:kashyap.rayas@gmail.com"
+                href="https://drive.google.com/file/d/1of62QPkDYw7nRgfTr4m6wf6ri0o1Hf7L/view?usp=sharing"
                 className={styles.second}
                 onMouseEnter={() => setResumeHovered(true)}
                 onMouseLeave={() => setResumeHovered(false)}

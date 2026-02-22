@@ -13,8 +13,8 @@ import { CustomEase } from "gsap/CustomEase";
 import { useGSAP } from "@gsap/react";
 import GrassOverlay from "../components/GrassOverlay";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import PixelLock from '/pixelLock.svg'
-import star from '/star.svg'
+import PixelLock from "/pixelLock.svg";
+import star from "/star.svg";
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
@@ -31,7 +31,9 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   const imagesRef = useRef({});
-  const canvasRef = useRef(null);
+  const topImgRef = useRef(null);
+  const bottomImgRef = useRef(null);
+  const prevActiveIndex = useRef(null);
   const handRef = useRef(null);
   const handShadowRef = useRef(null);
   const grassTargetRef1 = useRef(null);
@@ -96,7 +98,9 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     });
 
     gsap.globalTimeline.add(() => {
-      import("gsap/ScrollTrigger").then(st => st.ScrollTrigger.refresh());
+      import("gsap/ScrollTrigger").then((st) =>
+        st.ScrollTrigger.refresh()
+      );
     }, 0.5);
   }, [projectsData, handRef.current]);
 
@@ -129,22 +133,20 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     });
   }, [projectsData]);
 
-    useGSAP(() => {
+  useGSAP(() => {
     if (!projectsData) return;
 
-    // Kill and reset ALL stars first
     Object.entries(starRefsMap.current).forEach(([projIndex, starArray]) => {
-        if (Array.isArray(starArray)) {
+      if (Array.isArray(starArray)) {
         starArray.forEach((star) => {
-            if (star) {
+          if (star) {
             gsap.killTweensOf(star);
             gsap.set(star, { rotate: 0 });
-            }
+          }
         });
-        }
+      }
     });
 
-    // Only animate stars for active project
     if (activeIndex < 0) return;
 
     const starRefs = starRefsMap.current[activeIndex];
@@ -155,26 +157,83 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     const tl = gsap.timeline();
 
     starRefs.forEach((starEl, idx) => {
-        if (starEl) {
+      if (starEl) {
         tl.to(
-            starEl,
-            {
+          starEl,
+          {
             rotate: "360deg",
             duration: 3,
             ease: "wave",
             repeat: -1,
-            },
-            idx * 0.8
+          },
+          idx * 0.8
         );
-        }
+      }
     });
 
     return () => {
-        tl.kill();
+      tl.kill();
     };
-    }, [activeIndex, projectsData]);
+  }, [activeIndex, projectsData]);
 
-  const handleMouseEnter = useCallback((index) => setHoveredIndex(index), []);
+  // Clip-path reveal animation when active project changes
+    useGSAP(() => {
+    if (!topImgRef.current || !bottomImgRef.current) return;
+    if (!projectsData || projectsData.length === 0) return;
+
+    const newSrc = activeProject.img
+        ? BASE_PATH + activeProject.img
+        : FALLBACK_IMG_SRC;
+
+    // First mount — set both without animating
+    if (prevActiveIndex.current === null) {
+        topImgRef.current.src = newSrc;
+        bottomImgRef.current.src = newSrc;
+        gsap.set(topImgRef.current, {
+            clipPath: "inset(0% 0% 0% 0% round 6px)",
+        });
+        prevActiveIndex.current = activeIndex;
+        return;
+    }
+
+    if (activeIndex === prevActiveIndex.current) return;
+
+    // Kill any in-progress animation
+    gsap.killTweensOf(topImgRef.current);
+
+    // Snapshot outgoing image onto bottom layer
+    bottomImgRef.current.src = topImgRef.current.src;
+
+    // Set new src on top layer, collapsed via clip-path
+    topImgRef.current.src = newSrc;
+    gsap.set(topImgRef.current, {
+        clipPath: "inset(50% 50% 50% 50% round 6px)",
+    });
+
+    gsap.fromTo(topImgRef.current,
+        {
+        clipPath: "inset(50% 50% 50% 50% round 6px)",
+        },
+        {
+        clipPath: "inset(0% 0% 0% 0% round 6px)",
+        duration: 0.9,
+        ease: "power2.inOut",
+        onComplete: () => {
+        if (topImgRef.current) {
+                gsap.set(topImgRef.current, {
+                clipPath: "inset(0% 0% 0% 0% round 6px)",
+            });
+        }
+        },
+    });
+
+    prevActiveIndex.current = activeIndex;
+    }, [activeIndex, projectsData, activeProject]);
+
+  const handleMouseEnter = useCallback(
+    (index) => setHoveredIndex(index),
+    []
+  );
   const handleMouseLeave = useCallback(() => {
     if (typeof window === "undefined") {
       setHoveredIndex(0);
@@ -190,20 +249,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     },
     [handleProjectSelect]
   );
-
-  useGSAP(() => {
-    if (!canvasRef.current) return;
-    const tl = gsap.timeline();
-    tl.to(canvasRef.current, {
-      scale: 1,
-      duration: 0.1,
-      ease: "power2.out",
-    }).to(canvasRef.current, {
-      scale: 1.02,
-      duration: 0.2,
-      ease: "power2.out",
-    });
-  }, [activeIndex]);
 
   if (!projectsData) {
     return (
@@ -223,44 +268,46 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
       <div className="middle">
         <div className="right">
-            <div className="headingWrapper">
-                <div className="heading" ref={headingRef}>
-                    <div className="workHeadingWrapper">
-                        <span className="heading-bracket left">{"<"}</span>
-                        WORKS
-                        <span className="heading-bracket right">{"/>"}</span>
-                    </div>
-                    <div className="descHeading">
-                        A collection of Kashyap's curated works. Choose one below to view.
-                    </div>
-                </div>
-                <div className="rounder" ref={grassTargetRef2}>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="9"
-                    height="9"
-                    viewBox="0 0 9 9"
-                    fill="none"
-                >
-                    <path
-                    d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z"
-                    fill="var(--off-teal)"
-                    />
-                </svg>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="9"
-                    height="9"
-                    viewBox="0 0 9 9"
-                    fill="none"
-                >
-                    <path
-                    d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z"
-                    fill="var(--off-teal)"
-                    />
-                </svg>
-                </div>
+          <div className="headingWrapper">
+            <div className="heading" ref={headingRef}>
+              <div className="workHeadingWrapper">
+                <span className="heading-bracket left">{"<"}</span>
+                WORKS
+                <span className="heading-bracket right">{"/>"}</span>
+              </div>
+              <div className="descHeading">
+                A collection of Kashyap's curated works. Choose one below
+                to view.
+              </div>
             </div>
+            <div className="rounder" ref={grassTargetRef2}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="9"
+                height="9"
+                viewBox="0 0 9 9"
+                fill="none"
+              >
+                <path
+                  d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z"
+                  fill="var(--off-teal)"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="9"
+                height="9"
+                viewBox="0 0 9 9"
+                fill="none"
+              >
+                <path
+                  d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z"
+                  fill="var(--off-teal)"
+                />
+              </svg>
+            </div>
+          </div>
+
           <div
             className={"project locked"}
             onClick={() => console.log("It ain't here yet!")}
@@ -274,26 +321,30 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
               <h3>MOVIE COLAB VR</h3>
             </div>
             <div className="description locked">
-              <p>Case study coming soon! VR screening room for remote film review</p>
+              <p>
+                Case study coming soon! VR screening room for remote film
+                review
+              </p>
             </div>
             <div className="tags">
-                <div className="tag">
-                    <img src={star} alt="" />
-                    Virtual Reality
-                </div>
-                <div className="tag">
-                    <img src={star} alt="" />
-                    AI Integrated
-                </div>
-                <div className="tag">
-                    <img src={star} alt="" />
-                    Film Production
-                </div>
+              <div className="tag">
+                <img src={star} alt="" />
+                Virtual Reality
+              </div>
+              <div className="tag">
+                <img src={star} alt="" />
+                AI Integrated
+              </div>
+              <div className="tag">
+                <img src={star} alt="" />
+                Film Production
+              </div>
             </div>
           </div>
 
           {projectsData.map((project, index) => {
-            const isActive = hoveredIndex === index || selectedIndex === index;
+            const isActive =
+              hoveredIndex === index || selectedIndex === index;
             return (
               <div
                 key={index}
@@ -311,23 +362,23 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                   <p className="description-text">{project.description}</p>
                 </div>
                 <div className="tags">
-                    {project.tags?.map((tag, tagIndex) => (
+                  {project.tags?.map((tag, tagIndex) => (
                     <div className="tag" key={tagIndex}>
-                        <img
-                          ref={(el) => {
-                            if (el) {
-                              if (!starRefsMap.current[index]) {
-                                starRefsMap.current[index] = [];
-                              }
-                              starRefsMap.current[index][tagIndex] = el;
+                      <img
+                        ref={(el) => {
+                          if (el) {
+                            if (!starRefsMap.current[index]) {
+                              starRefsMap.current[index] = [];
                             }
-                          }}
-                          src={star}
-                          alt=""
-                        />
-                        {tag}
+                            starRefsMap.current[index][tagIndex] = el;
+                          }
+                        }}
+                        src={star}
+                        alt=""
+                      />
+                      {tag}
                     </div>
-                    ))}
+                  ))}
                 </div>
               </div>
             );
@@ -385,54 +436,152 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
             </div>
 
             <div className="first">
-              <svg className="cell" ref={grassTargetRef1} width="229" height="132" viewBox="0 0 229 132" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="229" height="132" rx="9" fill="#C2E9E7"/>
-                <path d="M14.5 29.4483V22H38.5V29.4483C38.5 36.0757 33.1274 41.4483 26.5 41.4483C19.8726 41.4483 14.5 36.0757 14.5 29.4483Z" fill="#559991"/>
-                <circle cx="26.5" cy="22" r="12" fill="#C2E9E7"/>
-                <path d="M26.5 10C33.1274 10 38.5 15.3726 38.5 22C38.5 22.2781 38.4893 22.5538 38.4707 22.8271C38.0453 16.586 32.8491 11.6553 26.5 11.6553C20.1509 11.6553 14.9537 16.586 14.5283 22.8271C14.5097 22.5538 14.5 22.278 14.5 22C14.5 15.3726 19.8726 10 26.5 10Z" fill="#FBFFFD"/>
-                <path d="M58.5 29.4483V22H82.5V29.4483C82.5 36.0757 77.1274 41.4483 70.5 41.4483C63.8726 41.4483 58.5 36.0757 58.5 29.4483Z" fill="#559991"/>
-                <circle cx="70.5" cy="22" r="12" fill="#C2E9E7"/>
-                <path d="M70.5 10C77.1274 10 82.5 15.3726 82.5 22C82.5 22.2781 82.4893 22.5538 82.4707 22.8271C82.0453 16.586 76.8491 11.6553 70.5 11.6553C64.1509 11.6553 58.9537 16.586 58.5283 22.8271C58.5097 22.5538 58.5 22.278 58.5 22C58.5 15.3726 63.8726 10 70.5 10Z" fill="#FBFFFD"/>
-                <path d="M102.5 29.4483V22H126.5V29.4483C126.5 36.0757 121.127 41.4483 114.5 41.4483C107.873 41.4483 102.5 36.0757 102.5 29.4483Z" fill="#559991"/>
-                <circle cx="114.5" cy="22" r="12" fill="#C2E9E7"/>
-                <path d="M114.5 10C121.127 10 126.5 15.3726 126.5 22C126.5 22.2781 126.489 22.5538 126.471 22.8271C126.045 16.586 120.849 11.6553 114.5 11.6553C108.151 11.6553 102.954 16.586 102.528 22.8271C102.51 22.5538 102.5 22.278 102.5 22C102.5 15.3726 107.873 10 114.5 10Z" fill="#FBFFFD"/>
-                <path d="M146.5 29.4483V22H170.5V29.4483C170.5 36.0757 165.127 41.4483 158.5 41.4483C151.873 41.4483 146.5 36.0757 146.5 29.4483Z" fill="#559991"/>
-                <circle cx="158.5" cy="22" r="12" fill="#C2E9E7"/>
-                <path d="M158.5 10C165.127 10 170.5 15.3726 170.5 22C170.5 22.2781 170.489 22.5538 170.471 22.8271C170.045 16.586 164.849 11.6553 158.5 11.6553C152.151 11.6553 146.954 16.586 146.528 22.8271C146.51 22.5538 146.5 22.278 146.5 22C146.5 15.3726 151.873 10 158.5 10Z" fill="#FBFFFD"/>
-                <path d="M190.5 29.4483V22H214.5V29.4483C214.5 36.0757 209.127 41.4483 202.5 41.4483C195.873 41.4483 190.5 36.0757 190.5 29.4483Z" fill="#559991"/>
-                <circle cx="202.5" cy="22" r="12" fill="#C2E9E7"/>
-                <path d="M202.5 10C209.127 10 214.5 15.3726 214.5 22C214.5 22.2781 214.489 22.5538 214.471 22.8271C214.045 16.586 208.849 11.6553 202.5 11.6553C196.151 11.6553 190.954 16.586 190.528 22.8271C190.51 22.5538 190.5 22.278 190.5 22C190.5 15.3726 195.873 10 202.5 10Z" fill="#FBFFFD"/>
-                <path d="M14.5 73.4483V66H38.5V73.4483C38.5 80.0757 33.1274 85.4483 26.5 85.4483C19.8726 85.4483 14.5 80.0757 14.5 73.4483Z" fill="#559991"/>
-                <circle cx="26.5" cy="66" r="12" fill="#C2E9E7"/>
-                <path d="M26.5 54C33.1274 54 38.5 59.3726 38.5 66C38.5 66.2781 38.4893 66.5538 38.4707 66.8271C38.0453 60.586 32.8491 55.6553 26.5 55.6553C20.1509 55.6553 14.9537 60.586 14.5283 66.8271C14.5097 66.5538 14.5 66.278 14.5 66C14.5 59.3726 19.8726 54 26.5 54Z" fill="#FBFFFD"/>
-                <path d="M58.5 73.4483V66H82.5V73.4483C82.5 80.0757 77.1274 85.4483 70.5 85.4483C63.8726 85.4483 58.5 80.0757 58.5 73.4483Z" fill="#559991"/>
-                <circle cx="70.5" cy="66" r="12" fill="#C2E9E7"/>
-                <path d="M70.5 54C77.1274 54 82.5 59.3726 82.5 66C82.5 66.2781 82.4893 66.5538 82.4707 66.8271C82.0453 60.586 76.8491 55.6553 70.5 55.6553C64.1509 55.6553 58.9537 60.586 58.5283 66.8271C58.5097 66.5538 58.5 66.278 58.5 66C58.5 59.3726 63.8726 54 70.5 54Z" fill="#FBFFFD"/>
-                <path d="M102.5 73.4483V66H126.5V73.4483C126.5 80.0757 121.127 85.4483 114.5 85.4483C107.873 85.4483 102.5 80.0757 102.5 73.4483Z" fill="#559991"/>
-                <circle cx="114.5" cy="66" r="12" fill="#C2E9E7"/>
-                <path d="M114.5 54C121.127 54 126.5 59.3726 126.5 66C126.5 66.2781 126.489 66.5538 126.471 66.8271C126.045 60.586 120.849 55.6553 114.5 55.6553C108.151 55.6553 102.954 60.586 102.528 66.8271C102.51 66.5538 102.5 66.278 102.5 66C102.5 59.3726 107.873 54 114.5 54Z" fill="#FBFFFD"/>
-                <path d="M146.5 73.4483V66H170.5V73.4483C170.5 80.0757 165.127 85.4483 158.5 85.4483C151.873 85.4483 146.5 80.0757 146.5 73.4483Z" fill="#559991"/>
-                <circle cx="158.5" cy="66" r="12" fill="#C2E9E7"/>
-                <path d="M158.5 54C165.127 54 170.5 59.3726 170.5 66C170.5 66.2781 170.489 66.5538 170.471 66.8271C170.045 60.586 164.849 55.6553 158.5 55.6553C152.151 55.6553 146.954 60.586 146.528 66.8271C146.51 66.5538 146.5 66.278 146.5 66C146.5 59.3726 151.873 54 158.5 54Z" fill="#FBFFFD"/>
-                <path d="M190.5 73.4483V66H214.5V73.4483C214.5 80.0757 209.127 85.4483 202.5 85.4483C195.873 85.4483 190.5 80.0757 190.5 73.4483Z" fill="#559991"/>
-                <circle cx="202.5" cy="66" r="12" fill="#C2E9E7"/>
-                <path d="M202.5 54C209.127 54 214.5 59.3726 214.5 66C214.5 66.2781 214.489 66.5538 214.471 66.8271C214.045 60.586 208.849 55.6553 202.5 55.6553C196.151 55.6553 190.954 60.586 190.528 66.8271C190.51 66.5538 190.5 66.278 190.5 66C190.5 59.3726 195.873 54 202.5 54Z" fill="#FBFFFD"/>
-                <path d="M14.5 117.448V110H38.5V117.448C38.5 124.076 33.1274 129.448 26.5 129.448C19.8726 129.448 14.5 124.076 14.5 117.448Z" fill="#559991"/>
-                <circle cx="26.5" cy="110" r="12" fill="#C2E9E7"/>
-                <path d="M26.5 98C33.1274 98 38.5 103.373 38.5 110C38.5 110.278 38.4893 110.554 38.4707 110.827C38.0453 104.586 32.8491 99.6553 26.5 99.6553C20.1509 99.6553 14.9537 104.586 14.5283 110.827C14.5097 110.554 14.5 110.278 14.5 110C14.5 103.373 19.8726 98 26.5 98Z" fill="#FBFFFD"/>
-                <path d="M58.5 117.448V110H82.5V117.448C82.5 124.076 77.1274 129.448 70.5 129.448C63.8726 129.448 58.5 124.076 58.5 117.448Z" fill="#559991"/>
-                <circle cx="70.5" cy="110" r="12" fill="#C2E9E7"/>
-                <path d="M70.5 98C77.1274 98 82.5 103.373 82.5 110C82.5 110.278 82.4893 110.554 82.4707 110.827C82.0453 104.586 76.8491 99.6553 70.5 99.6553C64.1509 99.6553 58.9537 104.586 58.5283 110.827C58.5097 110.554 58.5 110.278 58.5 110C58.5 103.373 63.8726 98 70.5 98Z" fill="#FBFFFD"/>
-                <path d="M102.5 117.448V110H126.5V117.448C126.5 124.076 121.127 129.448 114.5 129.448C107.873 129.448 102.5 124.076 102.5 117.448Z" fill="#559991"/>
-                <circle cx="114.5" cy="110" r="12" fill="#C2E9E7"/>
-                <path d="M114.5 98C121.127 98 126.5 103.373 126.5 110C126.5 110.278 126.489 110.554 126.471 110.827C126.045 104.586 120.849 99.6553 114.5 99.6553C108.151 99.6553 102.954 104.586 102.528 110.827C102.51 110.554 102.5 110.278 102.5 110C102.5 103.373 107.873 98 114.5 98Z" fill="#FBFFFD"/>
-                <path d="M146.5 117.448V110H170.5V117.448C170.5 124.076 165.127 129.448 158.5 129.448C151.873 129.448 146.5 124.076 146.5 117.448Z" fill="#559991"/>
-                <circle cx="158.5" cy="110" r="12" fill="#C2E9E7"/>
-                <path d="M158.5 98C165.127 98 170.5 103.373 170.5 110C170.5 110.278 170.489 110.554 170.471 110.827C170.045 104.586 164.849 99.6553 158.5 99.6553C152.151 99.6553 146.954 104.586 146.528 110.827C146.51 110.554 146.5 110.278 146.5 110C146.5 103.373 151.873 98 158.5 98Z" fill="#FBFFFD"/>
-                <path d="M190.5 117.448V110H214.5V117.448C214.5 124.076 209.127 129.448 202.5 129.448C195.873 129.448 190.5 124.076 190.5 117.448Z" fill="#559991"/>
-                <circle cx="202.5" cy="110" r="12" fill="#C2E9E7"/>
-                <path d="M202.5 98C209.127 98 214.5 103.373 214.5 110C214.5 110.278 214.489 110.554 214.471 110.827C214.045 104.586 208.849 99.6553 202.5 99.6553C196.151 99.6553 190.954 104.586 190.528 110.827C190.51 110.554 190.5 110.278 190.5 110C190.5 103.373 195.873 98 202.5 98Z" fill="#FBFFFD"/>
-            </svg>
+              <svg
+                className="cell"
+                ref={grassTargetRef1}
+                width="229"
+                height="132"
+                viewBox="0 0 229 132"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect width="229" height="132" rx="9" fill="#C2E9E7" />
+                <path
+                  d="M14.5 29.4483V22H38.5V29.4483C38.5 36.0757 33.1274 41.4483 26.5 41.4483C19.8726 41.4483 14.5 36.0757 14.5 29.4483Z"
+                  fill="#559991"
+                />
+                <circle cx="26.5" cy="22" r="12" fill="#C2E9E7" />
+                <path
+                  d="M26.5 10C33.1274 10 38.5 15.3726 38.5 22C38.5 22.2781 38.4893 22.5538 38.4707 22.8271C38.0453 16.586 32.8491 11.6553 26.5 11.6553C20.1509 11.6553 14.9537 16.586 14.5283 22.8271C14.5097 22.5538 14.5 22.278 14.5 22C14.5 15.3726 19.8726 10 26.5 10Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M58.5 29.4483V22H82.5V29.4483C82.5 36.0757 77.1274 41.4483 70.5 41.4483C63.8726 41.4483 58.5 36.0757 58.5 29.4483Z"
+                  fill="#559991"
+                />
+                <circle cx="70.5" cy="22" r="12" fill="#C2E9E7" />
+                <path
+                  d="M70.5 10C77.1274 10 82.5 15.3726 82.5 22C82.5 22.2781 82.4893 22.5538 82.4707 22.8271C82.0453 16.586 76.8491 11.6553 70.5 11.6553C64.1509 11.6553 58.9537 16.586 58.5283 22.8271C58.5097 22.5538 58.5 22.278 58.5 22C58.5 15.3726 63.8726 10 70.5 10Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M102.5 29.4483V22H126.5V29.4483C126.5 36.0757 121.127 41.4483 114.5 41.4483C107.873 41.4483 102.5 36.0757 102.5 29.4483Z"
+                  fill="#559991"
+                />
+                <circle cx="114.5" cy="22" r="12" fill="#C2E9E7" />
+                <path
+                  d="M114.5 10C121.127 10 126.5 15.3726 126.5 22C126.5 22.2781 126.489 22.5538 126.471 22.8271C126.045 16.586 120.849 11.6553 114.5 11.6553C108.151 11.6553 102.954 16.586 102.528 22.8271C102.51 22.5538 102.5 22.278 102.5 22C102.5 15.3726 107.873 10 114.5 10Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M146.5 29.4483V22H170.5V29.4483C170.5 36.0757 165.127 41.4483 158.5 41.4483C151.873 41.4483 146.5 36.0757 146.5 29.4483Z"
+                  fill="#559991"
+                />
+                <circle cx="158.5" cy="22" r="12" fill="#C2E9E7" />
+                <path
+                  d="M158.5 10C165.127 10 170.5 15.3726 170.5 22C170.5 22.2781 170.489 22.5538 170.471 22.8271C170.045 16.586 164.849 11.6553 158.5 11.6553C152.151 11.6553 146.954 16.586 146.528 22.8271C146.51 22.5538 146.5 22.278 146.5 22C146.5 15.3726 151.873 10 158.5 10Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M190.5 29.4483V22H214.5V29.4483C214.5 36.0757 209.127 41.4483 202.5 41.4483C195.873 41.4483 190.5 36.0757 190.5 29.4483Z"
+                  fill="#559991"
+                />
+                <circle cx="202.5" cy="22" r="12" fill="#C2E9E7" />
+                <path
+                  d="M202.5 10C209.127 10 214.5 15.3726 214.5 22C214.5 22.2781 214.489 22.5538 214.471 22.8271C214.045 16.586 208.849 11.6553 202.5 11.6553C196.151 11.6553 190.954 16.586 190.528 22.8271C190.51 22.5538 190.5 22.278 190.5 22C190.5 15.3726 195.873 10 202.5 10Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M14.5 73.4483V66H38.5V73.4483C38.5 80.0757 33.1274 85.4483 26.5 85.4483C19.8726 85.4483 14.5 80.0757 14.5 73.4483Z"
+                  fill="#559991"
+                />
+                <circle cx="26.5" cy="66" r="12" fill="#C2E9E7" />
+                <path
+                  d="M26.5 54C33.1274 54 38.5 59.3726 38.5 66C38.5 66.2781 38.4893 66.5538 38.4707 66.8271C38.0453 60.586 32.8491 55.6553 26.5 55.6553C20.1509 55.6553 14.9537 60.586 14.5283 66.8271C14.5097 66.5538 14.5 66.278 14.5 66C14.5 59.3726 19.8726 54 26.5 54Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M58.5 73.4483V66H82.5V73.4483C82.5 80.0757 77.1274 85.4483 70.5 85.4483C63.8726 85.4483 58.5 80.0757 58.5 73.4483Z"
+                  fill="#559991"
+                />
+                <circle cx="70.5" cy="66" r="12" fill="#C2E9E7" />
+                <path
+                  d="M70.5 54C77.1274 54 82.5 59.3726 82.5 66C82.5 66.2781 82.4893 66.5538 82.4707 66.8271C82.0453 60.586 76.8491 55.6553 70.5 55.6553C64.1509 55.6553 58.9537 60.586 58.5283 66.8271C58.5097 66.5538 58.5 66.278 58.5 66C58.5 59.3726 63.8726 54 70.5 54Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M102.5 73.4483V66H126.5V73.4483C126.5 80.0757 121.127 85.4483 114.5 85.4483C107.873 85.4483 102.5 80.0757 102.5 73.4483Z"
+                  fill="#559991"
+                />
+                <circle cx="114.5" cy="66" r="12" fill="#C2E9E7" />
+                <path
+                  d="M114.5 54C121.127 54 126.5 59.3726 126.5 66C126.5 66.2781 126.489 66.5538 126.471 66.8271C126.045 60.586 120.849 55.6553 114.5 55.6553C108.151 55.6553 102.954 60.586 102.528 66.8271C102.51 66.5538 102.5 66.278 102.5 66C102.5 59.3726 107.873 54 114.5 54Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M146.5 73.4483V66H170.5V73.4483C170.5 80.0757 165.127 85.4483 158.5 85.4483C151.873 85.4483 146.5 80.0757 146.5 73.4483Z"
+                  fill="#559991"
+                />
+                <circle cx="158.5" cy="66" r="12" fill="#C2E9E7" />
+                <path
+                  d="M158.5 54C165.127 54 170.5 59.3726 170.5 66C170.5 66.2781 170.489 66.5538 170.471 66.8271C170.045 60.586 164.849 55.6553 158.5 55.6553C152.151 55.6553 146.954 60.586 146.528 66.8271C146.51 66.5538 146.5 66.278 146.5 66C146.5 59.3726 151.873 54 158.5 54Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M190.5 73.4483V66H214.5V73.4483C214.5 80.0757 209.127 85.4483 202.5 85.4483C195.873 85.4483 190.5 80.0757 190.5 73.4483Z"
+                  fill="#559991"
+                />
+                <circle cx="202.5" cy="66" r="12" fill="#C2E9E7" />
+                <path
+                  d="M202.5 54C209.127 54 214.5 59.3726 214.5 66C214.5 66.2781 214.489 66.5538 214.471 66.8271C214.045 60.586 208.849 55.6553 202.5 55.6553C196.151 55.6553 190.954 60.586 190.528 66.8271C190.51 66.5538 190.5 66.278 190.5 66C190.5 59.3726 195.873 54 202.5 54Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M14.5 117.448V110H38.5V117.448C38.5 124.076 33.1274 129.448 26.5 129.448C19.8726 129.448 14.5 124.076 14.5 117.448Z"
+                  fill="#559991"
+                />
+                <circle cx="26.5" cy="110" r="12" fill="#C2E9E7" />
+                <path
+                  d="M26.5 98C33.1274 98 38.5 103.373 38.5 110C38.5 110.278 38.4893 110.554 38.4707 110.827C38.0453 104.586 32.8491 99.6553 26.5 99.6553C20.1509 99.6553 14.9537 104.586 14.5283 110.827C14.5097 110.554 14.5 110.278 14.5 110C14.5 103.373 19.8726 98 26.5 98Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M58.5 117.448V110H82.5V117.448C82.5 124.076 77.1274 129.448 70.5 129.448C63.8726 129.448 58.5 124.076 58.5 117.448Z"
+                  fill="#559991"
+                />
+                <circle cx="70.5" cy="110" r="12" fill="#C2E9E7" />
+                <path
+                  d="M70.5 98C77.1274 98 82.5 103.373 82.5 110C82.5 110.278 82.4893 110.554 82.4707 110.827C82.0453 104.586 76.8491 99.6553 70.5 99.6553C64.1509 99.6553 58.9537 104.586 58.5283 110.827C58.5097 110.554 58.5 110.278 58.5 110C58.5 103.373 63.8726 98 70.5 98Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M102.5 117.448V110H126.5V117.448C126.5 124.076 121.127 129.448 114.5 129.448C107.873 129.448 102.5 124.076 102.5 117.448Z"
+                  fill="#559991"
+                />
+                <circle cx="114.5" cy="110" r="12" fill="#C2E9E7" />
+                <path
+                  d="M114.5 98C121.127 98 126.5 103.373 126.5 110C126.5 110.278 126.489 110.554 126.471 110.827C126.045 104.586 120.849 99.6553 114.5 99.6553C108.151 99.6553 102.954 104.586 102.528 110.827C102.51 110.554 102.5 110.278 102.5 110C102.5 103.373 107.873 98 114.5 98Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M146.5 117.448V110H170.5V117.448C170.5 124.076 165.127 129.448 158.5 129.448C151.873 129.448 146.5 124.076 146.5 117.448Z"
+                  fill="#559991"
+                />
+                <circle cx="158.5" cy="110" r="12" fill="#C2E9E7" />
+                <path
+                  d="M158.5 98C165.127 98 170.5 103.373 170.5 110C170.5 110.278 170.489 110.554 170.471 110.827C170.045 104.586 164.849 99.6553 158.5 99.6553C152.151 99.6553 146.954 104.586 146.528 110.827C146.51 110.554 146.5 110.278 146.5 110C146.5 103.373 151.873 98 158.5 98Z"
+                  fill="#FBFFFD"
+                />
+                <path
+                  d="M190.5 117.448V110H214.5V117.448C214.5 124.076 209.127 129.448 202.5 129.448C195.873 129.448 190.5 124.076 190.5 117.448Z"
+                  fill="#559991"
+                />
+                <circle cx="202.5" cy="110" r="12" fill="#C2E9E7" />
+                <path
+                  d="M202.5 98C209.127 98 214.5 103.373 214.5 110C214.5 110.278 214.489 110.554 214.471 110.827C214.045 104.586 208.849 99.6553 202.5 99.6553C196.151 99.6553 190.954 104.586 190.528 110.827C190.51 110.554 190.5 110.278 190.5 110C190.5 103.373 195.873 98 202.5 98Z"
+                  fill="#FBFFFD"
+                />
+              </svg>
               <GrassOverlay targetRef={grassTargetRef1}></GrassOverlay>
               <div className="window"></div>
               <div className="cell-small"></div>
@@ -458,17 +607,20 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
               </div>
               <div className="work-img-wrapper">
                 <div className="canvas-wrapper">
+                  {/* Outgoing image — sits underneath */}
                   <img
-                    ref={canvasRef}
-                    className="work-img"
-                    src={
-                        activeProject.img
-                        ? BASE_PATH + activeProject.img
-                        : FALLBACK_IMG_SRC
-                    }
+                    ref={bottomImgRef}
+                    className="work-img work-img--bottom"
+                    alt=""
+                    draggable={false}
+                  />
+                  {/* Incoming image — animates in via clip-path */}
+                  <img
+                    ref={topImgRef}
+                    className="work-img work-img--top"
                     alt={activeProject.name || ""}
                     draggable={false}
-                    />
+                  />
                 </div>
               </div>
             </div>
@@ -511,4 +663,4 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   );
 });
 
-export default Work
+export default Work;

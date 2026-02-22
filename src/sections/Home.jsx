@@ -31,9 +31,9 @@ const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
 /* ------------------------------------------------------------------ */
 /* HomeCard – self‑contained GSAP + ScrollTrigger                      */
 /* ------------------------------------------------------------------ */
-const HomeCard = memo(({ index, containerHover, deckHovered }) => {
+const HomeCard = memo(({ index, containerHover, deckHovered, hasDesign = true }) => {
   const cardRef = useRef(null);
-  const hasEntered = useRef(false);
+  const [hasEntered, setHasEntered] = useState(false);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0, active: false });
 
   const frontImage = `/cards/card${index + 1}.jpg`;
@@ -44,30 +44,42 @@ const HomeCard = memo(({ index, containerHover, deckHovered }) => {
 
     let tl;
 
-    gsap.set(cardRef.current, { rotateY: 180, z: 0 });
+    if (hasDesign) {
+      gsap.set(cardRef.current, { rotateY: 180, z: 0 });
+    } else {
+      gsap.set(cardRef.current, { rotateY: 0, z: 0});
+    }
 
     const buildAnimation = () => {
       tl = gsap.timeline({
         onComplete: () => {
-          hasEntered.current = true;
+          setHasEntered(true);
         },
       });
-      tl.fromTo(
-        cardRef.current,
-        { rotateY: 180, z: 0 },
-        { z: 60, duration: 0.6, ease: "power2.out" },
-        index * 0.15
-      )
-        .to(cardRef.current, {
-          rotateY: 0,
-          duration: 0.4,
-          ease: "back.out(1.2)",
-        })
-        .to(
+
+      if (hasDesign) {
+        tl.fromTo(
           cardRef.current,
-          { z: 0, duration: 0.3, ease: "power2.in" },
-          "-=0.2"
-        );
+          { rotateY: 180, z: 0 },
+          { z: 60, duration: 0.6, ease: "power2.out" },
+          index * 0.15
+        )
+          .to(cardRef.current, {
+            rotateY: 0,
+            duration: 0.4,
+            ease: "back.out(1.2)",
+          })
+          .to(
+            cardRef.current,
+            { z: 0, duration: 0.3, ease: "power2.in" },
+            "-=0.2"
+          );
+      } else {
+        // No animation — mark as entered immediately
+        setHasEntered(true);
+    }
+
+
       return tl;
     };
 
@@ -75,7 +87,7 @@ const HomeCard = memo(({ index, containerHover, deckHovered }) => {
 
     const trigger = ScrollTrigger.create({
       trigger: cardRef.current,
-      start: "top center",
+      start: "top 70%",
       end: "bottom top",
       once: true,
       onEnter: () => {
@@ -97,10 +109,10 @@ const HomeCard = memo(({ index, containerHover, deckHovered }) => {
       if (tl) tl.kill();
       trigger.kill();
     };
-  }, [index]);
+  }, [index, hasDesign]);
 
   const handleMouseMove = (e) => {
-    if (!hasEntered.current) return;
+    if (!hasEntered) return;
     const rect = e.currentTarget.getBoundingClientRect();
     setHoverPos({
       x: (e.clientX - rect.left) / rect.width - 0.5,
@@ -110,23 +122,30 @@ const HomeCard = memo(({ index, containerHover, deckHovered }) => {
   };
 
   const dynamicStyle = useMemo(() => {
-    if (!hasEntered.current) return {};
+    if (!hasEntered) return {};
 
     let baseRotateY = 0;
-    if (index === 0) baseRotateY = containerHover ? -15 : -5;
-    if (index === 2) baseRotateY = containerHover ? 15 : 5;
+    if (index === 0) baseRotateY = containerHover ? -15 : 0;
+    if (index === 2) baseRotateY = containerHover ? 15 : 0;
+    // outer left cards fan out more
+    if (index === 3) baseRotateY = containerHover ? 28 : 0;
+    if (index === 4) baseRotateY = containerHover ? -28 : 0;
+
+    if (index === 5) baseRotateY = containerHover ? 36 : 0;
+    if (index === 6) baseRotateY = containerHover ? -36 : 0;
+
 
     const activeDepth = index === 1 ? 30 : 18;
     const idleDepth = index === 1 ? 0 : -10;
 
     let rotateZ = 0;
     if (deckHovered) {
-      if (index === 0) {
-        rotateZ = -6;
-      }
-      if (index === 2) {
-        rotateZ = 6;
-      }
+      if (index === 0) rotateZ = -6;
+      if (index === 2) rotateZ = 6;
+      if (index === 3) rotateZ = 12;
+      if (index === 4) rotateZ = -12;
+      if (index === 5) rotateZ = 18;
+      if (index === 6) rotateZ = -18;
     }
 
     if (hoverPos.active) {
@@ -136,7 +155,7 @@ const HomeCard = memo(({ index, containerHover, deckHovered }) => {
                     rotateX(${hoverPos.y * -20}deg)
                     rotateZ(${rotateZ}deg)
                     translateZ(${activeDepth}px)`,
-        zIndex: index === 1 ? 10 : 5,
+        zIndex: index === 1 ? 10 : (7 - index) % 8,
         transition: "transform 0.1s ease-out, rotateZ 0.4s ease-out",
       };
     }
@@ -149,38 +168,60 @@ const HomeCard = memo(({ index, containerHover, deckHovered }) => {
                   translateZ(${idleDepth}px)`,
       transition:
         "transform 0.7s cubic-bezier(0.23, 1, 0.32, 1), rotateZ 0.4s ease-out",
-      zIndex: index === 1 ? 10 : 5,
+      zIndex: index === 1 ? 10 : (7 - index) % 8,
     };
-  }, [hoverPos, containerHover, index, deckHovered]);
+  }, [hoverPos, containerHover, index, deckHovered, hasEntered]);
 
   return (
     <div
       className={styles.homeCard}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setHoverPos({ active: false })}
-      style={{ zIndex: index === 1 ? 3 : index }}
+      style={{ zIndex: index === 1 ? 10 : (7 - index) % 8 }}
     >
       <div className={styles.homeCardInner} ref={cardRef} style={dynamicStyle}>
-        <div className={styles.homeCardFront}>
-          <img src={frontImage} className={styles.cardImg} alt="" />
-          <div
-            className={styles.glimmer}
-            style={{
-              opacity: hoverPos.active ? 1 : 0,
-              background: `linear-gradient(
+        {hasDesign ? (
+          <>
+            <div className={styles.homeCardFront}>
+              <img src={frontImage} className={styles.cardImg} alt="" />
+              <div
+                className={styles.glimmer}
+                style={{
+                  opacity: hoverPos.active ? 1 : 0,
+                  background: `linear-gradient(
                     105deg,
                     transparent ${(0.5 - hoverPos.x) * 100 - 45}%,
                     rgba(255, 255, 255, 0.05) ${(0.5 - hoverPos.x) * 100 - 30}%,
                     rgba(255, 255, 255, 0.4) ${(0.5 - hoverPos.x) * 100}%,
                     rgba(255, 255, 255, 0.05) ${(0.5 - hoverPos.x) * 100 + 30}%,
                     transparent ${(0.5 - hoverPos.x) * 100 + 45}%
+                  )`,
+                }}
+              />
+            </div>
+            <div className={styles.homeCardBack}>
+              <img src={backImage} className={styles.cardImg} alt="" />
+            </div>
+          </>
+        ) : (
+          <div className={styles.homeCardBlank}>
+            <img src={backImage} className={styles.cardImg} alt="" />
+            <div
+              className={styles.glimmer}
+              style={{
+                opacity: hoverPos.active ? 1 : 0,
+                background: `linear-gradient(
+                  105deg,
+                  transparent ${(0.5 - hoverPos.x) * 100 - 45}%,
+                  rgba(255, 255, 255, 0.05) ${(0.5 - hoverPos.x) * 100 - 30}%,
+                  rgba(255, 255, 255, 0.4) ${(0.5 - hoverPos.x) * 100}%,
+                  rgba(255, 255, 255, 0.05) ${(0.5 - hoverPos.x) * 100 + 30}%,
+                  transparent ${(0.5 - hoverPos.x) * 100 + 45}%
                 )`,
-            }}
-          />
-        </div>
-        <div className={styles.homeCardBack}>
-          <img src={backImage} className={styles.cardImg} alt="" />
-        </div>
+              }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -617,12 +658,13 @@ const Home = forwardRef(
                 onMouseLeave={() => setCardsHovered(false)}
               >
                 <div className={styles.homeCardDeck}>
-                  {[0, 1, 2].map((i) => (
+                  {[0, 1, 2, 3, 4, 5, 6].map((i) => (
                     <HomeCard
                       key={i}
                       index={i}
                       containerHover={cardsHovered}
                       deckHovered={deckHovered}
+                      hasDesign={i <= 2}
                     />
                   ))}
                 </div>

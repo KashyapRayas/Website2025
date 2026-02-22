@@ -296,7 +296,7 @@ const Hero = ({ isLoaded }) => {
 
     const irisConfig = [
       { ref: leftIrisRef, maxMove: 0.6 },
-      { ref: rightIrisRef, maxMove: 0.9 },
+      { ref: rightIrisRef, maxMove: 1.2 },
     ];
 
     const getIrisCenter = (el) => {
