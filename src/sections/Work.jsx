@@ -22,6 +22,10 @@ const BASE_PATH = "";
 const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
 const FALLBACK_IMG_SRC = BASE_PATH + "/project_imgs/placeholder.webp";
 
+const PIXEL_STAGES = [24, 12, 6, 3, 1];
+const STAGE_DURATION_MS = 100;
+const CANVAS_FADE_DURATION_MS = 300;
+
 const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const [projectsData, setProjectsData] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(() => {
@@ -41,6 +45,125 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const headingRef = useRef(null);
   const starRefsMap = useRef({});
 
+  const pixelCanvasRef = useRef(null);
+  const pixelTimerRef = useRef(null);
+  const pixelObserverRef = useRef(null);
+
+  const syncCanvasSize = useCallback(() => {
+    const canvas = pixelCanvasRef.current;
+    const img = topImgRef.current;
+    if (!canvas || !img) return;
+
+    const { offsetWidth, offsetHeight } = img;
+    if (offsetWidth > 0 && offsetHeight > 0) {
+      canvas.width = offsetWidth;
+      canvas.height = offsetHeight;
+    }
+  }, []);
+
+  useEffect(() => {
+    const img = topImgRef.current;
+    if (!img) return;
+
+    const ro = new ResizeObserver(syncCanvasSize);
+    ro.observe(img);
+    syncCanvasSize();
+
+    return () => ro.disconnect();
+  }, [syncCanvasSize]);
+
+  const drawPixelated = useCallback(
+    (blockSize) => {
+      const canvas = pixelCanvasRef.current;
+      const img = topImgRef.current;
+      if (!canvas || !img) return;
+
+      // Keep canvas in sync in case it hasn't been sized yet
+      syncCanvasSize();
+
+      const ctx = canvas.getContext("2d");
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      if (blockSize <= 1) {
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(img, 0, 0, w, h);
+        return;
+      }
+
+      const smallW = Math.max(1, Math.floor(w / blockSize));
+      const smallH = Math.max(1, Math.floor(h / blockSize));
+
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(img, 0, 0, smallW, smallH);
+      ctx.drawImage(canvas, 0, 0, smallW, smallH, 0, 0, w, h);
+    },
+    [syncCanvasSize]
+  );
+
+  const runPixelAnimation = useCallback(() => {
+    const canvas = pixelCanvasRef.current;
+    if (!canvas) return;
+
+    canvas.style.transition = "none";
+    canvas.style.opacity = "1";
+
+    let stage = 0;
+
+    const step = () => {
+      drawPixelated(PIXEL_STAGES[stage]);
+      stage++;
+
+      if (stage < PIXEL_STAGES.length) {
+        pixelTimerRef.current = setTimeout(step, STAGE_DURATION_MS);
+      } else {
+        canvas.style.transition = `opacity ${CANVAS_FADE_DURATION_MS}ms ease`;
+        canvas.style.opacity = "0";
+      }
+    };
+
+    step();
+  }, [drawPixelated]);
+
+  useEffect(() => {
+    if (!projectsData || projectsData.length === 0) return;
+
+    const canvas = pixelCanvasRef.current;
+    const img = topImgRef.current;
+    if (!canvas || !img) return;
+
+    const startObserver = () => {
+      drawPixelated(PIXEL_STAGES[0]);
+
+      pixelObserverRef.current = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              runPixelAnimation();
+              pixelObserverRef.current?.disconnect();
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+
+      pixelObserverRef.current.observe(canvas);
+    };
+
+    if (img.complete && img.naturalWidth > 0) {
+      startObserver();
+    } else {
+      img.addEventListener("load", startObserver, { once: true });
+    }
+
+    return () => {
+      pixelObserverRef.current?.disconnect();
+      clearTimeout(pixelTimerRef.current);
+    };
+  }, [projectsData, drawPixelated, runPixelAnimation]);
+
   useEffect(() => {
     const loadProjects = async () => {
       try {
@@ -57,8 +180,9 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   }, []);
 
   const activeIndex = useMemo(() => {
+    if (selectedIndex !== null) return selectedIndex;
     if (hoveredIndex >= 0) return hoveredIndex;
-    return selectedIndex ?? 0;
+    return 0;
   }, [hoveredIndex, selectedIndex]);
 
   const activeProject = useMemo(() => {
@@ -343,8 +467,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
           </div>
 
           {projectsData.map((project, index) => {
-            const isActive =
-              hoveredIndex === index || selectedIndex === index;
+            const isActive = hoveredIndex === index || selectedIndex === index;
             return (
               <div
                 key={index}
@@ -620,6 +743,21 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                     className="work-img work-img--top"
                     alt={activeProject.name || ""}
                     draggable={false}
+                  />
+                  <canvas
+                    ref={pixelCanvasRef}
+                    aria-hidden="true"
+                    style={{
+                      position: "absolute",
+                      height: "100%",
+                      aspectRatio: "16 / 9",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                      imageRendering: "pixelated",
+                      zIndex: 2,
+                      pointerEvents: "none",
+                    }}
                   />
                 </div>
               </div>

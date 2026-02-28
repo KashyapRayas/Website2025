@@ -307,7 +307,7 @@ const Project = ({
                 case "img":
                   return (
                     <ProjectImage
-                      key={index}
+                      key={`${selectedProjectName}-${index}`}
                       src={BASE_PATH + item.url}
                       alt={`Project image ${index}`}
                       caption={item.caption}
