@@ -611,7 +611,7 @@ const Home = forwardRef(
           display: "inline",
           duration: 0.15,
           stagger: 0.1,
-          delay: returnedFrom ? 4 : 2,
+          delay: 0,
           ease: "none",
         }
       );
