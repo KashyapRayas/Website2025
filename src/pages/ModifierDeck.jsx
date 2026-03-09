@@ -15,7 +15,7 @@ const Card = ({ index, isLocked, triggerFlip, cardData }) => {
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0, active: false });
   const [hasFinishedIntro, setHasFinishedIntro] = useState(false);
 
-  const frontImage = cardData?.img || `/cards/card${index + 1}.jpg`;
+  const frontImage = cardData?.img || `/cards/cardBack.jpg`;
   const backImage = `/cards/cardBack.jpg`;
 
   useEffect(() => {
