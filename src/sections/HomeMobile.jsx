@@ -21,57 +21,55 @@ const Home = forwardRef(
     const grassTargetRef1 = useRef(null);
     const grassTargetRef2 = useRef(null);
     const grassTargetRef3 = useRef(null);
-    const starContainerRef = useRef(null);
     const [deckHovered, setDeckHovered] = useState(false);
     const narratorRef = useRef(null);
+    const cursorRef = useRef(null);
 
     const cardWrapperRef = useRef(null);
 
     const narratorMessage = useMemo(() => {
 
-    const modifierDialogues = [
-        "The deck grows heavier. So does he.",
-        "The collection expands. So does his resolve.",
-        "He carries more now and carries it well.",
-        "He’s building a hand he believes in.",
-        "The deck grows. So does his discipline.",
-        "He’s assembling something steady, isn’t he.",
-        "He keeps forging interesting cards.",
-        "The more he unlocks, the more deliberate he becomes.",
-        "He unlocked it. Now he has to live up to it.",
-        "It suits him, though he doesn’t realize why yet.",
-        "He reached for a heavier card this time.",
-        "He’s not afraid of harder cards now.",
-        "The collection is gaining structure.",
-        "That card will matter later.",
-        "He’s stacking identity, not just achievement.",
-        "The deck is beginning to resemble resolve.",
-        "He’s assembling something coherent.",
-        "He’s shaping who he’ll be remembered as.",
+      const modifierDialogues = [
+        "The deck grows heavier. So does he",
+        "The collection expands. So does his resolve",
+        "He carries more now and carries it well",
+        "He's building a hand he believes in",
+        "The deck grows. So does his discipline",
+        "He's assembling something steady, isn't he",
+        "He keeps forging interesting cards",
+        "The more he unlocks, the more deliberate he becomes",
+        "He unlocked it. Now he has to live up to it",
+        "It suits him, though he doesn't realize why yet",
+        "He reached for a heavier card this time",
+        "He's not afraid of harder cards now",
+        "The collection is gaining structure",
+        "That card will matter later",
+        "He's stacking identity, not just achievement",
+        "The deck is beginning to resemble resolve",
+        "He's assembling something coherent",
+        "He's shaping who he'll be remembered as",
+      ];
 
-        // "The traits are beginning to compound.",
-    ];
-
-    const projectDialogues = [
-        "He builds like he’s solving something personal.",
-        "Every project leaves a fingerprint.",
-        "Work is how he thinks out loud.",
-        "Interesting… he handled that differently.",
-        "That’s growth.",
-        "He’s asking better questions.",
-        "You can feel the evolution, can’t you.",
-        "You can tell he wrestled with this.",
-        "He’s designing the way he thinks.",
-        "The ambition outpaces the polish.",
-        "He sees it. He just hasn’t mastered it yet.",
-        "He’s aware of what’s missing.",
-        "He’s outgrowing his old limits.",
-        "He’s building taste faster than technique.",
-        "He’s not satisfied with this. That’s a good sign.",
-        "The growth is uneven. That’s normal.",
-        "There’s rawness here. That’s not weakness.",
-        "He’s closer to mastery than he was yesterday."
-    ];
+      const projectDialogues = [
+        "He builds like he's solving something personal",
+        "Every project leaves a fingerprint",
+        "Work is how he thinks out loud",
+        "Interesting… he handled that differently",
+        "That's growth",
+        "He's asking better questions",
+        "You can feel the evolution, can't you",
+        "You can tell he wrestled with this",
+        "He's designing the way he thinks",
+        "The ambition outpaces the polish",
+        "He sees it. He just hasn't mastered it yet",
+        "He's aware of what's missing",
+        "He's outgrowing his old limits",
+        "He's building taste faster than technique",
+        "He's not satisfied with this. That's a good sign",
+        "The growth is uneven. That's normal",
+        "There's rawness here. That's not weakness",
+        "He's closer to mastery than he was yesterday",
+      ];
 
     if (returnedFrom === "modifier_deck") {
         return modifierDialogues[
@@ -85,7 +83,7 @@ const Home = forwardRef(
         ];
     }
 
-    return "This is the loud version of him.";
+    return "This is the loud version of him";
     }, [returnedFrom]);
 
     useGSAP(() => {
@@ -98,7 +96,6 @@ const Home = forwardRef(
         ease: "wave",
         repeat: -1,
       });
-      return () => tween.kill();
     }, []);
 
     useGSAP(() => {
@@ -172,16 +169,30 @@ const Home = forwardRef(
         gsap.fromTo(words,
             {
                 opacity: 0,
+                display: "none",
             },
             {
-            opacity: 1,
-            duration: 0.15,
-            stagger: 0.1,
-            delay: returnedFrom ? 4 : 0,
-            ease: "none",
-        });
+                opacity: 1,
+                display: "inline",
+                duration: 0.15,
+                stagger: 0.1,
+                delay: returnedFrom ? 4 : 2,
+                ease: "none",
+            });
 
     }, [returnedFrom]);
+
+    useGSAP(() => {
+        if (!cursorRef.current) return;
+        gsap.to(cursorRef.current, {
+            opacity: 1,
+            duration: 0.1,
+            repeat: -1,
+            yoyo: true,
+            ease: "none",
+            repeatDelay: 0.6,
+        });
+    }, []);
 
     return (
       <section id="HOME" ref={ref} className={styles.home}>
@@ -204,24 +215,24 @@ const Home = forwardRef(
                         <h2 className={styles.topFirstH22}>
                             <span className={styles.narrator}>Narrator:</span>{" "}
                                 <span ref={narratorRef}>
-                                {narratorMessage.split(" ").map((word, i) => (
+                                {narratorMessage.split(" ").map((word, i, arr) => (
                                 <span
                                     key={`${word}-${i}`}
                                     className={"narrator-word-mobile"}
-                                    style={{ opacity: 0 }}
+                                    style={{ opacity: 0, display: "none" }}
                                     >
-                                    {word}{" "}
+                                    {word}
+                                    {i < arr.length - 1 ? " " : ""}
                                     </span>
                                     ))}
+                                </span>
+                                <span ref={cursorRef} className={styles.cursor}>
+                                    ▌
                                 </span>
                         </h2>
                     </div>
             <div className={styles.time}>
-              <div
-                ref={starContainerRef}
-                style={{ opacity: !isLoaded ? 0 : undefined }}
-              >
-                <svg
+              <svg
                   ref={rectRef}
                   width="9"
                   height="10"
@@ -231,10 +242,9 @@ const Home = forwardRef(
                 >
                   <path
                     d="M3.70596 1.00568C4.02063 0.331439 4.97937 0.33144 5.29404 1.00568L6.17762 2.89892C6.26466 3.08542 6.41458 3.23534 6.60108 3.32238L8.49432 4.20596C9.16856 4.52063 9.16856 5.47937 8.49432 5.79404L6.60108 6.67762C6.41458 6.76466 6.26466 6.91458 6.17762 7.10108L5.29404 8.99432C4.97937 9.66856 4.02063 9.66856 3.70595 8.99432L2.82238 7.10108C2.73534 6.91458 2.58542 6.76466 2.39892 6.67762L0.505681 5.79404C-0.168561 5.47937 -0.16856 4.52063 0.505682 4.20595L2.39892 3.32238C2.58542 3.23534 2.73534 3.08542 2.82238 2.89892L3.70596 1.00568Z"
-                    fill="currentColor"
+                    fill="var(--dark-green)"
                   />
                 </svg>
-              </div>
               <h3 className={styles.timeh3}>
                 LOCAL TIME <Clock />
               </h3>

@@ -530,7 +530,6 @@ const Home = forwardRef(
         repeat: -1,
         yoyo: true,
         ease: "none",
-        delay: 1,
         repeatDelay: 0.6,
       });
     }, [cursorRef.current]);
@@ -605,12 +604,14 @@ const Home = forwardRef(
         words,
         {
           opacity: 0,
+          display: "none",
         },
         {
           opacity: 1,
+          display: "inline",
           duration: 0.15,
           stagger: 0.1,
-          delay: 0,
+          delay: returnedFrom ? 4 : 2,
           ease: "none",
         }
       );
@@ -665,7 +666,7 @@ const Home = forwardRef(
                       <span
                         key={`${word}-${i}`}
                         className={"narrator-word"}
-                        style={{ opacity: 0 }}
+                        style={{ opacity: 0, display: "none" }}
                       >
                         {word}
                         {i < arr.length - 1 ? " " : ""}

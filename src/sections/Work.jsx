@@ -15,6 +15,7 @@ import GrassOverlay from "../components/GrassOverlay";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import PixelLock from "/pixelLock.svg";
 import star from "/star.svg";
+import WorkCursor from "../components/WorkCursor";
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
@@ -26,6 +27,14 @@ const PIXEL_STAGES = [24, 12, 6, 3, 1];
 const STAGE_DURATION_MS = 100;
 const CANVAS_FADE_DURATION_MS = 300;
 
+const getAppScale = () => {
+    const value = getComputedStyle(document.documentElement)
+        .getPropertyValue("--app-scale")
+        .trim();
+
+    return parseFloat(value) || 1;
+};
+
 const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const [projectsData, setProjectsData] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(() => {
@@ -34,6 +43,13 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   });
   const [selectedIndex, setSelectedIndex] = useState(null);
 
+  const [scale, setScale] = useState(getAppScale);
+  useEffect(() => {
+    const apply = () => setScale(getAppScale());
+    apply();
+    window.addEventListener("resize", apply);
+    return () => window.removeEventListener("resize", apply);
+  }, []);
   const imagesRef = useRef({});
   const topImgRef = useRef(null);
   const bottomImgRef = useRef(null);
@@ -45,9 +61,26 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const headingRef = useRef(null);
   const starRefsMap = useRef({});
 
+    const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+    const [isCursorVisible, setIsCursorVisible] = useState(false);
+
   const pixelCanvasRef = useRef(null);
   const pixelTimerRef = useRef(null);
   const pixelObserverRef = useRef(null);
+
+    const handleImgMouseMove = useCallback((e) => {
+    const s = getAppScale();
+    setCursorPos({ x: e.clientX / s, y: e.clientY / s });
+    }, []);
+
+    const handleImgMouseEnter = useCallback(() => {
+    setIsCursorVisible(true);
+    }, []);
+
+    const handleImgMouseLeave = useCallback(() => {
+    setIsCursorVisible(false);
+    }, []);
+
 
   const syncCanvasSize = useCallback(() => {
     const canvas = pixelCanvasRef.current;
@@ -728,7 +761,11 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                   />
                 </svg>
               </div>
-              <div className="work-img-wrapper">
+              <div className="work-img-wrapper"
+                    onMouseMove={handleImgMouseMove}
+                    onMouseEnter={handleImgMouseEnter}
+                    onMouseLeave={handleImgMouseLeave}
+                    >
                 <div className="canvas-wrapper">
                   {/* Outgoing image — sits underneath */}
                   <img
@@ -796,6 +833,18 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
       <div className="extremes-wrapper-right">
         <div className="extremes"></div>
+      </div>
+            <div
+        style={{
+          position: "fixed",
+          top: cursorPos.y,
+          left: cursorPos.x,
+          transform: `translate(${16 / scale}px, ${16 / scale}px)`,
+          pointerEvents: "none",
+          zIndex: 9999,
+        }}
+      >
+        <WorkCursor isVisible={isCursorVisible}/>
       </div>
     </section>
   );
