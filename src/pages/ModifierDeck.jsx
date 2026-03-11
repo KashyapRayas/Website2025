@@ -8,7 +8,7 @@ import { useGSAP } from "@gsap/react";
 
 const TOTAL_CARDS = 42;
 
-const Card = ({ index, isLocked, triggerFlip, cardData }) => {
+const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop }) => {
   const cardRef = useRef(null);
   const unlockLabelRef = useRef(null);
   const cardLabelRef = useRef(null);
@@ -74,7 +74,7 @@ const Card = ({ index, isLocked, triggerFlip, cardData }) => {
   }, [triggerFlip, isLocked, index]);
 
   const handleMouseMove = (e) => {
-    if (!hasFinishedIntro) return;
+    if (!hasFinishedIntro || !isDesktop) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -125,8 +125,10 @@ const Card = ({ index, isLocked, triggerFlip, cardData }) => {
   return (
     <div
       className={styles.cardContainer}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={() => setHoverPos({ active: false })}
+      onMouseMove={isDesktop ? handleMouseMove : undefined}
+      onMouseLeave={
+        isDesktop ? () => setHoverPos({ x: 0, y: 0, active: false }) : undefined
+      }
     >
       <div className={styles.cardInner} ref={cardRef} style={dynamicStyle}>
         <div className={styles.cardFront}>
@@ -158,6 +160,18 @@ const ModifierDeck = ({ handleBack, isIncomingTransition }) => {
   const [startSequence, setStartSequence] = useState(false);
   const [cardsData, setCardsData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.innerWidth >= 1201;
+  });
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsDesktop(window.innerWidth >= 1201);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     fetch("/data/cards.json")
@@ -283,11 +297,12 @@ const ModifierDeck = ({ handleBack, isIncomingTransition }) => {
                     <div className={styles.cardsGrid}>
                         {[...Array(TOTAL_CARDS)].map((_, i) => (
                         <Card
-                            key={i}
-                            index={i}
-                            isLocked={i >= UNLOCKED_COUNT}
-                            triggerFlip={startSequence}
-                            cardData={cardsData?.cards[i]}
+                          key={i}
+                          index={i}
+                          isLocked={i >= UNLOCKED_COUNT}
+                          triggerFlip={startSequence}
+                          cardData={cardsData?.cards[i]}
+                          isDesktop={isDesktop}
                         />
                         ))}
                     </div>

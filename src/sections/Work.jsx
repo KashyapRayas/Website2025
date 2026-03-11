@@ -69,13 +69,19 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
   const pixelObserverRef = useRef(null);
 
     const handleImgMouseMove = useCallback((e) => {
-    const s = getAppScale();
-    setCursorPos({ x: e.clientX / s, y: e.clientY / s });
+      const s = getAppScale();
+      setCursorPos({ x: e.clientX / s, y: e.clientY / s });
     }, []);
 
-    const handleImgMouseEnter = useCallback(() => {
-    setIsCursorVisible(true);
-    }, []);
+    const handleImgMouseEnter = useCallback(
+      (e) => {
+        // Ensure the cursor position is correct on first entry,
+        // even if there hasn't been a prior mousemove in this area.
+        handleImgMouseMove(e);
+        setIsCursorVisible(true);
+      },
+      [handleImgMouseMove]
+    );
 
     const handleImgMouseLeave = useCallback(() => {
     setIsCursorVisible(false);
