@@ -26,9 +26,25 @@ const Preloader = ({ onComplete, onMidway }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // Staggered vertical reveal for mobile / bottom info text
     useGSAP(() => {
+        gsap.from(".mobile-info .mobile-word", {
+            yPercent: 120,
+            opacity: 0,
+            duration: 0.6,
+            ease: "power2.out",
+            stagger: 0.06,
+        });
 
-    }, [] );
+        gsap.from(".bottom-info .bottom-word", {
+            yPercent: 120,
+            opacity: 0,
+            duration: 0.6,
+            ease: "power2.out",
+            stagger: 0.06,
+            delay: 0.1,
+        });
+    }, []);
 
     useGSAP(() => {
 
@@ -179,7 +195,10 @@ const Preloader = ({ onComplete, onMidway }) => {
         <div id="preloader">
 
             <div className="mobile-info">
-                Best experienced on desktops.
+                <span className="mobile-word" style={wordStyle}>Best</span>{" "}
+                <span className="mobile-word" style={wordStyle}>experienced</span>{" "}
+                <span className="mobile-word" style={wordStyle}>on</span>{" "}
+                <span className="mobile-word" style={wordStyle}>desktops.</span>
             </div>
 
             <div className="preloader-content-wrapper">
@@ -213,7 +232,11 @@ const Preloader = ({ onComplete, onMidway }) => {
             </div>
 
             <div className="bottom-info">
-                Making things breaks you open
+                <span className="bottom-word" style={wordStyle}>Making</span>{" "}
+                <span className="bottom-word" style={wordStyle}>things</span>{" "}
+                <span className="bottom-word" style={wordStyle}>breaks</span>{" "}
+                <span className="bottom-word" style={wordStyle}>you</span>{" "}
+                <span className="bottom-word" style={wordStyle}>open</span>
             </div>
         </div>
     );
