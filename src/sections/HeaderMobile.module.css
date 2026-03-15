@@ -51,7 +51,7 @@
 
 .rounder {
     position: absolute;
-    bottom: -9px;
+    bottom: -8.5px;
     right: 0px;
     display: flex;
     width: 100%;
@@ -65,13 +65,27 @@
     .left {
         display: flex;
         gap: 0px;
-        margin-left: -9.5px;
+        justify-content: space-between;
+        width: 100%;
+        min-width: 9px;
+        overflow: hidden;
+    }
+
+    .middle {
+        width: 100%;
+        max-width: 500px;
+        min-width: 500px;
+        display: flex;
+        justify-content: space-between;
     }
 
     .right {
         display: flex;
         gap: 0px;
-        margin-right: -9.5px;
+        justify-content: space-between;
+        width: 100%;
+        min-width: 9px;
+        overflow: hidden;
     }
 
     svg {
@@ -80,7 +94,15 @@
     }
 
     svg.svg-shrink-left, svg.svg-shrink-right {
-        transform: scaleX(1);
+        transform: scaleY(1);
+    }
+
+    svg.svg-shrink-left {
+        transform-origin: top right;
+    }
+
+    svg.svg-shrink-right {
+        transform-origin: top left;
     }
 }
 
@@ -147,12 +169,31 @@
     }
 }
 
-@media screen and (max-width: 520px) {
-    .rounder svg.svg-shrink-right {
-        transform: scaleX(0.5) translateX(-4.5px);
+@media screen and (max-width: 550px) {
+    .rounder .left svg.svg-shrink-right, .rounder .right svg.svg-shrink-left {
+        display: none;
+    }
+    .rounder .right svg.svg-shrink-right, .rounder .left svg.svg-shrink-left {
+        transform: scalex(0.5);
+    }
+    .rounder .left {
+        justify-content: end;
+    }
+}
+
+@media screen and (max-width: 530px) {
+    .rounder .middle {
+        min-width: 0px !important;
     }
 
-    .rounder svg.svg-shrink-left {
-        transform: scaleX(0.5) translateX(4.5px);
+    .rounder .left, .rounder .right {
+        width: 9px;
+
+    }
+}
+
+@media screen and (max-width: 390px) {
+    .rounder .left, .rounder .right {
+        display: none;
     }
 }

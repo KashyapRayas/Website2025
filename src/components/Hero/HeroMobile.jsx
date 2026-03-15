@@ -890,7 +890,7 @@ const Hero = ({ isLoaded }) => {
           </div>
           <div className={styles["top-bot"]}>
             <img src={figma_search} alt="search" />
-            Stara
+            Search fonts
           </div>
         </div>
 

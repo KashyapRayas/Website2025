@@ -72,15 +72,16 @@
             display: flex;
             gap: 10px;
             background-color: #383838;
-            border: 1px solid #0C8CE9;
+            border: 1px solid #444444;
             border-radius: 5px;
-            color: #F8F8F8;
+            color: rgba(248, 248, 248, 0.5);
             font-size: 11px;
             font-family: "Inter", sans-serif;
             font-optical-sizing: auto;
             font-weight: 500;
             font-style: normal;
             align-items: center;
+            transition: all 0.2s ease-in-out;
 
             img {
                 position: relative;
@@ -89,6 +90,10 @@
                 width: 12px;
                 height: 12px;
             }
+        }
+        .top-bot:hover {
+            border: 1px solid #0C8CE9;
+            cursor: no-drop;
         }
 
     }

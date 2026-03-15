@@ -62,6 +62,7 @@ const Hero = ({ isLoaded }) => {
   const parallaxGroupRef = useRef(null);
   const meSvgRef = useRef(null);
   const fishermanRef = useRef(null);
+  const [searchHover, setSearchHover] = useState(false);
 
   // Eyelid refs for blinking
   const rightEyelidRef = useRef(null);
@@ -709,9 +710,12 @@ const Hero = ({ isLoaded }) => {
               <img src={figma_cancel} alt="cancel" />
             </div>
           </div>
-          <div className={styles["top-bot"]}>
+          <div className={styles["top-bot"]}
+                onMouseEnter={()=> setSearchHover(true)}
+                onMouseLeave={()=> setSearchHover(false)}
+          >
             <img src={figma_search} alt="search" />
-            Stara
+            {!searchHover ? "Search fonts" : "I lied. Sorry :("}
           </div>
         </div>
 

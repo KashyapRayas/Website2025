@@ -390,6 +390,7 @@
   perspective: 1000px;
   overflow: hidden;
   border: 3px solid var(--off-teal);
+  box-sizing: border-box;
 }
 
 .homeCardDeck {
@@ -456,4 +457,17 @@
   object-fit: cover;
   image-rendering: pixelated;
   border-radius: 9px;
+}
+
+@media screen and (max-width: 390px) {
+
+  .topFirstH1 {
+    font-size: 40px;
+  }
+
+  .middle .fourth .top .cell {
+    padding: 21px;
+    min-width: 180px;
+  }
+
 }

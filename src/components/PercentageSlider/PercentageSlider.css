@@ -24,7 +24,7 @@
   */
   background: linear-gradient(
     to right,
-    var(--dark-green) var(--value),
+    var(--off-white) var(--value),
     var(--off-teal) var(--value)
   );
 }
@@ -36,7 +36,7 @@
   border-radius: 4px;
   background: linear-gradient(
     to right,
-    var(--dark-green) var(--value),
+    var(--off-white) var(--value),
     var(--off-teal) var(--value)
   );
 }
@@ -51,7 +51,7 @@
   margin-top: -6px;
   width: 16px;
   height: 16px;
-  background: var(--dark-green);
+  background: var(--off-white);
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -70,7 +70,7 @@
 .percentage-slider::-moz-range-thumb {
   width: 16px;
   height: 16px;
-  background: var(--dark-green);
+  background: var(--off-white);
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -86,15 +86,14 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    scale: 1;
+    transition: all 0.2s ease-out;
 
     img {
-        scale: 1;
-        transition: all 0.1s ease-in-out;
         pointer-events: none;
     }
 }
 
-#play-pause-button:active > img {
-    scale: 0.6;
+#play-pause-button:hover {
+    background-color: var(--light-off-teal);
 }

@@ -538,7 +538,7 @@ const Home = forwardRef(
     useGSAP(() => {
       if (!parallaxRef.current || !homeRef.current) return;
       gsap.to(parallaxRef.current, {
-        y: 60,
+        y: 90,
         ease: "none",
         scrollTrigger: {
           trigger: homeRef.current,

@@ -29,12 +29,14 @@ export function useSmoothScrollConfig() {
       setConfig({
         duration: 2,
         enabled: true,
+        syncTouch: true
       })
     } else {
       // Default for other devices
       setConfig({
         duration: 2,
         enabled: true,
+        syncTouch: true
       })
     }
   }, [])

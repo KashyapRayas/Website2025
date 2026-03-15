@@ -85,3 +85,14 @@ section > .middle {
         flex-direction: column;
     }
 }
+
+@media screen and (max-width: 390px) {
+
+    .extremes-wrapper-left, .extremes-wrapper-right {
+        display: none;
+    }
+
+    section > .middle {
+        flex-direction: column;
+    }
+}

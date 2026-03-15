@@ -28,7 +28,7 @@
   width: 100%;
   display: flex;
   gap: 1px;
-  height: 440px;
+  height: 459px;
   flex-shrink: 0;
   position: relative;
 }
@@ -53,7 +53,7 @@
   background-color: var(--off-white);
   border-radius: 9px;
   box-sizing: border-box;
-  padding: 30px;
+  padding: 21px;
   display: flex;
   flex-direction: column;
   gap: 18px;

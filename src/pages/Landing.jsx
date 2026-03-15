@@ -22,6 +22,18 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, onModifierDec
     const resizeTimeoutRef = useRef(null);
     const lastWidthRef = useRef(window.innerWidth);
 
+      // Hook up Lenis to GSAP ticker safely
+    // useEffect(() => {
+    //     if (!lenis) return; // lenis might be null until provider mounts
+
+    //     gsap.ticker.add((time) => {
+    //         lenis.raf(time * 1000); // Convert time from seconds to milliseconds
+    //       });
+          
+    //     // Disable lag smoothing in GSAP to prevent any delay in scroll animations
+    //     gsap.ticker.lagSmoothing(0);
+    // }, [lenis]);
+
     // Separate effect for handling resize with debounce
     useEffect(() => {
         const handleResize = () => {

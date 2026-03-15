@@ -112,64 +112,93 @@ const HeaderMobile = ({lenis}) => {
             </div>
 
             <div className={styles["middle"]}>
-                <div className={styles["rounder"]}>
-                    <div className={styles["left"]}>
-                        <svg
-                        className={styles["svg-shrink-left"]}
+                {/* <LinkButton isActive={!isHomeActive} linkName={"HOME"} linkTo={"#HOME"} lenis={lenis}/> */}
+                <LinkButton isActive={false} linkName={"MENU"} linkTo={""} lenis={lenis} onClick={handleMenuToggle}/>
+            </div>
+
+            <div className={styles["rounder"]}>
+                <div className={styles["left"]}>
+                    <svg
+                        className={styles["svg-shrink-right"]}
                         xmlns="http://www.w3.org/2000/svg"
                         width="9"
                         height="9"
                         viewBox="0 0 9 9"
                         fill="none"
-                        >
+                    >
+                        <path
+                        d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z"
+                        fill="var(--off-teal)"
+                        />
+                    </svg>
+                    <svg
+                    className={styles["svg-shrink-left"]}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="9"
+                    height="9"
+                    viewBox="0 0 9 9"
+                    fill="none"
+                    >
+                    <path
+                    d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z"
+                    fill="var(--off-teal)"
+                    />
+                    </svg>
+                </div>
+                <div className={styles["middle"]}>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="9"
+                        height="9"
+                        viewBox="0 0 9 9"
+                        fill="none"
+                    >
+                        <path
+                        d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z"
+                        fill="var(--off-teal)"
+                        />
+                    </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="9"
+                        height="9"
+                        viewBox="0 0 9 9"
+                        fill="none"
+                    >
                         <path
                         d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z"
                         fill="var(--off-teal)"
                         />
-                        </svg>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="9"
-                            height="9"
-                            viewBox="0 0 9 9"
-                            fill="none"
-                        >
-                            <path
-                            d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z"
-                            fill="var(--off-teal)"
-                            />
-                        </svg>
-                    </div>
-                    <div className={styles["right"]}>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="9"
-                            height="9"
-                            viewBox="0 0 9 9"
-                            fill="none"
-                        >
-                            <path
-                            d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z"
-                            fill="var(--off-teal)"
-                            />
-                        </svg>
-                        <svg
-                            className={styles["svg-shrink-right"]}
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="9"
-                            height="9"
-                            viewBox="0 0 9 9"
-                            fill="none"
-                        >
-                            <path
-                            d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z"
-                            fill="var(--off-teal)"
-                            />
-                        </svg>
-                    </div>
+                    </svg>
                 </div>
-                {/* <LinkButton isActive={!isHomeActive} linkName={"HOME"} linkTo={"#HOME"} lenis={lenis}/> */}
-                <LinkButton isActive={false} linkName={"MENU"} linkTo={""} lenis={lenis} onClick={handleMenuToggle}/>
+                <div className={styles["right"]}>
+                    <svg
+                        className={styles["svg-shrink-right"]}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="9"
+                        height="9"
+                        viewBox="0 0 9 9"
+                        fill="none"
+                    >
+                        <path
+                        d="M0 0H9C4.02944 0 3.22128e-07 4.02944 0 9V0Z"
+                        fill="var(--off-teal)"
+                        />
+                    </svg>
+                    <svg
+                    className={styles["svg-shrink-left"]}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="9"
+                    height="9"
+                    viewBox="0 0 9 9"
+                    fill="none"
+                    >
+                    <path
+                    d="M9 0H0C4.97056 0 9 4.02944 9 9V0Z"
+                    fill="var(--off-teal)"
+                    />
+                    </svg>
+                </div>
             </div>
 
             <div className={"extremes-wrapper-right"}>
