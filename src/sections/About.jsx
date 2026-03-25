@@ -52,7 +52,9 @@ const ExperienceBlock = ({ company, experiences }) => (
 );
 
 const About = forwardRef((_, ref) => {
-  const { playHover, playClick } = useButtonSounds();
+  const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
+  const playHover = () => _playHover(3);
+  const playClick = () => _playClick(3);
   const [resumeHovered, setResumeHovered] = useState(false);
   const cellRef = useRef(null);
   const legRef = useRef(null);

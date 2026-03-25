@@ -6,7 +6,9 @@ import styles from './HeaderMobile.module.css'
 import LinkButton from '../components/LinkButton/LinkButton';
 
 const HeaderMobile = ({lenis}) => {
-    const { playHover, playClick } = useButtonSounds();
+    const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
+    const playHover = () => _playHover(3);
+    const playClick = () => _playClick(3);
 
     const [isMenuActive, setIsMenuActive] = useState(false);
     const menuRef = useRef(null);

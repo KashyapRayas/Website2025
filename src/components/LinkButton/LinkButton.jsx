@@ -2,7 +2,9 @@ import styles from "./LinkButton.module.css";
 import { useButtonSounds } from "../../hooks/useButtonSounds";
 
 const LinkButton = ({ isActive = false, linkName, linkTo = "", lenis, onClick, size="small", offset=false}) => {
-	const { playHover, playClick } = useButtonSounds();
+	const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
+	const playHover = () => _playHover(3);
+	const playClick = () => _playClick(3);
 
 	let duration = 2
 	if(linkName === "ABOUT" && size==="small") duration = 3

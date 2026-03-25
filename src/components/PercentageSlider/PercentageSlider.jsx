@@ -40,7 +40,10 @@ const canvasStyle = {
 };
 
 const PercentageSlider = () => {
-  const { playHover, playClick } = useButtonSounds();
+  const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
+  const playButtonHover = () => _playHover(3);
+  const playButtonClick = () => _playClick(3);
+  const playSliderStep = () => _playHover(1);
   const lastPlayedFrameRef = useRef(0);
   const [frameIndex, setFrameIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -213,7 +216,7 @@ const PercentageSlider = () => {
     return () => clearInterval(intervalRef.current);
   }, [isPlaying, imagesLoaded]);
 
-  const togglePlay = () => { playClick(); setIsPlaying((p) => !p); };
+  const togglePlay = () => { playButtonClick(); setIsPlaying((p) => !p); };
 
   const handleSliderChange = (e) => {
     const percent = Number(e.target.value);
@@ -222,7 +225,7 @@ const PercentageSlider = () => {
     );
 
     if (index !== lastPlayedFrameRef.current) {
-      playHover();
+      playSliderStep();
       lastPlayedFrameRef.current = index;
     }
 
@@ -250,7 +253,7 @@ const PercentageSlider = () => {
           border: "2.4px solid var(--off-teal)"
         }}
       >
-        <div id="play-pause-button" onMouseEnter={playHover} onClick={togglePlay}>
+        <div id="play-pause-button" onMouseEnter={playButtonHover} onClick={togglePlay}>
           <img src={isPlaying ? PauseIcon : PlayIcon} alt=""/>
         </div>
 

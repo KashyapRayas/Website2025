@@ -9,7 +9,9 @@ import LinkButtonFooter from "../components/LinkButton/LinkButtonFooter";
 const CURRENT_YEAR = new Date().getFullYear();
 
 const Footer = ({ inProject = false, lenis, isMobile }) => {
-  const { playHover, playClick } = useButtonSounds();
+  const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
+  const playHover = () => _playHover(3);
+  const playClick = () => _playClick(3);
 
   // Pre-compute link text (saves recomputation each render and clarifies intent)
   const scrollText = useMemo(

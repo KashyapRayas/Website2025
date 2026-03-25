@@ -2,7 +2,9 @@ import styles from "./LinkButton.module.css";
 import { useButtonSounds } from "../../hooks/useButtonSounds";
 
 const LinkButtonFooter = ({ linkName, linkTo = "", lenis, onClick, offset=false}) => {
-	const { playHover, playClick } = useButtonSounds();
+	const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
+	const playHover = () => _playHover(3);
+	const playClick = () => _playClick(3);
 
 	const handleClick = () => {
 		playClick();

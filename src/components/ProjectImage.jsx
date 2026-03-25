@@ -12,7 +12,9 @@ const CANVAS_WIDTH = 1280;
 const CANVAS_HEIGHT = 720;
 
 const ProjectImage = ({ src, alt, caption = "" }) => {
-  const { playHover, playClick } = useButtonSounds();
+  const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
+  const playHover = () => _playHover(5);
+  const playClick = () => _playClick(5);
   const [open, setOpen] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -97,7 +99,7 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
 
   const containerStyle = {
     width: "100%",
-    padding: "30px",
+    padding: "21px",
     boxSizing: "border-box",
     borderRadius: "9px",
     backgroundColor: "var(--off-white)",
@@ -112,11 +114,12 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
     position: "relative",
     width: "100%",
     aspectRatio: "16 / 9",
-    borderRadius: "6px",
+    borderRadius: "9px",
     backgroundColor: "var(--light-off-teal)",
     overflow: "hidden",
     cursor: "pointer",
-    transition: "transform 0.3s ease-in-out"
+    transition: "transform 0.3s ease-in-out",
+    border: "2.1px solid var(--off-teal)"
   };
 
   // Shared style for both the img and canvas so they overlap perfectly
@@ -181,8 +184,7 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
       <div
         style={imgWrapperStyle}
         className="project-image-wrapper"
-        onMouseEnter={playHover}
-        onClick={() => { playClick(); setOpen(true); }}
+        onClick={() => { setOpen(true); }}
       >
         {/* Layer 0: real image, always present underneath */}
         <img

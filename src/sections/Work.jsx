@@ -479,7 +479,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
           <div
             className={"project locked"}
             onMouseEnter={playHover}
-            onClick={() => { playClick(); console.log("It ain't here yet!"); }}
+            onClick={() => { playClick(2); console.log("It ain't here yet!"); }}
           >
             <div className="title">
               <img
@@ -517,9 +517,9 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
               <div
                 key={index}
                 className={`project ${isActive ? "project--active" : ""}`}
-                onMouseEnter={() => { handleMouseEnter(index); playHover(); }}
+                onMouseEnter={() => { handleMouseEnter(index); playHover(3); }}
                 onMouseLeave={handleMouseLeave}
-                onClick={() => { handleClick(project, index); playClick(); }}
+                onClick={() => { handleClick(project, index); playClick(3); }}
               >
                 <div className="title">
                   <AnimatedArrow isActive={hoveredIndex !== index} />

@@ -26,7 +26,9 @@ const Project = ({
   selectedProjectName,
   onNextProjectSelect,
 }) => {
-  const { playHover, playClick } = useButtonSounds();
+  const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
+  const playHover = () => _playHover(3);
+  const playClick = () => _playClick(3);
   const [projectData, setProjectData] = useState(null);
   const [projectsData, setProjectsData] = useState(null);
   const [hovered, setHovered] = useState(false);

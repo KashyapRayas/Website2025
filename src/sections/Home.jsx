@@ -776,9 +776,9 @@ const Home = forwardRef(
                       ? styles.secondInnerwrapperSelected
                       : ""
                   }`}
-                  onMouseEnter={() => { handleRecentEnter(); playHover(); }}
+                  onMouseEnter={() => { handleRecentEnter(); playHover(3); }}
                   onMouseLeave={handleRecentLeave}
-                  onClick={() => { handleRecentClick(); playClick(); }}
+                  onClick={() => { handleRecentClick(); playClick(3); }}
                 >
                   <h4 className={styles.recenth4}>RECENT WORK</h4>
                   <div
@@ -1009,11 +1009,11 @@ const Home = forwardRef(
               <a
                 href="#"
                 className={styles.second}
-                onMouseEnter={() => { setDeckHovered(true); playHover(); }}
+                onMouseEnter={() => { setDeckHovered(true); playHover(3); }}
                 onMouseLeave={() => setDeckHovered(false)}
                 onClick={(e) => {
                   e.preventDefault();
-                  playClick();
+                  playClick(3);
                   onModifierDeckSelect();
                 }}
               >

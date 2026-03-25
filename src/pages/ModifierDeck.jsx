@@ -157,7 +157,9 @@ const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop }) => {
 };
 
 const ModifierDeck = ({ handleBack, isIncomingTransition }) => {
-  const { playHover, playClick } = useButtonSounds();
+  const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
+  const playHover = () => _playHover(3);
+  const playClick = () => _playClick(3);
   const lenis = useLenis();
   const [startSequence, setStartSequence] = useState(false);
   const [cardsData, setCardsData] = useState(null);

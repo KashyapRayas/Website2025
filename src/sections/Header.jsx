@@ -3,7 +3,9 @@ import LinkButton from '../components/LinkButton/LinkButton';
 import { useButtonSounds } from '../hooks/useButtonSounds';
 
 const Header = ({setLinkHovered, lenis, isLoaded}) => {
-    const { playHover, playClick } = useButtonSounds();
+    const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
+    const playHover = () => _playHover(3);
+    const playClick = () => _playClick(3);
     return (
             <header>
                 <div className={"extremes-wrapper-left header-extremes"}>

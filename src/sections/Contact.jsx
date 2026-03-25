@@ -11,7 +11,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const Contact = forwardRef(({}, ref) => {
-  const { playHover, playClick } = useButtonSounds();
+  const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
+  const playHover = () => _playHover(3);
+  const playClick = () => _playClick(3);
   const [contactHovered, setContactHovered] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   const grassTargetRef1 = useRef(null);
