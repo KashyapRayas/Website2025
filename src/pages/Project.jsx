@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
+import { useButtonSounds } from "../hooks/useButtonSounds";
 import "./Project.css";
 import ProjectBigText from "../components/ProjectBigText";
 import ProjectParaText from "../components/ProjectParaText";
@@ -25,6 +26,7 @@ const Project = ({
   selectedProjectName,
   onNextProjectSelect,
 }) => {
+  const { playHover, playClick } = useButtonSounds();
   const [projectData, setProjectData] = useState(null);
   const [projectsData, setProjectsData] = useState(null);
   const [hovered, setHovered] = useState(false);
@@ -180,15 +182,14 @@ const Project = ({
           <div className={"left"}>
             <div className={"sticky-div"}>
               <div className={"menu"}>
-                <div className={"nav-link"} onClick={handleBack}>
+                <div className={"nav-link"} onMouseEnter={playHover} onClick={() => { playClick(); handleBack(); }}>
                   BACK
                 </div>
                 {details.projectLink ? (
                   <div
                     className={"nav-link website"}
-                    onClick={() =>
-                      window.open(details.projectLink, "_blank", "noopener")
-                    }
+                    onMouseEnter={playHover}
+                    onClick={() => { playClick(); window.open(details.projectLink, "_blank", "noopener"); }}
                   >
                     GO TO PROJECT
                   </div>
@@ -253,14 +254,15 @@ const Project = ({
               {nextProject && (
                 <div
                   className={`project`}
-                  onMouseEnter={() => setHovered(true)}
+                  onMouseEnter={() => { setHovered(true); playHover(); }}
                   onMouseLeave={() => setHovered(false)}
-                  onClick={() =>
+                  onClick={() => {
+                    playClick();
                     onNextProjectSelect({
                       name: nextProject.nextWorkTitle,
                       description: nextProject.nextWorkDescription,
-                    })
-                  }
+                    });
+                  }}
                 >
                   <div className={"title"}>
                     <AnimatedArrow isActive={!hovered} />
@@ -332,15 +334,14 @@ const Project = ({
             })}
 
             <div className={"menu"}>
-              <div className={"nav-link"} onClick={handleBack}>
+              <div className={"nav-link"} onMouseEnter={playHover} onClick={() => { playClick(); handleBack(); }}>
                 BACK
               </div>
               {details.projectLink ? (
                 <div
                   className={"nav-link website"}
-                  onClick={() =>
-                    window.open(details.projectLink, "_blank", "noopener")
-                  }
+                  onMouseEnter={playHover}
+                  onClick={() => { playClick(); window.open(details.projectLink, "_blank", "noopener"); }}
                 >
                   GO TO PROJECT
                 </div>
@@ -352,14 +353,15 @@ const Project = ({
             {nextProject && (
               <div
                 className={`project`}
-                onMouseEnter={() => setHovered(true)}
+                onMouseEnter={() => { setHovered(true); playHover(); }}
                 onMouseLeave={() => setHovered(false)}
-                onClick={() =>
+                onClick={() => {
+                  playClick();
                   onNextProjectSelect({
                     name: nextProject.nextWorkTitle,
                     description: nextProject.nextWorkDescription,
-                  })
-                }
+                  });
+                }}
               >
                 <div className={"title"}>
                   <AnimatedArrow isActive={!hovered} />

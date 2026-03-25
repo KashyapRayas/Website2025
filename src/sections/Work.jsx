@@ -7,6 +7,7 @@ import {
   useEffect,
 } from "react";
 import "./Work.css";
+import { useButtonSounds } from "../hooks/useButtonSounds";
 import AnimatedArrow from "../components/AnimatedArrow";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
@@ -36,6 +37,7 @@ const getAppScale = () => {
 };
 
 const Work = forwardRef(({ handleProjectSelect }, ref) => {
+  const { playHover, playClick } = useButtonSounds();
   const [projectsData, setProjectsData] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(() => {
     if (typeof window === "undefined") return 0;
@@ -281,19 +283,22 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     });
   }, [projectsData]);
 
-  useGSAP(() => {
-    if (!headingRef.current) return;
-    gsap.to(headingRef.current, {
-      scrollTrigger: {
-        trigger: "#WORK",
-        start: "top 60%",
-        end: "bottom top",
-        toggleClass: {
-          targets: headingRef.current,
-          className: "heading--active",
-        },
+  useEffect(() => {
+    if (!headingRef.current || !projectsData) return;
+    const section = document.querySelector("#WORK");
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        headingRef.current?.classList.toggle("heading--active", entry.isIntersecting);
       },
-    });
+      // rootMargin -40% on bottom mirrors "start: top 60%" — fires when
+      // the section's top has crossed 60% down from the top of the viewport
+      { rootMargin: "0px 0px -40% 0px" }
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
   }, [projectsData]);
 
   useGSAP(() => {
@@ -473,7 +478,8 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
           <div
             className={"project locked"}
-            onClick={() => console.log("It ain't here yet!")}
+            onMouseEnter={playHover}
+            onClick={() => { playClick(); console.log("It ain't here yet!"); }}
           >
             <div className="title">
               <img
@@ -511,9 +517,9 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
               <div
                 key={index}
                 className={`project ${isActive ? "project--active" : ""}`}
-                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseEnter={() => { handleMouseEnter(index); playHover(); }}
                 onMouseLeave={handleMouseLeave}
-                onClick={() => handleClick(project, index)}
+                onClick={() => { handleClick(project, index); playClick(); }}
               >
                 <div className="title">
                   <AnimatedArrow isActive={hoveredIndex !== index} />

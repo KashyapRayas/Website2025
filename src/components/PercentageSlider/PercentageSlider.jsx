@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import "./PercentageSlider.css";
+import { useButtonSounds } from "../../hooks/useButtonSounds";
 import PlayIcon from "/icons/Play.svg";
 import PauseIcon from "/icons/Pause.svg";
 
@@ -39,6 +40,8 @@ const canvasStyle = {
 };
 
 const PercentageSlider = () => {
+  const { playHover, playClick } = useButtonSounds();
+  const lastPlayedFrameRef = useRef(0);
   const [frameIndex, setFrameIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(false);
@@ -210,13 +213,18 @@ const PercentageSlider = () => {
     return () => clearInterval(intervalRef.current);
   }, [isPlaying, imagesLoaded]);
 
-  const togglePlay = () => setIsPlaying((p) => !p);
+  const togglePlay = () => { playClick(); setIsPlaying((p) => !p); };
 
   const handleSliderChange = (e) => {
     const percent = Number(e.target.value);
     const index = Math.round(
       (percent / 100) * (FRAME_COUNT - 1)
     );
+
+    if (index !== lastPlayedFrameRef.current) {
+      playHover();
+      lastPlayedFrameRef.current = index;
+    }
 
     setFrameIndex(index);
     setIsPlaying(false);
@@ -242,7 +250,7 @@ const PercentageSlider = () => {
           border: "2.4px solid var(--off-teal)"
         }}
       >
-        <div id="play-pause-button" onClick={togglePlay}>
+        <div id="play-pause-button" onMouseEnter={playHover} onClick={togglePlay}>
           <img src={isPlaying ? PauseIcon : PlayIcon} alt=""/>
         </div>
 

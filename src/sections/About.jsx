@@ -6,6 +6,7 @@ import {
   useMemo,
   useCallback,
 } from "react";
+import { useButtonSounds } from "../hooks/useButtonSounds";
 import styles from "./About.module.css";
 import lego_210 from "/lego_210.svg";
 import star from "/star.svg";
@@ -51,6 +52,7 @@ const ExperienceBlock = ({ company, experiences }) => (
 );
 
 const About = forwardRef((_, ref) => {
+  const { playHover, playClick } = useButtonSounds();
   const [resumeHovered, setResumeHovered] = useState(false);
   const cellRef = useRef(null);
   const legRef = useRef(null);
@@ -247,8 +249,9 @@ const About = forwardRef((_, ref) => {
             <a
                 href="https://drive.google.com/file/d/1of62QPkDYw7nRgfTr4m6wf6ri0o1Hf7L/view?usp=sharing"
                 className={styles.second}
-                onMouseEnter={() => setResumeHovered(true)}
+                onMouseEnter={() => { setResumeHovered(true); playHover(); }}
                 onMouseLeave={() => setResumeHovered(false)}
+                onClick={playClick}
                 ref={grassTargetRef4}
             >
                 <AnimatedArrow isActive={!resumeHovered} />

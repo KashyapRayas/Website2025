@@ -48,6 +48,12 @@ const STATIC_IMAGE_ASSETS = Object.freeze([
   "/about_imgs/19.webp",
   "/about_imgs/20.webp",
 
+  "/tap_01.wav",
+  "/tap_02.wav",
+  "/tap_03.wav",
+  "/tap_04.wav",
+  "/tap_05.wav",
+
   "/project_imgs/placeholder.webp",
 ]);
 

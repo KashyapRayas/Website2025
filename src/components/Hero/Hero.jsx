@@ -6,6 +6,7 @@ import {
   useMemo,
 } from "react";
 import { gsap } from "gsap";
+import { useButtonSounds } from "../../hooks/useButtonSounds";
 import { useGSAP } from "@gsap/react";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -42,6 +43,7 @@ const fonts = Object.freeze([
 
 const Hero = ({ isLoaded }) => {
   const lenis = useLenis();
+  const { playHover } = useButtonSounds();
 
   gsap.config({
     force3D: true,
@@ -740,7 +742,7 @@ const Hero = ({ isLoaded }) => {
               }
               ref={(el) => (fontRefs.current[index] = el)}
               style={{ fontFamily: font }}
-              onMouseEnter={() => setActiveFont(font)}
+              onMouseEnter={() => { setActiveFont(font); playHover(); }}
             >
               {font}
             </div>

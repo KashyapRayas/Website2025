@@ -12,6 +12,7 @@ import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
+import { useButtonSounds } from "../hooks/useButtonSounds";
 import styles from "./Home.module.css";
 import Clock from "../components/Clock";
 import lego_44 from "/lego_44.svg";
@@ -260,6 +261,7 @@ const Home = forwardRef(
     },
     ref
   ) => {
+    const { playHover, playClick } = useButtonSounds();
     const [projects, setProjects] = useState(null);
     const [recentHovered, setRecentHovered] = useState(false);
     const [recentSelected, setRecentSelected] = useState(false);
@@ -774,9 +776,9 @@ const Home = forwardRef(
                       ? styles.secondInnerwrapperSelected
                       : ""
                   }`}
-                  onMouseEnter={handleRecentEnter}
+                  onMouseEnter={() => { handleRecentEnter(); playHover(); }}
                   onMouseLeave={handleRecentLeave}
-                  onClick={handleRecentClick}
+                  onClick={() => { handleRecentClick(); playClick(); }}
                 >
                   <h4 className={styles.recenth4}>RECENT WORK</h4>
                   <div
@@ -1007,10 +1009,11 @@ const Home = forwardRef(
               <a
                 href="#"
                 className={styles.second}
-                onMouseEnter={() => setDeckHovered(true)}
+                onMouseEnter={() => { setDeckHovered(true); playHover(); }}
                 onMouseLeave={() => setDeckHovered(false)}
                 onClick={(e) => {
                   e.preventDefault();
+                  playClick();
                   onModifierDeckSelect();
                 }}
               >

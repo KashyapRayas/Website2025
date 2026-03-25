@@ -1,4 +1,5 @@
 import { useState, forwardRef, useRef } from "react";
+import { useButtonSounds } from "../hooks/useButtonSounds";
 import styles from "./Contact.module.css";
 import Denji from "../components/Denji";
 import AnimatedArrow from "../components/AnimatedArrow";
@@ -10,6 +11,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const Contact = forwardRef(({}, ref) => {
+  const { playHover, playClick } = useButtonSounds();
   const [contactHovered, setContactHovered] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   const grassTargetRef1 = useRef(null);
@@ -121,8 +123,9 @@ const Contact = forwardRef(({}, ref) => {
           <a
             href="mailto:kashyap.rayas@gmail.com"
             className={styles.second}
-            onMouseEnter={() => setContactHovered(true)}
+            onMouseEnter={() => { setContactHovered(true); playHover(); }}
             onMouseLeave={() => setContactHovered(false)}
+            onClick={playClick}
             ref={grassTargetRef1}
           >
             <AnimatedArrow isActive={!contactHovered} />

@@ -1,4 +1,5 @@
 import React, { memo, useState, useRef, useEffect, useCallback } from 'react';
+import { useButtonSounds } from '../hooks/useButtonSounds';
 import Lightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import 'yet-another-react-lightbox/styles.css';
@@ -11,6 +12,7 @@ const CANVAS_WIDTH = 1280;
 const CANVAS_HEIGHT = 720;
 
 const ProjectImage = ({ src, alt, caption = "" }) => {
+  const { playHover, playClick } = useButtonSounds();
   const [open, setOpen] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -179,7 +181,8 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
       <div
         style={imgWrapperStyle}
         className="project-image-wrapper"
-        onClick={() => setOpen(true)}
+        onMouseEnter={playHover}
+        onClick={() => { playClick(); setOpen(true); }}
       >
         {/* Layer 0: real image, always present underneath */}
         <img

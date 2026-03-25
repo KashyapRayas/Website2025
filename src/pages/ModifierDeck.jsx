@@ -1,4 +1,5 @@
 import { useMemo, useState, useRef, useEffect } from "react";
+import { useButtonSounds } from "../hooks/useButtonSounds";
 import styles from "./ModifierDeck.module.css";
 import Contact from "../sections/Contact";
 import Footer from "../sections/Footer";
@@ -156,6 +157,7 @@ const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop }) => {
 };
 
 const ModifierDeck = ({ handleBack, isIncomingTransition }) => {
+  const { playHover, playClick } = useButtonSounds();
   const lenis = useLenis();
   const [startSequence, setStartSequence] = useState(false);
   const [cardsData, setCardsData] = useState(null);
@@ -227,7 +229,7 @@ const ModifierDeck = ({ handleBack, isIncomingTransition }) => {
           <div className={styles.left}>
             <div className={styles.stickyDiv}>
               <div className={styles.menu}>
-                <div className={styles.navLink} onClick={handleBack}>
+                <div className={styles.navLink} onMouseEnter={playHover} onClick={() => { playClick(); handleBack(); }}>
                   BACK
                 </div>
                 <div className={styles.cell}></div>
