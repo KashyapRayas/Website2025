@@ -119,6 +119,13 @@ function App() {
     setReturnedFrom(view)
   }, [view]);
 
+  const [pendingScrollTarget, setPendingScrollTarget] = useState(null);
+
+  const handleBackWithScroll = useCallback((target) => {
+    setPendingScrollTarget(target);
+    handleBackToLanding();
+  }, [handleBackToLanding]);
+
   const handlePreloaderComplete = useCallback(() => {
     setIsPreloaderDone(true)
   }, []);
@@ -186,12 +193,15 @@ function App() {
             isPreloaderDone={isPreloaderDone}
             isIncomingTransition={isTransitioning && transitionDirection === 'out'}
             returnedFrom={returnedFrom}
+            pendingScrollTarget={pendingScrollTarget}
+            onScrollTargetConsumed={() => setPendingScrollTarget(null)}
           />
         )}
 
         {view === 'project' && (
           <Project
             handleBack={handleBackToLanding}
+            onBackWithScroll={handleBackWithScroll}
             isIncomingTransition={isTransitioning && (transitionDirection === 'in' || corrector)}
             selectedProjectName={selectedProjectName}
             onNextProjectSelect={handleNextProjectSelect}
@@ -202,6 +212,7 @@ function App() {
         {view === 'modifier_deck' && (
           <ModifierDeck
             handleBack={handleBackToLanding}
+            onBackWithScroll={handleBackWithScroll}
             isIncomingTransition={isTransitioning && transitionDirection === 'modifier_in'}
           />
         )}

@@ -8,7 +8,7 @@ import LinkButtonFooter from "../components/LinkButton/LinkButtonFooter";
 // Pre-compute year once instead of on every render
 const CURRENT_YEAR = new Date().getFullYear();
 
-const Footer = ({ inProject = false, lenis, isMobile }) => {
+const Footer = ({ inProject = false, lenis, isMobile, onBackWithScroll }) => {
   const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
   const playHover = () => _playHover(3);
   const playClick = () => _playClick(3);
@@ -53,9 +53,9 @@ const Footer = ({ inProject = false, lenis, isMobile }) => {
             </div>
             <div className="right-subwrapper">
                 <div className={"web-links"}>
-                    <LinkButtonFooter linkName={"HOME"} linkTo={"#HOME"} lenis={lenis} offset={isMobile ? -60 : 0}/>
-                    <LinkButtonFooter linkName={"WORK"} linkTo={"#WORK"} lenis={lenis} offset={isMobile ? -60 : 0}/>
-                    <LinkButtonFooter linkName={"ABOUT"} linkTo={"#ABOUT"} lenis={lenis} offset={isMobile ? -60 : 0}/>
+                    <LinkButtonFooter linkName={"HOME"} linkTo={inProject && onBackWithScroll ? "" : "#HOME"} lenis={lenis} offset={isMobile ? -60 : 0} onClick={inProject && onBackWithScroll ? () => onBackWithScroll('#HOME') : undefined}/>
+                    <LinkButtonFooter linkName={"WORK"} linkTo={inProject && onBackWithScroll ? "" : "#WORK"} lenis={lenis} offset={isMobile ? -60 : 0} onClick={inProject && onBackWithScroll ? () => onBackWithScroll('#WORK') : undefined}/>
+                    <LinkButtonFooter linkName={"ABOUT"} linkTo={inProject && onBackWithScroll ? "" : "#ABOUT"} lenis={lenis} offset={isMobile ? -60 : 0} onClick={inProject && onBackWithScroll ? () => onBackWithScroll('#ABOUT') : undefined}/>
                     <LinkButtonFooter linkName={"2022 SITE"} linkTo={"https://2022.kashyaprayas.com"} lenis={lenis} offset={isMobile ? -60 : 0}/>
                 </div>
                 <div className="right">

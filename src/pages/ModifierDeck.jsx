@@ -156,7 +156,7 @@ const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop }) => {
   );
 };
 
-const ModifierDeck = ({ handleBack, isIncomingTransition }) => {
+const ModifierDeck = ({ handleBack, onBackWithScroll, isIncomingTransition }) => {
   const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
   const playHover = () => _playHover(3);
   const playClick = () => _playClick(3);
@@ -319,7 +319,7 @@ const ModifierDeck = ({ handleBack, isIncomingTransition }) => {
         </div>
       </section>
       <Contact />
-      <Footer inProject={true} lenis={lenis} />
+      <Footer inProject={true} lenis={lenis} onBackWithScroll={onBackWithScroll} />
     </div>
   );
 };

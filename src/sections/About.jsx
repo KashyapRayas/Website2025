@@ -64,20 +64,16 @@ const About = forwardRef((_, ref) => {
   const grassTargetRef4 = useRef(null);
   const headingRef = useRef(null);
 
-  useGSAP(() => {
+  useEffect(() => {
     if (!headingRef.current) return;
-
-    gsap.to(headingRef.current, {
-      scrollTrigger: {
-        trigger: headingRef.current,
-        start: "top 60%",
-        end: "bottom top",
-        toggleClass: {
-          targets: headingRef.current,
-          className: styles.headingActive,
-        },
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        headingRef.current?.classList.toggle(styles.headingActive, entry.isIntersecting);
       },
-    });
+      { rootMargin: "0px 0px -40% 0px" }
+    );
+    observer.observe(headingRef.current);
+    return () => observer.disconnect();
   }, []);
 
   const age = useMemo(() => {

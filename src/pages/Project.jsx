@@ -22,6 +22,7 @@ const getProjectDataPath = (projectName) => {
 
 const Project = ({
   handleBack,
+  onBackWithScroll,
   isIncomingTransition,
   selectedProjectName,
   onNextProjectSelect,
@@ -383,7 +384,7 @@ const Project = ({
         </div>
       </section>
       <Contact key={selectedProjectName}/>
-      <Footer inProject={true} lenis={lenis} />
+      <Footer inProject={true} lenis={lenis} onBackWithScroll={onBackWithScroll} />
     </div>
   );
 };

@@ -11,7 +11,7 @@ import About from '../sections/About.jsx';
 import Contact from '../sections/Contact.jsx';
 import Footer from '../sections/Footer.jsx';
 
-const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, onModifierDeckSelect, isPreloaderDone, returnedFrom}) => {
+const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, onModifierDeckSelect, isPreloaderDone, returnedFrom, pendingScrollTarget, onScrollTargetConsumed}) => {
     const [linkHovered, setLinkHovered] = useState(false);
     const homeRef = useRef(null);
     const aboutRef = useRef(null);
@@ -58,6 +58,18 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, onModifierDec
             clearTimeout(resizeTimeoutRef.current);
         };
     }, [isMobile]);
+
+    useEffect(() => {
+        if (!isIncomingTransition && pendingScrollTarget && lenis) {
+            let scrollDuration = 3;
+            if (pendingScrollTarget === '#ABOUT') scrollDuration = 4;
+            const timer = setTimeout(() => {
+                lenis.scrollTo(pendingScrollTarget, { duration: scrollDuration, offset: isMobile ? -60 : 0 });
+                onScrollTargetConsumed?.();
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [isIncomingTransition, pendingScrollTarget, lenis, isMobile]);
 
     const initialStyle = {
         position: "relative",
