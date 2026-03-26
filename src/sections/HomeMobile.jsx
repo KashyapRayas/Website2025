@@ -10,6 +10,7 @@ import AnimatedMan from "../components/AnimatedMan";
 import { useGSAP } from "@gsap/react";
 import GrassOverlay from "../components/GrassOverlay";
 import AnimatedArrow from "../components/AnimatedArrow";
+import { useButtonSounds } from "../hooks/useButtonSounds";
 
 gsap.registerPlugin(CustomEase, ScrollTrigger);
 
@@ -22,6 +23,7 @@ const Home = forwardRef(
     const grassTargetRef2 = useRef(null);
     const grassTargetRef3 = useRef(null);
     const [deckHovered, setDeckHovered] = useState(false);
+    const { playHover, playClick } = useButtonSounds();
     const narratorRef = useRef(null);
     const cursorRef = useRef(null);
 
@@ -457,10 +459,11 @@ const Home = forwardRef(
             <a
               href="#"
               className={styles.second}
-              onMouseEnter={() => setDeckHovered(true)}
+              onMouseEnter={() => { setDeckHovered(true); playHover(3); }}
               onMouseLeave={() => setDeckHovered(false)}
               onClick={(e) => {
                 e.preventDefault();
+                playClick(3);
                 onModifierDeckSelect();
               }}
             >
