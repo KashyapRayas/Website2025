@@ -134,7 +134,6 @@ const Preloader = ({ onComplete, onMidway }) => {
 
         if (isMobile) {
             // Mobile: 90% width of device with 16/9 aspect ratio
-            const deviceWidth = window.innerWidth;
             boxWidth = Math.min(356, window.innerWidth*0.9)
             window.innerHeight < 400 ? boxHeight = 60 : boxHeight = 200
         } else {

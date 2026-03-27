@@ -151,7 +151,7 @@ function App() {
         }
       }
       else if (state.view === 'modifier_deck') {
-        if (view !== 'modifier_deck') handleModifierDeckSelect();
+        if (view !== 'modifier_deck') handleModifierDeckSelect(); 
       }
 
       setTimeout(() => {

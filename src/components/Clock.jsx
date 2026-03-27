@@ -19,7 +19,7 @@ function Clock() {
     return () => clearInterval(interval);
   }, []);
 
-  return <span>{time}</span>;
+  return <span style={{paddingLeft: "9px"}}>{time}</span>;
 }
 
 export default Clock;
