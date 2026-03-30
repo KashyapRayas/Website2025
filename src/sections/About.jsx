@@ -245,7 +245,7 @@ const About = forwardRef((_, ref) => {
           </div>
 
             <a
-                href="https://drive.google.com/file/d/1QAMfZAwlDTpdvQKsIk_NVGW1BfTQuBND/view?usp=sharing"
+                href="https://drive.google.com/file/d/12dYdJq4Q5KDVlghvON27KRiGc8sl-ZMm/view?usp=sharing"
                 className={styles.second}
                 onMouseEnter={() => { setResumeHovered(true); playHover(); }}
                 onMouseLeave={() => setResumeHovered(false)}
