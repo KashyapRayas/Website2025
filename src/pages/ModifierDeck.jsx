@@ -9,12 +9,18 @@ import { useGSAP } from "@gsap/react";
 
 const TOTAL_CARDS = 42;
 
+// Fixed diagonal angle — hoisted so they're computed once, not per-frame
+const BAND_COS = Math.cos(-1);
+const BAND_SIN = Math.sin(-1);
+
 // Cursor-proximity pixelation with spring-elastic tracking.
 // Three concentric zones: mild → medium → heavy pixelation at cursor.
 const PixelHoverCanvas = ({ hoverPos, isActive, imgSrc }) => {
-  const canvasRef = useRef(null);
-  const liveRef   = useRef({ hoverPos, isActive });
-  liveRef.current = { hoverPos, isActive };
+  const canvasRef  = useRef(null);
+  const liveRef    = useRef({ hoverPos, isActive });
+  liveRef.current  = { hoverPos, isActive };
+  const rafRef     = useRef(null);
+  const restartRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -33,7 +39,6 @@ const PixelHoverCanvas = ({ hoverPos, isActive, imgSrc }) => {
     // Spring state for elastic cursor lag
     const spr = { x: 0, y: 0, vx: 0, vy: 0 };
     let hv = 0;
-    let raf;
 
     // Keep canvas drawing-buffer in sync with CSS size
     const sync = () => {
@@ -50,27 +55,18 @@ const PixelHoverCanvas = ({ hoverPos, isActive, imgSrc }) => {
     const off    = document.createElement("canvas");
     const offCtx = off.getContext("2d");
 
-    // Deterministic per-block hash — same formula as the WebGL shader
-    const hash2 = (ix, iy) =>
-      ((Math.sin(ix * 127.1 + iy * 311.7) * 43758.5453) % 1 + 1) % 1;
-
-    // Diagonal band clip drawn on `targetCtx`.
-    const applyStreakClip = (targetCtx, bandX, bandY, halfWidth, blockSize, cosA, sinA) => {
-      const bx1    = Math.ceil(canvas.width  / blockSize);
-      const by1    = Math.ceil(canvas.height / blockSize);
-      const jitter = blockSize * 0.8;
+    // Simple diagonal band clip — 4-point polygon, O(1) path ops per zone.
+    // Replaces the per-block rect loop which was O(w*h / blockSize²) per zone.
+    const applyBandClip = (targetCtx, bandX, bandY, halfWidth) => {
+      const len = Math.hypot(canvas.width, canvas.height) * 2;
+      const nx = -BAND_SIN;
+      const ny =  BAND_COS;
       targetCtx.beginPath();
-      for (let iy = 0; iy <= by1; iy++) {
-        for (let ix = 0; ix <= bx1; ix++) {
-          const bcx  = (ix + 0.5) * blockSize;
-          const bcy  = (iy + 0.5) * blockSize;
-          const perp  = Math.abs((bcx - bandX) * (-sinA) + (bcy - bandY) * cosA);
-          const noise = (hash2(ix, iy) - 0.5) * jitter;
-          if (perp <= halfWidth + noise) {
-            targetCtx.rect(ix * blockSize, iy * blockSize, blockSize, blockSize);
-          }
-        }
-      }
+      targetCtx.moveTo(bandX + nx * halfWidth - BAND_COS * len, bandY + ny * halfWidth - BAND_SIN * len);
+      targetCtx.lineTo(bandX + nx * halfWidth + BAND_COS * len, bandY + ny * halfWidth + BAND_SIN * len);
+      targetCtx.lineTo(bandX - nx * halfWidth + BAND_COS * len, bandY - ny * halfWidth + BAND_SIN * len);
+      targetCtx.lineTo(bandX - nx * halfWidth - BAND_COS * len, bandY - ny * halfWidth - BAND_SIN * len);
+      targetCtx.closePath();
     };
 
     // 6-step progressive reveal: base(8) → 6 → 4 → 2 → 1(sharp)
@@ -91,6 +87,14 @@ const PixelHoverCanvas = ({ hoverPos, isActive, imgSrc }) => {
       hv += (hvTarget - hv) * (act ? 0.12 : 0.08);
       if (Math.abs(hv - hvTarget) < 0.001) hv = hvTarget;
 
+      // Stop the RAF loop when fully idle — restartRef restarts it on next hover
+      if (hv < 0.001 && !act) {
+        hv = 0;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        rafRef.current = null;
+        return;
+      }
+
       if (hp?.active) {
         spr.vx = (spr.vx + (hp.x - spr.x) * 0.12) * 0.72;
         spr.vy = (spr.vy + (hp.y - spr.y) * 0.12) * 0.72;
@@ -105,8 +109,6 @@ const PixelHoverCanvas = ({ hoverPos, isActive, imgSrc }) => {
       if (hv > 0.002 && img.complete && img.naturalWidth > 0) {
         const bandX = (spr.x + 0.5) * w;
         const bandY = (spr.y + 0.5) * h;
-        const cosA  = Math.cos(-1); // fixed, never rotates
-        const sinA  = Math.sin(-1);
 
         if (off.width !== w || off.height !== h) { off.width = w; off.height = h; }
         offCtx.clearRect(0, 0, w, h);
@@ -131,7 +133,7 @@ const PixelHoverCanvas = ({ hoverPos, isActive, imgSrc }) => {
           tmpCtx.drawImage(img, 0, 0, sw, sh);
 
           offCtx.save();
-          applyStreakClip(offCtx, bandX, bandY, halfWidth, blockSize, cosA, sinA);
+          applyBandClip(offCtx, bandX, bandY, halfWidth);
           offCtx.clip();
           offCtx.drawImage(tmp, 0, 0, sw, sh, 0, 0, w, h);
           offCtx.restore();
@@ -143,12 +145,26 @@ const PixelHoverCanvas = ({ hoverPos, isActive, imgSrc }) => {
         ctx.globalAlpha = 1;
       }
 
-      raf = requestAnimationFrame(tick);
+      rafRef.current = requestAnimationFrame(tick);
     };
 
-    raf = requestAnimationFrame(tick);
-    return () => { cancelAnimationFrame(raf); ro.disconnect(); };
+    // Exposed so the isActive effect can restart a stopped loop
+    restartRef.current = () => {
+      if (!rafRef.current) rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+      ro.disconnect();
+    };
   }, [imgSrc]);
+
+  // Restart the idle-stopped loop as soon as hover begins
+  useEffect(() => {
+    if (isActive && restartRef.current) restartRef.current();
+  }, [isActive]);
 
   return (
     <canvas
@@ -161,6 +177,7 @@ const PixelHoverCanvas = ({ hoverPos, isActive, imgSrc }) => {
         pointerEvents: "none",
         zIndex: 3,
         borderRadius: "9px",
+        willChange: "transform",
       }}
     />
   );
@@ -283,7 +300,7 @@ const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop, isAnyHovered,
             alt={cardData?.name || `Card ${index + 1}`}
             className={styles.cardImg}
           />
-          <PixelHoverCanvas hoverPos={hoverPos} isActive={hoverPos.active} imgSrc={frontImage} />
+          {!isLocked && <PixelHoverCanvas hoverPos={hoverPos} isActive={hoverPos.active} imgSrc={frontImage} />}
         </div>
         <div className={styles.cardBack}>
           <img src={backImage} alt="Card Back" className={styles.cardImg} />
