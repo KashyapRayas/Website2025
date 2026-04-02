@@ -9,7 +9,164 @@ import { useGSAP } from "@gsap/react";
 
 const TOTAL_CARDS = 42;
 
-const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop }) => {
+// Cursor-proximity pixelation with spring-elastic tracking.
+// Three concentric zones: mild → medium → heavy pixelation at cursor.
+const PixelHoverCanvas = ({ hoverPos, isActive, imgSrc }) => {
+  const canvasRef = useRef(null);
+  const liveRef   = useRef({ hoverPos, isActive });
+  liveRef.current = { hoverPos, isActive };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    // Reusable small canvas for downsampling each zone
+    const tmp    = document.createElement("canvas");
+    const tmpCtx = tmp.getContext("2d");
+    tmpCtx.imageSmoothingEnabled = false;
+
+    // Reuse the browser-cached image
+    const img = new Image();
+    img.src = imgSrc;
+
+    // Spring state for elastic cursor lag
+    const spr = { x: 0, y: 0, vx: 0, vy: 0 };
+    let hv = 0;
+    let raf;
+
+    // Keep canvas drawing-buffer in sync with CSS size
+    const sync = () => {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      if (w > 0 && h > 0) { canvas.width = w; canvas.height = h; }
+    };
+    const ro = new ResizeObserver(sync);
+    ro.observe(canvas);
+    sync();
+
+    // Off-screen canvas — all compositing done here at full alpha,
+    // then faded onto the main canvas via globalAlpha = hv
+    const off    = document.createElement("canvas");
+    const offCtx = off.getContext("2d");
+
+    // Deterministic per-block hash — same formula as the WebGL shader
+    const hash2 = (ix, iy) =>
+      ((Math.sin(ix * 127.1 + iy * 311.7) * 43758.5453) % 1 + 1) % 1;
+
+    // Diagonal band clip drawn on `targetCtx`.
+    const applyStreakClip = (targetCtx, bandX, bandY, halfWidth, blockSize, cosA, sinA) => {
+      const bx1    = Math.ceil(canvas.width  / blockSize);
+      const by1    = Math.ceil(canvas.height / blockSize);
+      const jitter = blockSize * 0.8;
+      targetCtx.beginPath();
+      for (let iy = 0; iy <= by1; iy++) {
+        for (let ix = 0; ix <= bx1; ix++) {
+          const bcx  = (ix + 0.5) * blockSize;
+          const bcy  = (iy + 0.5) * blockSize;
+          const perp  = Math.abs((bcx - bandX) * (-sinA) + (bcy - bandY) * cosA);
+          const noise = (hash2(ix, iy) - 0.5) * jitter;
+          if (perp <= halfWidth + noise) {
+            targetCtx.rect(ix * blockSize, iy * blockSize, blockSize, blockSize);
+          }
+        }
+      }
+    };
+
+    // 6-step progressive reveal: base(8) → 6 → 4 → 2 → 1(sharp)
+    // Half-widths strictly decreasing so each inner zone overrides only the previous.
+    // The clear zone (blockSize 1) is wide to give a generous unobstructed window.
+    const INNER_ZONES = [
+      { relWidth: 0.65, blockSize: 8 },
+      { relWidth: 0.52, blockSize: 6  },
+      { relWidth: 0.41, blockSize: 4  },
+      { relWidth: 0.33, blockSize: 2  },
+      { relWidth: 0.28, blockSize: 1  }, // sharp centre — wide clear band
+    ];
+
+    const tick = () => {
+      const { hoverPos: hp, isActive: act } = liveRef.current;
+
+      const hvTarget = act ? 1 : 0;
+      hv += (hvTarget - hv) * (act ? 0.12 : 0.08);
+      if (Math.abs(hv - hvTarget) < 0.001) hv = hvTarget;
+
+      if (hp?.active) {
+        spr.vx = (spr.vx + (hp.x - spr.x) * 0.12) * 0.72;
+        spr.vy = (spr.vy + (hp.y - spr.y) * 0.12) * 0.72;
+        spr.x += spr.vx;
+        spr.y += spr.vy;
+      }
+
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      if (hv > 0.002 && img.complete && img.naturalWidth > 0) {
+        const bandX = (spr.x + 0.5) * w;
+        const bandY = (spr.y + 0.5) * h;
+        const cosA  = Math.cos(-1); // fixed, never rotates
+        const sinA  = Math.sin(-1);
+
+        if (off.width !== w || off.height !== h) { off.width = w; off.height = h; }
+        offCtx.clearRect(0, 0, w, h);
+        offCtx.imageSmoothingEnabled = false;
+
+        // Base layer: heaviest pixelation everywhere (farthest from streak = most pixelated)
+        const swB = Math.max(1, Math.floor(w / 6));
+        const shB = Math.max(1, Math.floor(h / 6));
+        if (tmp.width !== swB) tmp.width = swB;
+        if (tmp.height !== shB) tmp.height = shB;
+        tmpCtx.drawImage(img, 0, 0, swB, shB);
+        offCtx.drawImage(tmp, 0, 0, swB, shB, 0, 0, w, h);
+
+        // Progressive reveal: streak narrows as hv fades, giving a closing-band exit
+        for (const { relWidth, blockSize } of INNER_ZONES) {
+          const halfWidth = relWidth * w * hv;
+          if (halfWidth < 1) continue;
+          const sw = Math.max(1, Math.floor(w / blockSize));
+          const sh = Math.max(1, Math.floor(h / blockSize));
+          if (tmp.width  !== sw) tmp.width  = sw;
+          if (tmp.height !== sh) tmp.height = sh;
+          tmpCtx.drawImage(img, 0, 0, sw, sh);
+
+          offCtx.save();
+          applyStreakClip(offCtx, bandX, bandY, halfWidth, blockSize, cosA, sinA);
+          offCtx.clip();
+          offCtx.drawImage(tmp, 0, 0, sw, sh, 0, 0, w, h);
+          offCtx.restore();
+        }
+
+        // Base fades out with hv; streak has already narrowed by this point
+        ctx.globalAlpha = hv;
+        ctx.drawImage(off, 0, 0);
+        ctx.globalAlpha = 1;
+      }
+
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => { cancelAnimationFrame(raf); ro.disconnect(); };
+  }, [imgSrc]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        zIndex: 3,
+        borderRadius: "9px",
+      }}
+    />
+  );
+};
+
+const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop, isAnyHovered, onHoverStart, onHoverEnd }) => {
   const cardRef = useRef(null);
   const unlockLabelRef = useRef(null);
   const cardLabelRef = useRef(null);
@@ -80,6 +237,7 @@ const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop }) => {
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     setHoverPos({ x, y, active: true });
+    onHoverStart?.();
   };
 
   const dynamicStyle = useMemo(() => {
@@ -101,34 +259,21 @@ const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop }) => {
     return {
       transform: `perspective(1000px) rotateY(${isLocked ? 180 : 0}deg)
                   rotateX(0deg) translateZ(0px)`,
-      transition: "transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)",
+      transition: "transform 0.9s cubic-bezier(0.23, 1, 0.32, 1)",
     };
   }, [hoverPos, isLocked, hasFinishedIntro]);
 
-  const glimmerStyle = useMemo(() => {
-    if (!hoverPos.active) return { opacity: 0 };
-
-    const xPos = (0.5 - hoverPos.x) * 100;
-
-    return {
-      opacity: 1,
-      background: `linear-gradient(
-        105deg,
-        transparent ${xPos - 45}%,
-        rgba(255, 255, 255, 0.05) ${xPos - 30}%,
-        rgba(255, 255, 255, 0.4) ${xPos}%,
-        rgba(255, 255, 255, 0.05) ${xPos + 30}%,
-        transparent ${xPos + 45}%
-      )`,
-    };
-  }, [hoverPos, isLocked]);
 
   return (
     <div
       className={styles.cardContainer}
+      style={{
+        opacity: isAnyHovered ? 0.6 : 1,
+        transition: "opacity 0.9s ease",
+      }}
       onMouseMove={isDesktop ? handleMouseMove : undefined}
       onMouseLeave={
-        isDesktop ? () => setHoverPos({ x: 0, y: 0, active: false }) : undefined
+        isDesktop ? () => { setHoverPos({ x: 0, y: 0, active: false }); onHoverEnd?.(); } : undefined
       }
     >
       <div className={styles.cardInner} ref={cardRef} style={dynamicStyle}>
@@ -138,11 +283,11 @@ const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop }) => {
             alt={cardData?.name || `Card ${index + 1}`}
             className={styles.cardImg}
           />
-          <div className={styles.glimmer} style={glimmerStyle}></div>
+          <PixelHoverCanvas hoverPos={hoverPos} isActive={hoverPos.active} imgSrc={frontImage} />
         </div>
         <div className={styles.cardBack}>
           <img src={backImage} alt="Card Back" className={styles.cardImg} />
-          <div className={styles.glimmer} style={glimmerStyle}></div>
+          {!isLocked && <PixelHoverCanvas hoverPos={hoverPos} isActive={hoverPos.active} imgSrc={backImage} />}
         </div>
       </div>
       <div className={styles.unlockLabel} ref={unlockLabelRef}>
@@ -162,6 +307,7 @@ const ModifierDeck = ({ handleBack, onBackWithScroll, isIncomingTransition }) =>
   const playClick = () => _playClick(3);
   const lenis = useLenis();
   const [startSequence, setStartSequence] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const [cardsData, setCardsData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDesktop, setIsDesktop] = useState(() => {
@@ -307,6 +453,9 @@ const ModifierDeck = ({ handleBack, onBackWithScroll, isIncomingTransition }) =>
                           triggerFlip={startSequence}
                           cardData={cardsData?.cards[i]}
                           isDesktop={isDesktop}
+                          isAnyHovered={hoveredIndex !== null && hoveredIndex !== i}
+                          onHoverStart={() => setHoveredIndex(i)}
+                          onHoverEnd={() => setHoveredIndex(null)}
                         />
                         ))}
                     </div>

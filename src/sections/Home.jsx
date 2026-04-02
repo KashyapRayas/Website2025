@@ -25,6 +25,147 @@ import GrassOverlay from "../components/GrassOverlay";
 
 gsap.registerPlugin(CustomEase, ScrollTrigger);
 
+const PixelHoverCanvas = ({ hoverPos, isActive, imgSrc }) => {
+  const canvasRef = useRef(null);
+  const liveRef   = useRef({ hoverPos, isActive });
+  liveRef.current = { hoverPos, isActive };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    const tmp    = document.createElement("canvas");
+    const tmpCtx = tmp.getContext("2d");
+    tmpCtx.imageSmoothingEnabled = false;
+
+    const img = new Image();
+    img.src = imgSrc;
+
+    const spr = { x: 0, y: 0, vx: 0, vy: 0 };
+    let hv = 0;
+    let raf;
+
+    const sync = () => {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      if (w > 0 && h > 0) { canvas.width = w; canvas.height = h; }
+    };
+    const ro = new ResizeObserver(sync);
+    ro.observe(canvas);
+    sync();
+
+    const off    = document.createElement("canvas");
+    const offCtx = off.getContext("2d");
+
+    const hash2 = (ix, iy) =>
+      ((Math.sin(ix * 127.1 + iy * 311.7) * 43758.5453) % 1 + 1) % 1;
+
+    const applyStreakClip = (targetCtx, bandX, bandY, halfWidth, blockSize, cosA, sinA) => {
+      const bx1    = Math.ceil(canvas.width  / blockSize);
+      const by1    = Math.ceil(canvas.height / blockSize);
+      const jitter = blockSize * 0.8;
+      targetCtx.beginPath();
+      for (let iy = 0; iy <= by1; iy++) {
+        for (let ix = 0; ix <= bx1; ix++) {
+          const bcx  = (ix + 0.5) * blockSize;
+          const bcy  = (iy + 0.5) * blockSize;
+          const perp  = Math.abs((bcx - bandX) * (-sinA) + (bcy - bandY) * cosA);
+          const noise = (hash2(ix, iy) - 0.5) * jitter;
+          if (perp <= halfWidth + noise) {
+            targetCtx.rect(ix * blockSize, iy * blockSize, blockSize, blockSize);
+          }
+        }
+      }
+    };
+
+    const INNER_ZONES = [
+      // { relWidth: 0.65, blockSize: 8 },
+      { relWidth: 0.52, blockSize: 6 },
+      { relWidth: 0.41, blockSize: 4 },
+      { relWidth: 0.33, blockSize: 2 },
+      { relWidth: 0.28, blockSize: 1 },
+    ];
+
+    const tick = () => {
+      const { hoverPos: hp, isActive: act } = liveRef.current;
+
+      const hvTarget = act ? 1 : 0;
+      hv += (hvTarget - hv) * (act ? 0.12 : 0.08);
+      if (Math.abs(hv - hvTarget) < 0.001) hv = hvTarget;
+
+      if (hp?.active) {
+        spr.vx = (spr.vx + (hp.x - spr.x) * 0.12) * 0.72;
+        spr.vy = (spr.vy + (hp.y - spr.y) * 0.12) * 0.72;
+        spr.x += spr.vx;
+        spr.y += spr.vy;
+      }
+
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      if (hv > 0.002 && img.complete && img.naturalWidth > 0) {
+        const bandX = (spr.x + 0.5) * w;
+        const bandY = (spr.y + 0.5) * h;
+        const cosA  = Math.cos(-1);
+        const sinA  = Math.sin(-1);
+
+        if (off.width !== w || off.height !== h) { off.width = w; off.height = h; }
+        offCtx.clearRect(0, 0, w, h);
+        offCtx.imageSmoothingEnabled = false;
+
+        const swB = Math.max(1, Math.floor(w / 4));
+        const shB = Math.max(1, Math.floor(h / 4));
+        if (tmp.width !== swB) tmp.width = swB;
+        if (tmp.height !== shB) tmp.height = shB;
+        tmpCtx.drawImage(img, 0, 0, swB, shB);
+        offCtx.drawImage(tmp, 0, 0, swB, shB, 0, 0, w, h);
+
+        for (const { relWidth, blockSize } of INNER_ZONES) {
+          const halfWidth = relWidth * w * hv;
+          if (halfWidth < 1) continue;
+          const sw = Math.max(1, Math.floor(w / blockSize));
+          const sh = Math.max(1, Math.floor(h / blockSize));
+          if (tmp.width  !== sw) tmp.width  = sw;
+          if (tmp.height !== sh) tmp.height = sh;
+          tmpCtx.drawImage(img, 0, 0, sw, sh);
+
+          offCtx.save();
+          applyStreakClip(offCtx, bandX, bandY, halfWidth, blockSize, cosA, sinA);
+          offCtx.clip();
+          offCtx.drawImage(tmp, 0, 0, sw, sh, 0, 0, w, h);
+          offCtx.restore();
+        }
+
+        ctx.globalAlpha = hv;
+        ctx.drawImage(off, 0, 0);
+        ctx.globalAlpha = 1;
+      }
+
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => { cancelAnimationFrame(raf); ro.disconnect(); };
+  }, [imgSrc]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        zIndex: 3,
+        borderRadius: "9px",
+      }}
+    />
+  );
+};
+
 const BASE_PATH = "";
 const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
 
@@ -181,6 +322,7 @@ const HomeCard = memo(
             <>
               <div className={styles.homeCardFront}>
                 <img src={frontImage} className={styles.cardImg} alt="" />
+                <PixelHoverCanvas hoverPos={hoverPos} isActive={hoverPos.active} imgSrc={frontImage} />
                 <div
                   className={styles.glimmer}
                   style={{
