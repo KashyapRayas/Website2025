@@ -24,7 +24,7 @@ const BASE_PATH = "";
 const PROJECTS_JSON_URL = `${BASE_PATH}/data/projects.json`;
 const FALLBACK_IMG_SRC = BASE_PATH + "/project_imgs/placeholder.webp";
 
-const PIXEL_STAGES = [24, 12, 6, 3, 1];
+const PIXEL_STAGES = [12, 6, 3, 1];
 const STAGE_DURATION_MS = 100;
 const CANVAS_FADE_DURATION_MS = 300;
 

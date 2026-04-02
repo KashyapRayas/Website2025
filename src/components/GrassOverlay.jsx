@@ -144,13 +144,25 @@ const GrassOverlay = ({
     });
 
     resizeObserver.observe(targetRef.current);
-    window.addEventListener("scroll", updateLayout, {
-      passive: true
-    });
+
+    // RAF-throttle the scroll handler — with multiple GrassOverlay instances
+    // on the page, firing updateLayout (getBoundingClientRect + setState) on
+    // every scroll event causes excessive layout reads and re-renders.
+    let scrollRaf = null;
+    const onScroll = () => {
+      if (scrollRaf) return;
+      scrollRaf = requestAnimationFrame(() => {
+        scrollRaf = null;
+        updateLayout();
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener("scroll", updateLayout);
+      window.removeEventListener("scroll", onScroll);
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
     };
   }, [targetRef]);
 

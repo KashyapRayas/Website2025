@@ -752,7 +752,7 @@ const Home = forwardRef(
         return {
           color: HOVER_COLOR_BANDS[colorIndex],
           transform: `rotate(${rotation}deg)`,
-          transition: "color 0.15s ease, transform 0.1s ease-out",
+          transition: "color 0.15s ease",
         };
       },
       [starsHover]

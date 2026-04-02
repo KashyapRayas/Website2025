@@ -4,7 +4,7 @@ import Lightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import 'yet-another-react-lightbox/styles.css';
 
-const PIXEL_STAGES = [48, 24, 12, 6, 3, 1];
+const PIXEL_STAGES = [24, 12, 6, 3, 1];
 const STAGE_DURATION_MS = 100;
 const CANVAS_FADE_DURATION_MS = 300;
 

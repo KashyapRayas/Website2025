@@ -105,9 +105,11 @@ function buildProgram(gl) {
 }
 
 export default function CardShader({ hoverPos, isActive }) {
-  const canvasRef = useRef(null);
-  const liveRef   = useRef({ hoverPos, isActive });
-  liveRef.current = { hoverPos, isActive };
+  const canvasRef  = useRef(null);
+  const liveRef    = useRef({ hoverPos, isActive });
+  liveRef.current  = { hoverPos, isActive };
+  const rafRef     = useRef(null);
+  const restartRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -142,7 +144,6 @@ export default function CardShader({ hoverPos, isActive }) {
 
     let hoverVal = 0;
     let smx = 0, smy = 0; // smoothed cursor position
-    let raf;
 
     const tick = () => {
       const { hoverPos: hp, isActive: act } = liveRef.current;
@@ -150,6 +151,14 @@ export default function CardShader({ hoverPos, isActive }) {
       // Smooth hover in/out
       hoverVal += ((act ? 1.0 : 0.0) - hoverVal) * 0.1;
       if (Math.abs(hoverVal - (act ? 1.0 : 0.0)) < 0.001) hoverVal = act ? 1.0 : 0.0;
+
+      // Stop the RAF loop when fully idle — restartRef restarts it on next hover
+      if (hoverVal < 0.001 && !act) {
+        hoverVal = 0;
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        rafRef.current = null;
+        return;
+      }
 
       // Smooth cursor — trails slightly so the distortion field glides
       if (hp?.active) {
@@ -168,17 +177,28 @@ export default function CardShader({ hoverPos, isActive }) {
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
 
-      raf = requestAnimationFrame(tick);
+      rafRef.current = requestAnimationFrame(tick);
     };
 
-    raf = requestAnimationFrame(tick);
+    // Exposed so the isActive effect can restart a stopped loop
+    restartRef.current = () => {
+      if (!rafRef.current) rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
 
     return () => {
-      cancelAnimationFrame(raf);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
       gl.deleteBuffer(buf);
       gl.deleteProgram(prog);
     };
   }, []);
+
+  // Restart the idle-stopped loop as soon as hover begins
+  useEffect(() => {
+    if (isActive && restartRef.current) restartRef.current();
+  }, [isActive]);
 
   return (
     <canvas
