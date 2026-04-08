@@ -542,7 +542,7 @@ export default function Error404() {
               <div className="e4-third">
                 <h4 className="e4-label-sm">ABOUT THIS PAGE</h4>
                 <p className="e4-desc">
-                  This URL doesn't exist. Roll the block onto the green tile to find your way home. Don't fall off the edge.
+                  This URL doesn't exist. Roll the block onto the green tile to find your way home. Don't fall off the edge [ Idea by my bsf Isha ]
                 </p>
               </div>
 
