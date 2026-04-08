@@ -52,7 +52,7 @@ const Digit = ({ number, isLoaded, delay=0 }) => {
   );
 
   return (
-    <div ref={container} style={{ display: "flex" }}>
+    <div ref={container} style={{ display: "flex", gap: "7px" }}>
       {hasPlus && <PLUS />}
       {digits.map((d, i) => {
         const DigitSvg = digitComponents[d];

@@ -114,12 +114,12 @@ const ProjectImage = ({ src, alt, caption = "" }) => {
     position: "relative",
     width: "100%",
     aspectRatio: "16 / 9",
-    borderRadius: "9px",
+    borderRadius: "6px",
     backgroundColor: "var(--light-off-teal)",
     overflow: "hidden",
     cursor: "pointer",
     transition: "transform 0.3s ease-in-out",
-    border: "2.1px solid var(--off-teal)"
+    border: "1.8px solid var(--off-teal)"
   };
 
   // Shared style for both the img and canvas so they overlap perfectly
