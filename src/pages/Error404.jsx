@@ -123,13 +123,54 @@ function easeInOutQuad(t) {
   return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 }
 
+// ─── BFS: find minimum moves to win ──────────────────────────────────────────
+const MIN_MOVES = (() => {
+  const queue = [{ block: LEVEL.start, moves: 0 }];
+  const visited = new Set();
+  const key = (b) => `${b.type},${b.x},${b.y}`;
+  visited.add(key(LEVEL.start));
+  while (queue.length) {
+    const { block, moves } = queue.shift();
+    for (const dir of ['up', 'down', 'left', 'right']) {
+      const next = rollBlock(block, dir);
+      if (!isValid(LEVEL.grid, next)) continue;
+      if (isWin(LEVEL.grid, next)) return moves + 1;
+      const k = key(next);
+      if (!visited.has(k)) { visited.add(k); queue.push({ block: next, moves: moves + 1 }); }
+    }
+  }
+  return null;
+})();
+
+function getWinMessage(moves, falls) {
+  const extra = moves - MIN_MOVES;
+  if (falls === 0 && extra === 0)  return "Flawless.";
+  if (falls === 0 && extra <= 3)   return "Clean and efficient.";
+  if (falls === 0 && extra <= 8)   return "No falls. Decent.";
+  if (falls === 0)                 return "You took the scenic route.";
+  if (extra === 0 && falls === 1)  return "Optimal line, one slip.";
+  if (extra === 0 && falls <= 3)   return "Optimal path, shaky landing.";
+  if (extra === 0)                 return "You know the route, just not the edges.";
+  if (falls === 1 && extra <= 3)   return "Almost clean.";
+  if (falls <= 2 && extra <= 6)    return "Decent run.";
+  if (falls <= 2)                  return "A few detours.";
+  if (falls >= 15)                 return "Absolute chaos, so I'll let you pass.";
+  if (falls >= 8)                  return "Stubborn. It paid off.";
+  if (falls >= 4 && extra <= 5)    return "Efficient but clumsy.";
+  if (falls >= 4)                  return "More falls than it needed.";
+  return "You got there eventually.";
+}
+
 // ─── Reducer ─────────────────────────────────────────────────────────────────
+const FALL_LIMIT = 15;
+
 const INIT = {
   block: { ...LEVEL.start },
   moves: 0,
   fell: false,
   fallCount: 0,
   won: false,
+  gameover: false,
 };
 
 function reducer(state, action) {
@@ -138,12 +179,15 @@ function reducer(state, action) {
       const won = isWin(LEVEL.grid, action.block);
       return { ...state, block: action.block, moves: state.moves + 1, won };
     }
-    case 'FELL':
-      return { ...state, fell: true, fallCount: state.fallCount + 1 };
+    case 'FELL': {
+      const newCount = state.fallCount + 1;
+      return { ...state, fell: true, fallCount: newCount, gameover: newCount >= FALL_LIMIT };
+    }
     case 'UNFALL':
+      if (state.gameover) return { ...state, fell: false };
       return { ...state, fell: false, block: { ...LEVEL.start }, moves: 0 };
     case 'RESET':
-      return { ...state, fell: false, block: { ...LEVEL.start }, moves: 0, won: false };
+      return { ...INIT };
     default: return state;
   }
 }
@@ -365,10 +409,15 @@ function drawScene(canvas, state) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function Error404() {
-  const canvasRef = useRef(null);
-  const shakeRef  = useRef(null);
-  const animRef   = useRef({ active: false });
-  const rafRef    = useRef(null);
+  const canvasRef   = useRef(null);
+  const shakeRef    = useRef(null);
+  const animRef     = useRef({ active: false });
+  const rafRef      = useRef(null);
+  const btnUpRef    = useRef(null);
+  const btnDownRef  = useRef(null);
+  const btnLeftRef  = useRef(null);
+  const btnRightRef = useRef(null);
+  const btnResetRef = useRef(null);
   const [state, dispatch] = useReducer(reducer, INIT);
   const stateRef  = useRef(state);
   stateRef.current = state;
@@ -443,7 +492,8 @@ export default function Error404() {
           const tumbleT = Math.min(1, (elapsed - FALL_ROLL) / FALL_TUMBLE);
           const tumbleTheta = easeInQuad(tumbleT) * Math.PI * 0.75;
           const sinkY = easeInQuad(tumbleT) * 160;
-          const alpha = Math.max(0, 1 - tumbleT);
+          const fadeStart = 0.55;
+          const alpha = tumbleT < fadeStart ? 1 : Math.max(0, 1 - (tumbleT - fadeStart) / (1 - fadeStart));
           // Left/up = falling away from camera → draw behind all tiles
           // Right/down = falling toward camera → interleave at depth
           if (a.dir === 'left' || a.dir === 'up') {
@@ -476,7 +526,7 @@ export default function Error404() {
   const handleMove = useCallback((dir) => {
     if (animRef.current.active) return;
     const s = stateRef.current;
-    if (s.fell || s.won) return;
+    if (s.fell || s.won || s.gameover) return;
     const { grid } = LEVEL;
     const next = rollBlock(s.block, dir);
     startAnim(isValid(grid, next) ? 'move' : 'fall', s.block, next, dir);
@@ -490,24 +540,40 @@ export default function Error404() {
       ArrowUp: 'up', w: 'up', W: 'up',
       ArrowDown: 'down', s: 'down', S: 'down',
     };
-    const onKey = (e) => {
+    const DIR_BTN = {
+      left: btnLeftRef, right: btnRightRef, up: btnUpRef, down: btnDownRef,
+    };
+    const pressBtn   = (ref) => ref.current?.classList.add('e4-db--pressed');
+    const releaseBtn = (ref) => ref.current?.classList.remove('e4-db--pressed');
+
+    const onKeyDown = (e) => {
       if (animRef.current.active) return;
       const s = stateRef.current;
       if (s.fell) return;
-      if (s.won) { if (e.key === 'Enter') window.location.href = '/'; return; }
-      if (e.key === 'r' || e.key === 'R') { dispatch({ type: 'RESET' }); return; }
+      if (s.won || s.gameover) { if (e.key === 'Enter') window.location.href = '/'; return; }
+      if (e.key === 'r' || e.key === 'R') { pressBtn(btnResetRef); dispatch({ type: 'RESET' }); return; }
       const dir = MAP[e.key];
       if (!dir) return;
       if (e.key.startsWith('Arrow')) e.preventDefault();
+      pressBtn(DIR_BTN[dir]);
       handleMove(dir);
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    const onKeyUp = (e) => {
+      if (e.key === 'r' || e.key === 'R') { releaseBtn(btnResetRef); return; }
+      const dir = MAP[e.key];
+      if (dir) releaseBtn(DIR_BTN[dir]);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+    };
   }, [handleMove]);
 
-  // Countdown and redirect after win
+  // Countdown and redirect after win or gameover
   useEffect(() => {
-    if (!state.won) return;
+    if (!state.won && !state.gameover) return;
     setCountdown(3);
     const interval = setInterval(() => {
       setCountdown(prev => {
@@ -516,7 +582,7 @@ export default function Error404() {
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [state.won]);
+  }, [state.won, state.gameover]);
 
   return (
     <div className="e4-root">
@@ -577,19 +643,19 @@ export default function Error404() {
                   <div className="e4-dpad">
                     <div className="e4-drow">
                       <div className="e4-db-empty" />
-                      <button className="e4-db" onClick={() => handleMove('up')}><ArrowUp /></button>
+                      <button ref={btnUpRef} className="e4-db" onClick={() => handleMove('up')}><ArrowUp /></button>
                       <div className="e4-db-empty" />
                     </div>
                     <div className="e4-drow">
-                      <button className="e4-db" onClick={() => handleMove('left')}><ArrowLeft /></button>
-                      <button className="e4-db e4-db-r" onClick={() => dispatch({ type: 'RESET' })}>
+                      <button ref={btnLeftRef} className="e4-db" onClick={() => handleMove('left')}><ArrowLeft /></button>
+                      <button ref={btnResetRef} className="e4-db e4-db-r" onClick={() => dispatch({ type: 'RESET' })}>
                         <img src="/R.svg" alt="R" width="22" height="22" />
                       </button>
-                      <button className="e4-db" onClick={() => handleMove('right')}><ArrowRight /></button>
+                      <button ref={btnRightRef} className="e4-db" onClick={() => handleMove('right')}><ArrowRight /></button>
                     </div>
                     <div className="e4-drow">
                       <div className="e4-db-empty" />
-                      <button className="e4-db" onClick={() => handleMove('down')}><ArrowDown /></button>
+                      <button ref={btnDownRef} className="e4-db" onClick={() => handleMove('down')}><ArrowDown /></button>
                       <div className="e4-db-empty" />
                     </div>
                   </div>
@@ -615,7 +681,15 @@ export default function Error404() {
                   <canvas ref={canvasRef} className="e4-canvas" />
                   {state.won && (
                     <div className="e4-overlay">
-                      <div className="e4-ol-title">Great Job!</div>
+                      <div className="e4-ol-title">{getWinMessage(state.moves, state.fallCount)}</div>
+                      <div className="e4-ol-stats">{state.moves} moves · {state.fallCount} {state.fallCount === 1 ? 'fall' : 'falls'} · best {MIN_MOVES}</div>
+                      <div className="e4-ol-sub">Redirecting in {countdown}s</div>
+                    </div>
+                  )}
+                  {state.gameover && (
+                    <div className="e4-overlay">
+                      <div className="e4-ol-title">Absolute chaos, so I'll let you pass.</div>
+                      <div className="e4-ol-stats">{state.fallCount} {state.fallCount === 1 ? 'fall' : 'falls'} · {state.moves} moves</div>
                       <div className="e4-ol-sub">Redirecting in {countdown}s</div>
                     </div>
                   )}
