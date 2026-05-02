@@ -1,4 +1,4 @@
-import { useRef, useState} from 'react';
+import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -35,6 +35,7 @@ const WavingMan = () => (
 
 const AnimatedMan = ({isLoaded}) => {
     const container = useRef(null);
+    const waveRef = useRef(null);
 
     useGSAP(() => {
         if(isLoaded) {
@@ -69,10 +70,29 @@ const AnimatedMan = ({isLoaded}) => {
                 .to("#hand-2", { fillOpacity: 1, duration: 0.15 }, "<")
                 .to("#hand-1", { fillOpacity: 1, duration: 0.15 }, "+=0.6")
                 .to("#hand-2", { fillOpacity: 0, duration: 0.15 }, "<");
-                masterTl.add(waveTl);
+
+            waveRef.current = waveTl;
+            masterTl.add(waveTl);
         }
 
     }, { scope: container, dependencies: [isLoaded] });
+
+    useEffect(() => {
+        const el = container.current;
+        if (!el) return;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    waveRef.current?.resume();
+                } else {
+                    waveRef.current?.pause();
+                }
+            },
+            { threshold: 0 }
+        );
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
 
     return (
         <div ref={container}>

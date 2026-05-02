@@ -90,6 +90,10 @@ const Hero = ({ isLoaded }) => {
 
   // Timelines
   const t1 = useRef(null);
+  const fishermanTlRef = useRef(null);
+  const waveTlRef = useRef(null);
+  const isHeroVisibleRef = useRef(true);
+  const blinkRestartRef = useRef(null);
 
   const d = 0.8;
 
@@ -524,12 +528,20 @@ const Hero = ({ isLoaded }) => {
     const scheduleNextGroup = () => {
       const delay = 1.5 + Math.random() * 0.5;
       blinkTimeout = setTimeout(() => {
+        if (!isHeroVisibleRef.current) {
+          blinkRestartRef.current = performBlinkGroup;
+          return;
+        }
         performBlinkGroup();
       }, delay * 1000);
     };
 
     blinkTimeout = setTimeout(() => {
-      performBlinkGroup();
+      if (isHeroVisibleRef.current) {
+        performBlinkGroup();
+      } else {
+        blinkRestartRef.current = performBlinkGroup;
+      }
     }, (1.5 + Math.random() * 0.5) * 1000);
 
     return () => {
@@ -590,8 +602,9 @@ const Hero = ({ isLoaded }) => {
       });
 
     masterTl.add(fishermanTl, 0);
+    fishermanTlRef.current = masterTl;
 
-    return () => masterTl.kill();
+    return () => { masterTl.kill(); fishermanTlRef.current = null; };
   }, []);
 
   // Wave animation on header rectangles
@@ -614,7 +627,9 @@ const Hero = ({ isLoaded }) => {
       ease: "wave",
     });
 
-    return () => t2.kill();
+    waveTlRef.current = t2;
+
+    return () => { t2.kill(); waveTlRef.current = null; };
   }, []);
 
   // Parallax group on scroll
@@ -633,6 +648,33 @@ const Hero = ({ isLoaded }) => {
     });
 
     return () => tween.kill();
+  }, []);
+
+  // Pause all looping animations when the hero is scrolled out of view
+  useEffect(() => {
+    const el = meSvgRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isHeroVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          t1.current?.resume();
+          fishermanTlRef.current?.resume();
+          waveTlRef.current?.resume();
+          if (blinkRestartRef.current) {
+            blinkRestartRef.current();
+            blinkRestartRef.current = null;
+          }
+        } else {
+          t1.current?.pause();
+          fishermanTlRef.current?.pause();
+          waveTlRef.current?.pause();
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
   return (

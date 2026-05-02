@@ -448,8 +448,10 @@ const Home = forwardRef(
     const grassTargetRef3 = useRef(null);
     const grassTargetRef4 = useRef(null);
 
+    const cardDeckRef = useRef(null);
     const recentCanvasRef = useRef(null);
     const recentPixelTimerRef = useRef(null);
+    const starTweenRef = useRef(null);
 
     const PIXEL_STAGES = [12, 6, 3, 1];
     const STAGE_DURATION_MS = 100;
@@ -677,13 +679,30 @@ const Home = forwardRef(
     useGSAP(() => {
       if (!rectRef.current) return;
       CustomEase.create("wave", "M0,0 C0.6,0, 0.3,1.4, 1,1");
-      gsap.to(rectRef.current, {
+      starTweenRef.current = gsap.to(rectRef.current, {
         rotate: "360deg",
         duration: 3,
         ease: "wave",
         repeat: -1,
       });
     }, [rectRef.current]);
+
+    useEffect(() => {
+      const el = rectRef.current;
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            starTweenRef.current?.resume();
+          } else {
+            starTweenRef.current?.pause();
+          }
+        },
+        { threshold: 0 }
+      );
+      observer.observe(el);
+      return () => observer.disconnect();
+    }, []);
 
     useGSAP(() => {
       if (!cursorRef.current) return;
@@ -710,6 +729,25 @@ const Home = forwardRef(
           scrub: 1,
         },
       });
+    }, [homeRef.current]);
+
+    /* — parallax on card deck — */
+    useGSAP(() => {
+      if (!cardDeckRef.current || !homeRef.current) return;
+      gsap.set(cardDeckRef.current, { y: -18, force3D: true });
+      const tween = gsap.to(cardDeckRef.current, {
+        y: 18,
+        ease: "none",
+        force3D: true,
+        scrollTrigger: {
+          trigger: cardDeckRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.5,
+          invalidateOnRefresh: true,
+        },
+      });
+      return () => tween.kill();
     }, [homeRef.current]);
 
     const handleRecentEnter = useCallback(() => setRecentHovered(true), []);
@@ -1008,7 +1046,7 @@ const Home = forwardRef(
                 onMouseEnter={() => setCardsHovered(true)}
                 onMouseLeave={() => setCardsHovered(false)}
               >
-                <div className={styles.homeCardDeck}>
+                <div className={styles.homeCardDeck} ref={cardDeckRef}>
                   {[0, 1, 2, 3, 4, 5, 6].map((i) => (
                     <HomeCard
                       key={i}
