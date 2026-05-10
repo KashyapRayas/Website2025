@@ -74,7 +74,7 @@
   position: relative;
 }
 
-.second h4 {
+.second p {
   font-size: 24px;
   text-wrap: wrap;
   margin: 0;
@@ -85,7 +85,7 @@
   word-break: break-word;
 }
 
-.second h4 span {
+.second p span {
   display: inline;
   color: var(--dark-green);
 }
@@ -105,21 +105,12 @@
   position: relative;
 }
 
-.thirdNew h4 {
+.thirdNew h3 {
   font-size: 13px;
   width: 100%;
   text-wrap: wrap;
   font-weight: 400;
   color: var(--off-black-06);
-  margin: 0;
-}
-
-.thirdNew h3 {
-  font-size: 18px;
-  width: 100%;
-  text-wrap: wrap;
-  font-weight: 400;
-  color: var(--off-black);
   margin: 0;
 }
 
@@ -137,8 +128,8 @@
   border-radius: 9px;
 }
 
-.thirdLeft h4,
-.thirdRight h4 {
+.thirdLeft h3,
+.thirdRight h3 {
   font-size: 13px;
   width: 100%;
   text-wrap: wrap;
@@ -160,14 +151,14 @@
   width: 100%;
 }
 
-.item h2 {
+.item p {
   color: var(--off-black);
   font-size: 16px;
   font-weight: 400;
   margin: 0;
 }
 
-.item h2 span {
+.item p span {
   display: inline;
 }
 
@@ -179,7 +170,7 @@
   display: inline;
 }
 
-.thirdRight .item h2 {
+.thirdRight .item p {
   color: var(--off-black-06);
 }
 
@@ -297,13 +288,13 @@
   overflow: hidden;
 }
 
-.iconWrapper h4 {
+.iconWrapper span {
   font-weight: 800;
   color: var(--off-black-06);
 }
 
-.rightFirst h4,
-.rightSecond h4 {
+.rightFirst h3,
+.rightSecond h3 {
   font-size: 13px;
   width: 100%;
   text-wrap: wrap;
@@ -312,11 +303,11 @@
   margin: 0;
 }
 
-.rightFirst h4 span {
+.rightFirst h3 span {
   display: inline-block;
 }
 
-.rightFirst h4 spanspan {
+.rightFirst h3 spanspan {
   display: inline-block;
 }
 
@@ -439,7 +430,7 @@
   align-items: center;
 }
 
-.rightThird h4 {
+.rightThird h3 {
   font-size: 13px;
   width: 100%;
   text-wrap: wrap;
@@ -448,15 +439,15 @@
   margin: 0;
 }
 
-.rightThird h4 span {
+.rightThird h3 span {
   display: inline-block;
 }
 
-.rightThird h4 spanspan {
+.rightThird h3 spanspan {
   display: inline-block;
 }
 
-.rightThird h3 {
+.rightThird p {
   font-size: 15px;
   width: 100%;
   text-wrap: wrap;
@@ -465,11 +456,11 @@
   margin: 0;
 }
 
-.rightThird h3 span {
+.rightThird p span {
   display: inline;
 }
 
-.rightThird h3 spanspan {
+.rightThird p spanspan {
   display: inline;
 }
 

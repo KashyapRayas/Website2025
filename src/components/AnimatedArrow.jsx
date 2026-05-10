@@ -110,7 +110,7 @@ const AnimatedArrow = ({ isActive = false }) => {
     };
 
     return (
-        <div ref={container} style={containerStyle}>
+        <div ref={container} style={containerStyle} aria-hidden="true">
         <ArrowSvg style={svgStyle} />
         </div>
     );

@@ -215,6 +215,7 @@
         font-size: 15px;
         color: var(--dark-green);
         font-weight: 400;
+        margin: 0;
         .workHeadingWrapper {
             width: 100%;
             display: flex;

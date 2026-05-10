@@ -400,6 +400,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  isolation: isolate;
 }
 
 .homeCard {
@@ -410,15 +411,25 @@
   transition: all 0.3s ease-in-out;
 }
 
+/* Back-facing cards */
 .homeCard:nth-child(1) {
-  transform: translateX(-70px) translateY(45px);
+  transform: translateX(-125px) translateY(58px);
 }
 
 .homeCard:nth-child(2) {
+  transform: translateX(125px) translateY(58px);
+}
+
+/* Front-facing cards */
+.homeCard:nth-child(3) {
+  transform: translateX(-70px) translateY(45px);
+}
+
+.homeCard:nth-child(4) {
   transform: translateX(0) translateY(30px);
 }
 
-.homeCard:nth-child(3) {
+.homeCard:nth-child(5) {
   transform: translateX(70px) translateY(45px);
 }
 
@@ -449,6 +460,15 @@
 .homeCardBack {
   background-color: var(--off-black);
   transform: rotateY(180deg);
+}
+
+.homeCardBlank {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  overflow: hidden;
+  background-color: var(--off-black);
 }
 
 .cardImg {

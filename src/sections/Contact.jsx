@@ -77,6 +77,7 @@ const Contact = forwardRef(({}, ref) => {
     <section
       id="CONTACT"
       className={styles.contact}
+      aria-label="Contact"
       ref={(el) => {
         sectionRef.current = el;
         if (typeof ref === "function") ref(el);
@@ -89,14 +90,14 @@ const Contact = forwardRef(({}, ref) => {
 
       <div className={styles.middle}>
         <div className={styles.right}>
-          <div className={styles.heading} ref={headingRef}>
+          <h2 className={styles.heading} ref={headingRef}>
             <span className={styles.headingBracket}>{"<"}</span>
             CONTACT
             <span className={styles.headingBracket}>{"/>"}</span>
-          </div>
+          </h2>
 
           <div className={styles.first}>
-            <h4 className={styles.firstH4} ref={firstH4Ref}>
+            <p className={styles.firstH4} ref={firstH4Ref}>
               <span ref={muteButtonRef}>[ Muted ]</span>
               <br />{" "}
               <span className="word" style={{ opacity: 0 }}>
@@ -114,16 +115,17 @@ const Contact = forwardRef(({}, ref) => {
               <span className="word" style={{ opacity: 0 }}>
                 ..
               </span>
-            </h4>
-            <h3 className={styles.firstH3}>
+            </p>
+            <p className={styles.firstH3}>
               I'm always up for a chat, about Chainsaw Man's
               nihilist worldview or your next project. You can
               reach me at..
-            </h3>
+            </p>
           </div>
 
           <a
             href="mailto:kashyap.rayas@gmail.com"
+            aria-label="Email Kashyap at kashyap.rayas@gmail.com"
             className={styles.second}
             onMouseEnter={() => { setContactHovered(true); playHover(); }}
             onMouseLeave={() => setContactHovered(false)}
@@ -131,10 +133,10 @@ const Contact = forwardRef(({}, ref) => {
             ref={grassTargetRef1}
           >
             <AnimatedArrow isActive={!contactHovered} />
-            <h4>
+            <p>
               KASHYAP.RAYAS
               <span>@GMAIL.COM</span>
-            </h4>
+            </p>
             <AnimatedArrow isActive={contactHovered} />
           </a>
           <GrassOverlay targetRef={grassTargetRef1}></GrassOverlay>

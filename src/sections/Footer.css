@@ -91,7 +91,7 @@ footer > .middle > .right-wrapper > .right-subwrapper > .right {
     gap: 9px;
     background-color: var(--off-white);
 
-    h1 {
+    p.fin {
         font-family: "Stara", "sans-serif";
         font-size: 60px;
         margin: 0;
@@ -100,11 +100,11 @@ footer > .middle > .right-wrapper > .right-subwrapper > .right {
         color: var(--off-black);
     }
 
-    h1 span {
+    p.fin span {
         color: var(--dark-green);
     }
 
-    h1 span.Fin {
+    p.fin span.Fin {
         font-family: "Lora", serif;
         font-style: italic;
         color: var(--off-black);
@@ -116,7 +116,7 @@ footer > .middle > .right-wrapper > .right-subwrapper > .right {
         width: 100%;
         align-items: start;
         height: 100%;
-        h3 {
+        p.copyright {
             font-size: 15px;
             color: var(--off-black-06);
             font-weight: 600;
@@ -124,7 +124,7 @@ footer > .middle > .right-wrapper > .right-subwrapper > .right {
             margin: 0;
         }
 
-        h2 {
+        p.tagline {
             font-size: 15px;
             color: var(--off-black-06);
             font-weight: 400;

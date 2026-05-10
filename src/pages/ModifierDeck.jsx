@@ -409,9 +409,9 @@ const ModifierDeck = ({ handleBack, onBackWithScroll, isIncomingTransition }) =>
               <div className={styles.third}>
                 <div>
                   <div className={styles.iconWrapper}>
-                    <h4 className={styles.chevronh4}>{">"}</h4>
+                    <span aria-hidden="true" className={styles.chevronh4}>{">"}</span>
                   </div>
-                  <h4 className={styles.desch4}>ABOUT MODIFIER DECK</h4>
+                  <p className={styles.desch4}>ABOUT MODIFIER DECK</p>
                 </div>
                 <h3 className={styles.desch3}>
                   Completing a task or achievement forges a new card,
@@ -444,9 +444,9 @@ const ModifierDeck = ({ handleBack, onBackWithScroll, isIncomingTransition }) =>
                 <div className={styles.third}>
                     <div>
                         <div className={styles.iconWrapper}>
-                            <h4 className={styles.chevronh4}>{">"}</h4>
+                            <span aria-hidden="true" className={styles.chevronh4}>{">"}</span>
                         </div>
-                        <h4 className={styles.desch4}>ABOUT MODIFIER DECK</h4>
+                        <p className={styles.desch4}>ABOUT MODIFIER DECK</p>
                     </div>
                     <h3 className={styles.desch3}>
                         Completing a task or achievement forges a new card,

@@ -236,7 +236,7 @@ const PercentageSlider = () => {
   return (
     <div ref={containerRef} style={containerStyle}>
       <div style={squareStyle}>
-        <canvas ref={canvasRef} style={canvasStyle} />
+        <canvas ref={canvasRef} style={canvasStyle} role="img" aria-label="Photo of Kashyap" />
       </div>
 
       <div
@@ -253,7 +253,15 @@ const PercentageSlider = () => {
           border: "2.4px solid var(--off-teal)"
         }}
       >
-        <div id="play-pause-button" onMouseEnter={playButtonHover} onClick={togglePlay}>
+        <div
+          id="play-pause-button"
+          role="button"
+          tabIndex={0}
+          aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
+          onMouseEnter={playButtonHover}
+          onClick={togglePlay}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); togglePlay(); } }}
+        >
           <img src={isPlaying ? PauseIcon : PlayIcon} alt=""/>
         </div>
 
@@ -265,6 +273,7 @@ const PercentageSlider = () => {
           onChange={handleSliderChange}
           className="percentage-slider"
           style={{ "--value": `${percentage}%` }}
+          aria-label="Browse photos"
         />
       </div>
     </div>

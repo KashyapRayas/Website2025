@@ -1,7 +1,7 @@
 import styles from "./LinkButton.module.css";
 import { useButtonSounds } from "../../hooks/useButtonSounds";
 
-const LinkButton = ({ isActive = false, linkName, linkTo = "", lenis, onClick, size="small", offset=false}) => {
+const LinkButton = ({ isActive = false, linkName, linkTo = "", lenis, onClick, size="small", offset=false, ariaExpanded}) => {
 	const { playHover: _playHover, playClick: _playClick } = useButtonSounds();
 	const playHover = () => _playHover(3);
 	const playClick = () => _playClick(3);
@@ -27,11 +27,16 @@ const LinkButton = ({ isActive = false, linkName, linkTo = "", lenis, onClick, s
 	const buttonClassName = `${styles.navLink} ${size === "large" ? styles.large : ""} ${isActive ? styles.active : ""}`;
 
 	return (
-		// Use the combined className string
-		<button className={buttonClassName.trim()} onClick={handleClick} onMouseEnter={playHover}>
-			<span className={styles.bracket}>{"<"}</span>
+		<button
+			className={buttonClassName.trim()}
+			onClick={handleClick}
+			onMouseEnter={playHover}
+			aria-current={isActive ? "page" : undefined}
+			aria-expanded={ariaExpanded}
+		>
+			<span className={styles.bracket} aria-hidden="true">{"<"}</span>
 			{linkName}
-			<span className={styles.bracket}>{"/>"}</span>
+			<span className={styles.bracket} aria-hidden="true">{"/>"}</span>
 		</button>
 	);
 };

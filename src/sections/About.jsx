@@ -29,9 +29,9 @@ const ListItem = ({ icon, text, span }) => (
     <div className={styles.wrapper}>
       <img src={icon} alt="" />
     </div>
-    <h2 className={icon === checked ? styles.checked : styles.unchecked}>
+    <p className={icon === checked ? styles.checked : styles.unchecked}>
       {text} {span && <span>{span}</span>}
-    </h2>
+    </p>
   </div>
 );
 
@@ -137,14 +137,14 @@ const About = forwardRef((_, ref) => {
   ];
 
   return (
-    <section id="ABOUT" className={styles.about} ref={ref}>
+    <section id="ABOUT" className={styles.about} ref={ref} aria-label="About">
       <div className="extremes-wrapper-left">
         <div className="extremes"></div>
       </div>
 
       <div className={styles.middle}>
         <div className={styles.right}>
-          <div className={styles.heading} ref={headingRef}>
+          <h2 className={styles.heading} ref={headingRef}>
             <span className={`${styles.headingBracket}`}>
               {"<"}
             </span>
@@ -152,22 +152,21 @@ const About = forwardRef((_, ref) => {
             <span className={`${styles.headingBracket}`}>
               {"/>"}
             </span>
-          </div>
+          </h2>
 
           <div className={styles.rightFirst}>
             <div>
               <div className={styles.iconWrapper}>
-                <h4>{">"}
-                </h4>
+                <span aria-hidden="true">{">"}</span>
               </div>
-              <h4>OBJECTIVE</h4>
+              <h3>OBJECTIVE</h3>
             </div>
-            <h3 className={styles.objh3}>
+            <p className={styles.objh3}>
               Ever since I was a kid<span>,</span> I knew I wanted to
               <span> write emails</span> and work
               <span> cross functionally</span> across teams
               <span>.</span>
-            </h3>
+            </p>
           </div>
 
           <div
@@ -176,13 +175,13 @@ const About = forwardRef((_, ref) => {
           >
             <div>
               <div className={styles.iconWrapper}>
-                <h4 className={styles.desch4}>
+                <span aria-hidden="true" className={styles.desch4}>
                   {">"}
-                </h4>
+                </span>
               </div>
-              <h4>DESCRIPTIVE</h4>
+              <h3>DESCRIPTIVE</h3>
             </div>
-            <h3 className={styles.desch3}>
+            <p className={styles.desch3}>
               <span>[ ready's intro ]</span> He's Kashyap Rayas{" "}
               <span>[ {age} M ]</span>, Product Designer by trade and
               professional overthinker by nature.
@@ -198,7 +197,7 @@ const About = forwardRef((_, ref) => {
               <br />
               Right now, he’s at VigaET as a UI/UX Engineer, leading design & product strategy
               for a suite of apps made for the film production industry.
-            </h3>
+            </p>
           </div>
 
           <GrassOverlay targetRef={grassTargetRef1}></GrassOverlay>
@@ -210,17 +209,16 @@ const About = forwardRef((_, ref) => {
             <div className={styles.rightThird}>
               <div>
                 <div className={styles.iconWrapper}>
-                  <h4>{">"}
-                  </h4>
+                  <span aria-hidden="true">{">"}</span>
                 </div>
-                <h4>THE UNDERGROUND MAN</h4>
+                <h3>THE UNDERGROUND MAN</h3>
               </div>
-              <h3>
+              <p>
                 It is clear to me now that, owing to my unbounded vanity and
                 to the high standard I set for myself, I often looked at
                 myself with furious discontent, which verged on loathing, and
                 so I inwardly attributed the same feeling to everyone.
-              </h3>
+              </p>
             </div>
             <div className={styles.rightS2}>
               <AnimatedDownwardSmiley isActive={true} />
@@ -246,6 +244,9 @@ const About = forwardRef((_, ref) => {
 
             <a
                 href="https://drive.google.com/file/d/12dYdJq4Q5KDVlghvON27KRiGc8sl-ZMm/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="View Kashyap's resume (PDF, opens in new tab)"
                 className={styles.second}
                 onMouseEnter={() => { setResumeHovered(true); playHover(); }}
                 onMouseLeave={() => setResumeHovered(false)}
@@ -253,9 +254,9 @@ const About = forwardRef((_, ref) => {
                 ref={grassTargetRef4}
             >
                 <AnimatedArrow isActive={!resumeHovered} />
-                <h4>
+                <p>
                 VIEW KASHYAP'S <span>RESUME</span>
-                </h4>
+                </p>
                 <AnimatedArrow isActive={resumeHovered} />
             </a>
 
@@ -263,7 +264,7 @@ const About = forwardRef((_, ref) => {
 
           <div className={styles.thirdNew}>
             <div className={styles.thirdLeft}>
-              <h4>THINGS HE CURRENTLY ENJOYS</h4>
+              <h3>THINGS HE CURRENTLY ENJOYS</h3>
               <div className={styles.list}>
                 {currentEnjoy.map((item, i) => (
                   <ListItem
@@ -279,7 +280,7 @@ const About = forwardRef((_, ref) => {
               className={styles.thirdRight}
               ref={grassTargetRef3}
             >
-              <h4>THINGS HE HOPES TO COMPLETE</h4>
+              <h3>THINGS HE HOPES TO COMPLETE</h3>
               <div className={styles.list}>
                 {goals.map((item, i) => (
                   <ListItem

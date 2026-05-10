@@ -121,10 +121,10 @@ const Home = forwardRef(
     const cards = cardWrapperRef.current.querySelectorAll(
         `.${styles.homeCardInner}`
     );
-
     gsap.set(cards, { rotateY: 180 });
 
     const master = gsap.timeline({ paused: true });
+
     cards.forEach((card, i) => {
         const tl = gsap
         .timeline()
@@ -197,7 +197,7 @@ const Home = forwardRef(
     }, []);
 
     return (
-      <section id="HOME" ref={ref} className={styles.home}>
+      <section id="HOME" ref={ref} className={styles.home} aria-label="Home">
         <div className="extremes-wrapper-left">
           <div className="extremes"></div>
         </div>
@@ -266,9 +266,9 @@ const Home = forwardRef(
             <div className={styles.third}>
                 <div>
                 <div className={styles.iconWrapper}>
-                    <h4 className={styles.chevronh4}>{">"}</h4>
+                    <span aria-hidden="true" className={styles.chevronh4}>{">"}</span>
                 </div>
-                <h4 className={styles.desch4}>NARRATOR'S NOTE</h4>
+                <p className={styles.desch4}>NARRATOR'S NOTE</p>
                 </div>
                 <div className={styles.spacer}></div>
                 <h3 className={styles.desch3}>
@@ -414,11 +414,23 @@ const Home = forwardRef(
           <div className={styles.fourthTop}>
             <div className={styles.cardWrapper} ref={cardWrapperRef}>
               <div className={styles.homeCardDeck}>
+                {/* Back-facing cards — rendered first, z-index: -1 keeps them behind */}
+                <div className={styles.homeCard} style={{ zIndex: -1 }}>
+                  <div className={styles.homeCardBlank}>
+                    <img src="/cards/cardBack.jpg" className={styles.cardImg} alt="" />
+                  </div>
+                </div>
+                <div className={styles.homeCard} style={{ zIndex: -1 }}>
+                  <div className={styles.homeCardBlank}>
+                    <img src="/cards/cardBack.jpg" className={styles.cardImg} alt="" />
+                  </div>
+                </div>
+                {/* Front-facing cards with flip animation */}
                 {[0, 1, 2].map((i) => (
                   <div
                     key={i}
                     className={styles.homeCard}
-                    style={{ zIndex: i === 1 ? 3 : i }}
+                    style={{ zIndex: i === 1 ? 5 : i + 1 }}
                   >
                     <div className={styles.homeCardInner}>
                       <div className={styles.homeCardFront}>

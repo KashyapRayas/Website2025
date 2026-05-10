@@ -420,7 +420,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
   if (!projectsData) {
     return (
-      <section id="WORK" ref={ref}>
+      <section id="WORK" ref={ref} aria-label="Work">
         <div style={{ textAlign: "center", padding: "100px" }}>
           Loading Works...
         </div>
@@ -437,7 +437,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
       <div className="middle">
         <div className="right">
           <div className="headingWrapper">
-            <div className="heading" ref={headingRef}>
+            <h2 className="heading" ref={headingRef}>
               <div className="workHeadingWrapper">
                 <span className="heading-bracket left">{"<"}</span>
                 WORKS
@@ -447,7 +447,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                 A collection of Kashyap's curated works. Choose one below
                 to view.
               </div>
-            </div>
+            </h2>
             <div className="rounder" ref={grassTargetRef2}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -478,8 +478,13 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
           <div
             className={"project locked"}
+            role="button"
+            tabIndex={0}
+            aria-label="Movie Colab VR – case study coming soon"
+            aria-disabled="true"
             onMouseEnter={playHover}
             onClick={() => { playClick(2); console.log("It ain't here yet!"); }}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); playClick(2); } }}
           >
             <div className="title">
               <img
@@ -517,9 +522,13 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
               <div
                 key={index}
                 className={`project ${isActive ? "project--active" : ""}`}
+                role="button"
+                tabIndex={0}
+                aria-label={`View project: ${project.name}`}
                 onMouseEnter={() => { handleMouseEnter(index); playHover(3); }}
                 onMouseLeave={handleMouseLeave}
                 onClick={() => { handleClick(project, index); playClick(3); }}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(project, index); playClick(3); } }}
               >
                 <div className="title">
                   <AnimatedArrow isActive={hoveredIndex !== index} />

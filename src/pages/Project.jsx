@@ -36,6 +36,8 @@ const Project = ({
   const lenis = useLenis();
   const grassTargetRef1 = useRef(null);
   const grassTargetRef2 = useRef(null);
+  // Cache for next project: stores { name, data, images[] } so switching is instant
+  const prefetchRef = useRef(null);
 
   const initialStyle = useMemo(
     () => ({
@@ -83,6 +85,13 @@ const Project = ({
   useEffect(() => {
     if (!selectedProjectName) {
       setProjectData(null);
+      return;
+    }
+
+    // Use prefetched data immediately if it matches — no loading flash
+    if (prefetchRef.current?.name === selectedProjectName) {
+      setProjectData(prefetchRef.current.data);
+      prefetchRef.current = null;
       return;
     }
 
@@ -138,23 +147,26 @@ const Project = ({
 
   useEffect(() => {
     if (!nextProject?.nextWorkTitle) return;
-    const nextFile = nextProject.nextWorkTitle
-      .toLowerCase()
-      .replace(/\s/g, "_");
+    const nextName = nextProject.nextWorkTitle;
+    const nextFile = nextName.toLowerCase().replace(/\s/g, "_");
     const nextUrl = `${BASE_PATH}/data/project_data/${nextFile}.json`;
 
     fetch(nextUrl)
       .then((res) => res.json())
       .then((nextData) => {
+        const images = [];
         if (Array.isArray(nextData.content)) {
           nextData.content
             .filter((i) => i.type === "img" && i.url)
             .forEach((i) => {
               const img = new Image();
+              img.crossOrigin = "anonymous"; // match ProjectImage's crossOrigin so same cache entry is used
               img.loading = "eager";
               img.src = BASE_PATH + i.url;
+              images.push(img); // hold ref to prevent GC before load completes
             });
         }
+        prefetchRef.current = { name: nextName, data: nextData, images };
       })
       .catch(() => {});
   }, [nextProject]);
@@ -176,6 +188,7 @@ const Project = ({
 
   return (
     <div id="project-content" style={currentStyle}>
+      <main>
       <section id={"PROJECT"}>
         <div className={"extremes-wrapper-left"}>
           <div className={"extremes"}></div>
@@ -185,14 +198,18 @@ const Project = ({
           <div className={"left"}>
             <div className={"sticky-div"}>
               <div className={"menu"}>
-                <div className={"nav-link"} onMouseEnter={playHover} onClick={() => { playClick(); handleBack(); }}>
+                <div className={"nav-link"} role="button" tabIndex={0} aria-label="Back to portfolio" onMouseEnter={playHover} onClick={() => { playClick(); handleBack(); }} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); playClick(); handleBack(); } }}>
                   BACK
                 </div>
                 {details.projectLink ? (
                   <div
                     className={"nav-link website"}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Go to ${details.projectTitle} project site (opens in new tab)`}
                     onMouseEnter={playHover}
                     onClick={() => { playClick(); window.open(details.projectLink, "_blank", "noopener"); }}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); playClick(); window.open(details.projectLink, "_blank", "noopener"); } }}
                   >
                     GO TO PROJECT
                   </div>
@@ -257,6 +274,9 @@ const Project = ({
               {nextProject && (
                 <div
                   className={`project`}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View next project: ${nextProject.nextWorkTitle}`}
                   onMouseEnter={() => { setHovered(true); playHover(); }}
                   onMouseLeave={() => setHovered(false)}
                   onClick={() => {
@@ -266,6 +286,7 @@ const Project = ({
                       description: nextProject.nextWorkDescription,
                     });
                   }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); playClick(); onNextProjectSelect({ name: nextProject.nextWorkTitle, description: nextProject.nextWorkDescription }); } }}
                 >
                   <div className={"title"}>
                     <AnimatedArrow isActive={!hovered} />
@@ -384,6 +405,7 @@ const Project = ({
         </div>
       </section>
       <Contact key={selectedProjectName}/>
+      </main>
       <Footer inProject={true} lenis={lenis} onBackWithScroll={onBackWithScroll} />
     </div>
   );

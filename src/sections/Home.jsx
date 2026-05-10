@@ -820,7 +820,7 @@ const Home = forwardRef(
 
     if (!projects) {
       return (
-        <section id="HOME" ref={ref} className={styles.home}>
+        <section id="HOME" ref={ref} className={styles.home} aria-label="Home">
           <div className={styles.middle}>
             <h2 style={{ padding: "100px", textAlign: "center" }}>
               Loading projects...
@@ -835,6 +835,7 @@ const Home = forwardRef(
         id="HOME"
         ref={homeRef}
         className={styles.home}
+        aria-label="Home"
         onMouseMove={handleStarsMove}
         onMouseLeave={handleStarsLeave}
       >
@@ -975,9 +976,13 @@ const Home = forwardRef(
                       ? styles.secondInnerwrapperSelected
                       : ""
                   }`}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View recent work: ${firstProject.name}`}
                   onMouseEnter={() => { handleRecentEnter(); playHover(3); }}
                   onMouseLeave={handleRecentLeave}
                   onClick={() => { handleRecentClick(); playClick(3); }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleRecentClick(); playClick(3); } }}
                 >
                   <h4 className={styles.recenth4}>RECENT WORK</h4>
                   <div
@@ -1137,9 +1142,9 @@ const Home = forwardRef(
             <div className={styles.third}>
               <div>
                 <div className={styles.iconWrapper}>
-                  <h4 className={styles.chevronh4}>{">"}</h4>
+                  <span aria-hidden="true" className={styles.chevronh4}>{">"}</span>
                 </div>
-                <h4 className={styles.desch4}>NARRATOR'S NOTE</h4>
+                <p className={styles.desch4}>NARRATOR'S NOTE</p>
               </div>
               <div className={styles.spacer}></div>
               <h3 className={styles.desch3}>
