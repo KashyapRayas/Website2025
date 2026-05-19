@@ -116,10 +116,10 @@
 
 @media screen and (max-height: 400px) and (orientation: landscape) {
     .quote-line {
-        font-size: 21px;
+        font-size: 18px;
         padding: 12px;
     }
     .counter-wrapper {
-        font-size: 24px;
+        font-size: 18px;
     }
 }

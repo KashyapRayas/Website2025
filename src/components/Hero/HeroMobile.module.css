@@ -114,6 +114,18 @@
             font-weight: 500;
             font-style: normal;
             align-items: center;
+            gap: 0px;
+            user-select: none;
+        }
+
+        .mid-top-selected {
+            background-color: #264F78;
+            border-radius: 2px;
+        }
+
+        .mid-top-cursor {
+            color: #F8F8F8;
+            animation: midTopBlink 1s step-end infinite;
         }
 
     }
@@ -242,4 +254,10 @@
     box-sizing: border-box;
     border-radius: 12px;
     background-color: rgb(0, 99, 82);
+}
+
+
+@keyframes midTopBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
 }

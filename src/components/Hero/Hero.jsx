@@ -66,6 +66,14 @@ const Hero = ({ isLoaded }) => {
   const fishermanRef = useRef(null);
   const [searchHover, setSearchHover] = useState(false);
 
+  // mid-top typing animation state
+  const DEFAULT_MID_TOP = "Choose a font with me";
+  const HOVER_MID_TOP   = "One must imagine Kashyap happy";
+  const [midTopText,        setMidTopText]        = useState(DEFAULT_MID_TOP);
+  const [midTopHighlighted, setMidTopHighlighted] = useState(false);
+  const [midTopCursor,      setMidTopCursor]      = useState(false);
+  const midTopTimers = useRef([]);
+
   // Eyelid refs for blinking
   const rightEyelidRef = useRef(null);
   const rightEyelidBottomRef = useRef(null);
@@ -124,6 +132,41 @@ const Hero = ({ isLoaded }) => {
   const handleFontMenuLeave = useCallback(() => {
     fontMenuHoveredRef.current = false;
     setFontMenuHovered(false);
+  }, []);
+
+  const animateMidTop = useCallback((targetText, stopCursor = false) => {
+    midTopTimers.current.forEach(clearTimeout);
+    midTopTimers.current = [];
+
+    // Phase 1: highlight current text
+    setMidTopHighlighted(true);
+    setMidTopCursor(false);
+
+    // Phase 2: clear → show cursor
+    const tClear = setTimeout(() => {
+      setMidTopHighlighted(false);
+      setMidTopText("");
+      setMidTopCursor(true);
+    }, 380);
+    midTopTimers.current.push(tClear);
+
+    // Phase 3: type each character
+    const TYPE_DELAY = 560;
+    const CHAR_MS    = 48;
+    for (let i = 1; i <= targetText.length; i++) {
+      const tChar = setTimeout(() => {
+        setMidTopText(targetText.slice(0, i));
+      }, TYPE_DELAY + i * CHAR_MS);
+      midTopTimers.current.push(tChar);
+    }
+
+    // Phase 4: hide cursor once typing is done (only when reverting to default)
+    if (stopCursor) {
+      const tDone = setTimeout(() => {
+        setMidTopCursor(false);
+      }, TYPE_DELAY + targetText.length * CHAR_MS + 120);
+      midTopTimers.current.push(tDone);
+    }
   }, []);
 
   const checkIntersection = useCallback(() => {
@@ -502,17 +545,29 @@ const Hero = ({ isLoaded }) => {
     };
 
     const performBlinkGroup = () => {
-      let isDoubleBlink;
+      const r = Math.random();
+      let blinkType;
 
-      if (previousBlinkRef.current === "double") {
-        isDoubleBlink = Math.random() < 0.3;
+      if (previousBlinkRef.current === "triple") {
+        blinkType = r < 0.55 ? "single" : r < 0.775 ? "double" : "triple";
+      } else if (previousBlinkRef.current === "double") {
+        blinkType = r < 0.45 ? "single" : r < 0.725 ? "double" : "triple";
       } else {
-        isDoubleBlink = Math.random() < 0.6;
+        blinkType = r < 0.35 ? "single" : r < 0.675 ? "double" : "triple";
       }
 
-      if (isDoubleBlink) {
+      if (blinkType === "triple") {
         createSingleBlink();
-
+        blinkTimeout = setTimeout(() => {
+          createSingleBlink();
+          blinkTimeout = setTimeout(() => {
+            createSingleBlink();
+            previousBlinkRef.current = "triple";
+            scheduleNextGroup();
+          }, 520);
+        }, 300);
+      } else if (blinkType === "double") {
+        createSingleBlink();
         blinkTimeout = setTimeout(() => {
           createSingleBlink();
           previousBlinkRef.current = "double";
@@ -764,13 +819,18 @@ const Hero = ({ isLoaded }) => {
         </div>
 
         <div className={styles["mid"]}>
-          <div className={styles["mid-top"]}>Choose a font with me</div>
+          <div className={styles["mid-top"]}>
+            <span className={midTopHighlighted ? styles["mid-top-selected"] : undefined}>
+              {midTopText}
+            </span>
+            {midTopCursor && <span className={styles["mid-top-cursor"]}>▌</span>}
+          </div>
         </div>
 
         <div
           className={styles["bot"]}
-          onMouseEnter={() => t1.current && t1.current.pause()}
-          onMouseLeave={() => t1.current && t1.current.resume()}
+          onMouseEnter={() => { t1.current && t1.current.pause(); animateMidTop(HOVER_MID_TOP, false); }}
+          onMouseLeave={() => { t1.current && t1.current.resume(); animateMidTop(DEFAULT_MID_TOP, true); }}
         >
           {fonts.map((font, index) => (
             <div

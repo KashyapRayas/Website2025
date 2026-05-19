@@ -52,6 +52,15 @@ const Hero = ({ isLoaded }) => {
   const [fontWrapperState, setFontWrapperState] = useState("Stara");
   const fontStateRef = useRef("Stara");
   const [fontMenuHovered, setFontMenuHovered] = useState(false);
+
+  // mid-top typing animation state
+  const DEFAULT_MID_TOP = "Choose a font with me";
+  const HOVER_MID_TOP   = "One must imagine Kashyap happy";
+  const [midTopText,        setMidTopText]        = useState(DEFAULT_MID_TOP);
+  const [midTopHighlighted, setMidTopHighlighted] = useState(false);
+  const [midTopCursor,      setMidTopCursor]      = useState(false);
+  const midTopTimers = useRef([]);
+
   const fishermanRef = useRef(null);
 
   // Refs for SVG parts
@@ -106,6 +115,37 @@ const Hero = ({ isLoaded }) => {
     if (fontStateRef.current !== font) {
       fontStateRef.current = font;
       setFontWrapperState(font);
+    }
+  }, []);
+
+  const animateMidTop = useCallback((targetText, stopCursor = false) => {
+    midTopTimers.current.forEach(clearTimeout);
+    midTopTimers.current = [];
+
+    setMidTopHighlighted(true);
+    setMidTopCursor(false);
+
+    const tClear = setTimeout(() => {
+      setMidTopHighlighted(false);
+      setMidTopText("");
+      setMidTopCursor(true);
+    }, 380);
+    midTopTimers.current.push(tClear);
+
+    const TYPE_DELAY = 560;
+    const CHAR_MS    = 48;
+    for (let i = 1; i <= targetText.length; i++) {
+      const tChar = setTimeout(() => {
+        setMidTopText(targetText.slice(0, i));
+      }, TYPE_DELAY + i * CHAR_MS);
+      midTopTimers.current.push(tChar);
+    }
+
+    if (stopCursor) {
+      const tDone = setTimeout(() => {
+        setMidTopCursor(false);
+      }, TYPE_DELAY + targetText.length * CHAR_MS + 120);
+      midTopTimers.current.push(tDone);
     }
   }, []);
 
@@ -895,13 +935,18 @@ const Hero = ({ isLoaded }) => {
         </div>
 
         <div className={styles["mid"]}>
-          <div className={styles["mid-top"]}>Choose a font with me</div>
+          <div className={styles["mid-top"]}>
+            <span className={midTopHighlighted ? styles["mid-top-selected"] : undefined}>
+              {midTopText}
+            </span>
+            {midTopCursor && <span className={styles["mid-top-cursor"]}>▌</span>}
+          </div>
         </div>
 
         <div
           className={styles["bot"]}
-          onMouseEnter={() => t1.current && t1.current.pause()}
-          onMouseLeave={() => t1.current && t1.current.resume()}
+          onMouseEnter={() => { t1.current && t1.current.pause(); animateMidTop(HOVER_MID_TOP, false); }}
+          onMouseLeave={() => { t1.current && t1.current.resume(); animateMidTop(DEFAULT_MID_TOP, true); }}
         >
           {fonts.map((font, index) => (
             <div

@@ -289,6 +289,7 @@
 }
 
 .iconWrapper span {
+  font-size: 13px;
   font-weight: 800;
   color: var(--off-black-06);
 }

@@ -1,10 +1,30 @@
-import { forwardRef } from "react";
+import { forwardRef, useRef, useCallback, useEffect, useState } from "react";
 import Digit from "./Digit";
+import { usePixelHover } from "../hooks/usePixelHover";
 
-const Metric = forwardRef(({ name, count, isLoaded}, ref) => {
+const Metric = forwardRef(({ name, count, isLoaded }, forwardedRef) => {
+  const internalRef   = useRef(null);
+  const [hoverEnabled, setHoverEnabled] = useState(false);
+
+  const setRefs = useCallback((node) => {
+    internalRef.current = node;
+    if (typeof forwardedRef === "function") forwardedRef(node);
+    else if (forwardedRef) forwardedRef.current = node;
+  }, [forwardedRef]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    const t = setTimeout(() => setHoverEnabled(true), 2200);
+    return () => clearTimeout(t);
+  }, [isLoaded]);
+
+  const { onMouseMove, onMouseLeave } = usePixelHover(internalRef, hoverEnabled);
+
   return (
     <div
-      ref={ref}
+      ref={setRefs}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
       style={{
         position: "relative",
         width: "100%",
@@ -50,6 +70,6 @@ const Metric = forwardRef(({ name, count, isLoaded}, ref) => {
       </div>
     </div>
   );
-})
+});
 
 export default Metric;

@@ -121,6 +121,18 @@
             font-weight: 500;
             font-style: normal;
             align-items: center;
+            gap: 0px;
+            user-select: none;
+        }
+
+        .mid-top-selected {
+            background-color: #264F78;
+            border-radius: 2px;
+        }
+
+        .mid-top-cursor {
+            color: #F8F8F8;
+            animation: midTopBlink 1s step-end infinite;
         }
 
     }
@@ -281,4 +293,9 @@
     position: relative;
     height: 77px;
     overflow: hidden;
+}
+
+@keyframes midTopBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
 }

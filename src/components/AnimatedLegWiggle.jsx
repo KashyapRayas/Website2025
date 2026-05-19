@@ -1,8 +1,8 @@
-import { forwardRef, useRef, useImperativeHandle } from 'react';
+import { forwardRef, useRef, useImperativeHandle, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { usePixelHover } from '../hooks/usePixelHover';
 
-// The LegWiggleMan SVG component remains the same
 const LegWiggleMan = () => (
     <svg width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g id="leg_wiggle_man">
@@ -31,86 +31,70 @@ const LegWiggleMan = () => (
         <rect id="foot-rd" x="24" y="42" width="6" height="6" rx="2" fill="#00A084"/>
         </g>
     </svg>
-)
+);
 
 const AnimatedLegWiggle = forwardRef((props, ref) => {
     const container = useRef(null);
-    let masterTl = useRef(null);
+    const masterTl  = useRef(null);
+    const [hoverEnabled, setHoverEnabled] = useState(false);
 
     useGSAP(() => {
-        const footR = container.current.querySelector("#foot-r");
+        const footR  = container.current.querySelector("#foot-r");
         const footRd = container.current.querySelector("#foot-rd");
-        const footL = container.current.querySelector("#foot-l");
+        const footL  = container.current.querySelector("#foot-l");
         const footLd = container.current.querySelector("#foot-ld");
+
         const rects = gsap.utils.toArray("rect", container.current);
-        const sortedRects = rects.sort((a, b) => {
-            const aY = a.getBoundingClientRect().y;
-            const bY = b.getBoundingClientRect().y;
-            return aY - bY;
-        });
+        const sortedRects = rects.sort((a, b) => a.getBoundingClientRect().y - b.getBoundingClientRect().y);
 
-        // 1. Create a master timeline to control the overall animation
-        masterTl.current = gsap.timeline({
-            paused: true
-        });
+        masterTl.current = gsap.timeline({ paused: true });
 
-        // 2. Add the initial "reveal" animation (this will only run once)
         masterTl.current.fromTo(
             sortedRects,
             { opacity: 0 },
-            {
-                opacity: 1,
-                duration: 0.3,
-                ease: "power2.out",
-                stagger: 0.04,
-                delay: 0.3,
-            }
+            { opacity: 1, duration: 0.3, ease: "power2.out", stagger: 0.04, delay: 0.3 }
         );
 
-        // 3. Create a separate timeline for the waving animation
-        const waveTl = gsap.timeline({
-            repeat: -1, // Repeat this timeline forever
-            repeatDelay: 0.9, // Add a 0.3s pause between each full wave cycle
-        });
+        // Enable hover once the reveal animation finishes (fires on play())
+        masterTl.current.call(() => setHoverEnabled(true));
 
-        // 4. Build the waving sequence inside the wave timeline
+        const waveTl = gsap.timeline({ repeat: -1, repeatDelay: 0.9 });
         waveTl
-            // First part of the wave: foot-l disappears, foot-r appears
             .to(footRd, { fillOpacity: 1, duration: 0.15 })
-            .to(footR, { fillOpacity: 0, duration: 0.15 }, "<")
+            .to(footR,  { fillOpacity: 0, duration: 0.15 }, "<")
             .to(footLd, { fillOpacity: 0, duration: 0.15 }, "<")
-            .to(footL, { fillOpacity: 1, duration: 0.15 }, "<")
-
-            // Second part of the wave: foot-l reappears, foot-r disappears
-            // The "+=0.3" position parameter creates the 0.3-second delay you wanted
+            .to(footL,  { fillOpacity: 1, duration: 0.15 }, "<")
             .to(footLd, { fillOpacity: 1, duration: 0.15 }, "+=0.6")
-            .to(footL, { fillOpacity: 0, duration: 0.15 }, "<")
+            .to(footL,  { fillOpacity: 0, duration: 0.15 }, "<")
             .to(footRd, { fillOpacity: 0, duration: 0.15 }, "<")
-            .to(footR, { fillOpacity: 1, duration: 0.15 }, "<");
+            .to(footR,  { fillOpacity: 1, duration: 0.15 }, "<");
 
-        // 5. Add the repeating wave timeline to the master timeline
-        // This will start the wave loop after the initial reveal is complete
         masterTl.current.add(waveTl);
 
     }, { scope: container });
 
-    const containerStyle = {
-        position: "absolute",
-        width: 36,
-        height: 48,
-        left: 0,
-        bottom: -13,
-        zIndex: 5,
-        transform: "scaleX(-1)"
-    }
-
     useImperativeHandle(ref, () => ({
-        play: () => masterTl.current?.play(0),
+        play:  () => masterTl.current?.play(0),
         pause: () => masterTl.current?.pause(),
     }));
 
+    const { onMouseMove, onMouseLeave } = usePixelHover(container, hoverEnabled);
+
     return (
-        <div ref={container} style={containerStyle}>
+        <div
+            ref={container}
+            onMouseMove={onMouseMove}
+            onMouseLeave={onMouseLeave}
+            style={{
+                position: "absolute",
+                width: 36,
+                height: 48,
+                left: 0,
+                bottom: -13,
+                zIndex: 5,
+                transform: "scaleX(-1)",
+            }}
+        >
             <LegWiggleMan />
         </div>
     );
