@@ -6,182 +6,9 @@ import Footer from "../sections/Footer";
 import { useLenis } from "lenis/react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import LegoStreakCanvas from "../components/LegoStreakCanvas";
 
 const TOTAL_CARDS = 42;
-
-// Fixed diagonal angle — hoisted so they're computed once, not per-frame
-const BAND_COS = Math.cos(-1);
-const BAND_SIN = Math.sin(-1);
-
-// Cursor-proximity pixelation with spring-elastic tracking.
-// Three concentric zones: mild → medium → heavy pixelation at cursor.
-const PixelHoverCanvas = ({ hoverPos, isActive, imgSrc }) => {
-  const canvasRef  = useRef(null);
-  const liveRef    = useRef({ hoverPos, isActive });
-  liveRef.current  = { hoverPos, isActive };
-  const rafRef     = useRef(null);
-  const restartRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-
-    // Reusable small canvas for downsampling each zone
-    const tmp    = document.createElement("canvas");
-    const tmpCtx = tmp.getContext("2d");
-    tmpCtx.imageSmoothingEnabled = false;
-
-    // Reuse the browser-cached image
-    const img = new Image();
-    img.src = imgSrc;
-
-    // Spring state for elastic cursor lag
-    const spr = { x: 0, y: 0, vx: 0, vy: 0 };
-    let hv = 0;
-
-    // Keep canvas drawing-buffer in sync with CSS size
-    const sync = () => {
-      const w = canvas.offsetWidth;
-      const h = canvas.offsetHeight;
-      if (w > 0 && h > 0) { canvas.width = w; canvas.height = h; }
-    };
-    const ro = new ResizeObserver(sync);
-    ro.observe(canvas);
-    sync();
-
-    // Off-screen canvas — all compositing done here at full alpha,
-    // then faded onto the main canvas via globalAlpha = hv
-    const off    = document.createElement("canvas");
-    const offCtx = off.getContext("2d");
-
-    // Simple diagonal band clip — 4-point polygon, O(1) path ops per zone.
-    // Replaces the per-block rect loop which was O(w*h / blockSize²) per zone.
-    const applyBandClip = (targetCtx, bandX, bandY, halfWidth) => {
-      const len = Math.hypot(canvas.width, canvas.height) * 2;
-      const nx = -BAND_SIN;
-      const ny =  BAND_COS;
-      targetCtx.beginPath();
-      targetCtx.moveTo(bandX + nx * halfWidth - BAND_COS * len, bandY + ny * halfWidth - BAND_SIN * len);
-      targetCtx.lineTo(bandX + nx * halfWidth + BAND_COS * len, bandY + ny * halfWidth + BAND_SIN * len);
-      targetCtx.lineTo(bandX - nx * halfWidth + BAND_COS * len, bandY - ny * halfWidth + BAND_SIN * len);
-      targetCtx.lineTo(bandX - nx * halfWidth - BAND_COS * len, bandY - ny * halfWidth - BAND_SIN * len);
-      targetCtx.closePath();
-    };
-
-    // 6-step progressive reveal: base(8) → 6 → 4 → 2 → 1(sharp)
-    // Half-widths strictly decreasing so each inner zone overrides only the previous.
-    // The clear zone (blockSize 1) is wide to give a generous unobstructed window.
-    const INNER_ZONES = [
-      { relWidth: 0.65, blockSize: 8 },
-      { relWidth: 0.52, blockSize: 6  },
-      { relWidth: 0.41, blockSize: 4  },
-      { relWidth: 0.33, blockSize: 2  },
-      { relWidth: 0.28, blockSize: 1  }, // sharp centre — wide clear band
-    ];
-
-    const tick = () => {
-      const { hoverPos: hp, isActive: act } = liveRef.current;
-
-      const hvTarget = act ? 1 : 0;
-      hv += (hvTarget - hv) * (act ? 0.12 : 0.08);
-      if (Math.abs(hv - hvTarget) < 0.001) hv = hvTarget;
-
-      // Stop the RAF loop when fully idle — restartRef restarts it on next hover
-      if (hv < 0.001 && !act) {
-        hv = 0;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        rafRef.current = null;
-        return;
-      }
-
-      if (hp?.active) {
-        spr.vx = (spr.vx + (hp.x - spr.x) * 0.12) * 0.72;
-        spr.vy = (spr.vy + (hp.y - spr.y) * 0.12) * 0.72;
-        spr.x += spr.vx;
-        spr.y += spr.vy;
-      }
-
-      const w = canvas.width;
-      const h = canvas.height;
-      ctx.clearRect(0, 0, w, h);
-
-      if (hv > 0.002 && img.complete && img.naturalWidth > 0) {
-        const bandX = (spr.x + 0.5) * w;
-        const bandY = (spr.y + 0.5) * h;
-
-        if (off.width !== w || off.height !== h) { off.width = w; off.height = h; }
-        offCtx.clearRect(0, 0, w, h);
-        offCtx.imageSmoothingEnabled = false;
-
-        // Base layer: heaviest pixelation everywhere (farthest from streak = most pixelated)
-        const swB = Math.max(1, Math.floor(w / 6));
-        const shB = Math.max(1, Math.floor(h / 6));
-        if (tmp.width !== swB) tmp.width = swB;
-        if (tmp.height !== shB) tmp.height = shB;
-        tmpCtx.drawImage(img, 0, 0, swB, shB);
-        offCtx.drawImage(tmp, 0, 0, swB, shB, 0, 0, w, h);
-
-        // Progressive reveal: streak narrows as hv fades, giving a closing-band exit
-        for (const { relWidth, blockSize } of INNER_ZONES) {
-          const halfWidth = relWidth * w * hv;
-          if (halfWidth < 1) continue;
-          const sw = Math.max(1, Math.floor(w / blockSize));
-          const sh = Math.max(1, Math.floor(h / blockSize));
-          if (tmp.width  !== sw) tmp.width  = sw;
-          if (tmp.height !== sh) tmp.height = sh;
-          tmpCtx.drawImage(img, 0, 0, sw, sh);
-
-          offCtx.save();
-          applyBandClip(offCtx, bandX, bandY, halfWidth);
-          offCtx.clip();
-          offCtx.drawImage(tmp, 0, 0, sw, sh, 0, 0, w, h);
-          offCtx.restore();
-        }
-
-        // Base fades out with hv; streak has already narrowed by this point
-        ctx.globalAlpha = hv;
-        ctx.drawImage(off, 0, 0);
-        ctx.globalAlpha = 1;
-      }
-
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    // Exposed so the isActive effect can restart a stopped loop
-    restartRef.current = () => {
-      if (!rafRef.current) rafRef.current = requestAnimationFrame(tick);
-    };
-
-    rafRef.current = requestAnimationFrame(tick);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-      ro.disconnect();
-    };
-  }, [imgSrc]);
-
-  // Restart the idle-stopped loop as soon as hover begins
-  useEffect(() => {
-    if (isActive && restartRef.current) restartRef.current();
-  }, [isActive]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: "absolute",
-        inset: 0,
-        width: "100%",
-        height: "100%",
-        pointerEvents: "none",
-        zIndex: 3,
-        borderRadius: "9px",
-        willChange: "transform",
-      }}
-    />
-  );
-};
 
 const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop, isAnyHovered, onHoverStart, onHoverEnd }) => {
   const cardRef = useRef(null);
@@ -300,11 +127,18 @@ const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop, isAnyHovered,
             alt={cardData?.name || `Card ${index + 1}`}
             className={styles.cardImg}
           />
-          {!isLocked && <PixelHoverCanvas hoverPos={hoverPos} isActive={hoverPos.active} imgSrc={frontImage} />}
+          {!isLocked && <LegoStreakCanvas hoverPos={hoverPos} isActive={hoverPos.active} imgSrc={frontImage} 
+          config={{ 
+                gridSize: 21,
+                innerZones: [
+                  { relWidth: 0.50, quality: "plain" },  // outer edge: studded → plain
+                  { relWidth: 0.29, quality: "image" },  // inner edge: plain → transparent
+                ], 
+            }} />}
         </div>
         <div className={styles.cardBack}>
           <img src={backImage} alt="Card Back" className={styles.cardImg} />
-          {!isLocked && <PixelHoverCanvas hoverPos={hoverPos} isActive={hoverPos.active} imgSrc={backImage} />}
+          {!isLocked && <LegoStreakCanvas hoverPos={hoverPos} isActive={hoverPos.active} imgSrc={backImage} config={{ gridSize: 21 }} />}
         </div>
       </div>
       <div className={styles.unlockLabel} ref={unlockLabelRef}>

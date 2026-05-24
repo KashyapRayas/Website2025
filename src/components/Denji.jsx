@@ -3,7 +3,8 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import denji from "/denji.svg";
+import denjiBody from "/denji-body.svg";
+import denjiHand from "/denji-hand.svg";
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
@@ -38,7 +39,9 @@ const rectConfigs = [
 const Denji = () => {
   const container = useRef(null);
   const denjiRef = useRef(null);
+  const handRef = useRef(null);
   const scrollTriggerRef = useRef(null);
+  const handScrollTriggerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Detect mobile
@@ -51,12 +54,20 @@ const Denji = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Conditional imgStyle based on device type
-  const imgStyle = {
+  const wrapperStyle = {
     position: "relative",
     zIndex: 6,
     bottom: "-60px",
+    aspectRatio: "378 / 313",
     ...(isMobile ? { width: "100%" } : { height: "100%" }),
+  };
+
+  const layerStyle = {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
   };
 
   // Wave animation
@@ -126,6 +137,36 @@ const Denji = () => {
     };
   }, []);
 
+  // Hand parallax — starts 60px below body, rises 30px over scroll to simulate being in front
+  useGSAP(() => {
+    if (!handRef.current || !container.current) return;
+
+    const section = container.current.closest("section");
+    if (!section) return;
+
+    gsap.set(handRef.current, { y: 60 });
+
+    handScrollTriggerRef.current = gsap.to(handRef.current, {
+      y: 15,
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        start: "top bottom",
+        endTrigger: "footer",
+        end: "bottom bottom",
+        scrub: 1,
+        markers: false,
+      },
+    }).scrollTrigger;
+
+    return () => {
+      if (handScrollTriggerRef.current) {
+        handScrollTriggerRef.current.kill();
+        handScrollTriggerRef.current = null;
+      }
+    };
+  }, []);
+
   // Refresh ScrollTrigger on mount and window resize
   useEffect(() => {
     // Refresh immediately on mount
@@ -147,14 +188,19 @@ const Denji = () => {
       if (scrollTriggerRef.current) {
         scrollTriggerRef.current.kill();
       }
-      // Also refresh remaining triggers to update their positions
+      if (handScrollTriggerRef.current) {
+        handScrollTriggerRef.current.kill();
+      }
       ScrollTrigger.refresh();
     };
   }, []);
 
   return (
     <div style={containerStyle} ref={container}>
-      <img src={denji} alt="Denji" style={imgStyle} ref={denjiRef} id="denji" />
+      <div style={wrapperStyle} ref={denjiRef} id="denji">
+        <img src={denjiBody} style={layerStyle} alt="Denji" />
+        <img src={denjiHand} style={layerStyle} ref={handRef} alt="" aria-hidden="true" />
+      </div>
       {rectConfigs.map((style, i) => (
         <div
           key={i}
