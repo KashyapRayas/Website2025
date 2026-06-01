@@ -296,6 +296,7 @@ const Hero = ({ isLoaded }) => {
         isIdleRef.current = false;
         resetIrisTranslation();
         animateEyesLeft();
+        if (isHeroVisibleRef.current) waveTlRef.current?.pause();
       }
 
       if (stopTimerRef.current) clearTimeout(stopTimerRef.current);
@@ -306,6 +307,7 @@ const Hero = ({ isLoaded }) => {
             fontMenuHoveredRef.current || !isLoadedRef.current;
           isIdleRef.current = !stillBlocked;
           animateEyesRight();
+          if (isHeroVisibleRef.current) waveTlRef.current?.resume();
         }
       }, STOP_DELAY);
     };
@@ -715,7 +717,7 @@ const Hero = ({ isLoaded }) => {
         if (entry.isIntersecting) {
           t1.current?.resume();
           fishermanTlRef.current?.resume();
-          waveTlRef.current?.resume();
+          if (!isScrollingRef.current) waveTlRef.current?.resume();
           if (blinkRestartRef.current) {
             blinkRestartRef.current();
             blinkRestartRef.current = null;

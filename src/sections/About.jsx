@@ -16,11 +16,11 @@ import unchecked from "/unchecked.svg";
 import PercentageSlider from "../components/PercentageSlider/PercentageSlider.jsx";
 import AnimatedLegWiggle from "../components/AnimatedLegWiggle.jsx";
 import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import GrassOverlay from "../components/GrassOverlay.jsx";
 import AnimatedArrow from "../components/AnimatedArrow.jsx";
+import RevealText from "../components/RevealText.jsx";
 
 gsap.registerPlugin(CustomEase, ScrollTrigger);
 
@@ -34,6 +34,30 @@ const ListItem = ({ icon, text, span }) => (
     </p>
   </div>
 );
+
+// Objective sentence as reveal segments. `trail` is punctuation glued to its
+// word (so it never wraps onto its own line); `className` styles a whole word.
+const OBJECTIVE_SEGMENTS = [
+  { text: "Ever" },
+  { text: "since" },
+  { text: "I" },
+  { text: "was" },
+  { text: "a" },
+  { text: "kid", trail: { text: ",", className: styles.objComma } },
+  { text: "I" },
+  { text: "knew" },
+  { text: "I" },
+  { text: "wanted" },
+  { text: "to" },
+  { text: "write", className: styles.objLora },
+  { text: "emails", className: styles.objLora },
+  { text: "and" },
+  { text: "work" },
+  { text: "cross", className: styles.objLora },
+  { text: "functionally", className: styles.objLora },
+  { text: "across" },
+  { text: "teams", trail: { text: ".", className: styles.objPeriod } },
+];
 
 const ExperienceBlock = ({ company, experiences }) => (
   <div className={styles.experienceWrapper}>
@@ -102,10 +126,10 @@ const About = forwardRef((_, ref) => {
 
   const currentEnjoy = [
     { text: "Films, Severance & The Office", span: "[ US ]" },
-    { text: "Arc Raiders" },
+    { text: "Death Stranding 2" },
     { text: "Chainsaw Man" },
     { text: "Learning French" },
-    { text: "Lego" },
+    { text: "Lego Kits" },
     { text: "Gym" },
     { text: "The color green" },
   ];
@@ -113,7 +137,7 @@ const About = forwardRef((_, ref) => {
   const goals = [
     { text: "Design a VR experience", checked: true },
     { text: "Finish reading - The Courage To Be Disliked", checked: true },
-    { text: "Play Death Stranding 2" },
+    { text: "Play Death Stranding 2" , checked: true },
     { text: "Mod a Casio watch" },
     { text: "Pursue a HCI Master's" },
     { text: "Learn Cardistry" },
@@ -161,12 +185,12 @@ const About = forwardRef((_, ref) => {
               </div>
               <h3>OBJECTIVE</h3>
             </div>
-            <p className={styles.objh3}>
-              Ever since I was a kid<span>,</span> I knew I wanted to
-              <span> write emails</span> and work
-              <span> cross functionally</span> across teams
-              <span>.</span>
-            </p>
+            <RevealText
+              className={styles.objh3}
+              segments={OBJECTIVE_SEGMENTS}
+              rootMargin="0px 0px -25% 0px"
+              threshold={0}
+            />
           </div>
 
           <div

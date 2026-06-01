@@ -322,24 +322,19 @@
   line-height: 120%;
 }
 
-.rightFirst .objh3 span {
-  display: inline;
-}
-
-.rightFirst .objh3 spanspan {
-  display: inline;
-}
-
-.rightFirst .objh3 span:nth-child(1) {
+/* word/letter base wrapping styles live in RevealText.module.css; the rules
+   below only add per-segment styling. */
+.rightFirst .objh3 .objComma {
   margin-left: 6px;
+  color: var(--dark-green);
 }
-.rightFirst .objh3 span:nth-child(4) {
+
+.rightFirst .objh3 .objPeriod {
   font-family: "Stara";
   color: var(--dark-green);
 }
 
-.rightFirst .objh3 span:nth-child(2),
-.rightFirst .objh3 span:nth-child(3) {
+.rightFirst .objh3 .objLora {
   font-family: "Lora", serif;
   font-weight: 600;
   font-style: italic;

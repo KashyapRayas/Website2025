@@ -173,8 +173,8 @@ function App() {
         ref={lenisRef}
         root
         options={{
-          duration: scrollConfig.enabled ? scrollConfig.duration : 0,
-          autoRaf: true
+          autoRaf: true,
+          ...scrollConfig,
         }}
       >
         {isTransitioning && (

@@ -1,45 +1,34 @@
-// hooks/useSmoothScrollConfig.js
 import { useEffect, useState } from 'react'
 
 export function useSmoothScrollConfig() {
-  const [config, setConfig] = useState({
+  const [options, setOptions] = useState({
     duration: 2,
-    enabled: true,
     smoothWheel: true,
-    smoothTouch: true,
+    syncTouch: true,
   })
 
   useEffect(() => {
-    // Check for reduced motion preference
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches
-
-    // Detect macOS
-    const isMac = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent)
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
     if (prefersReducedMotion) {
-      // Disable custom scroll for users with reduced motion
-      setConfig({
-        duration: 1,
-        enabled: false,
-      })
-    } else if (isMac) {
-      // Shorter duration for Mac (already has smooth scroll)
-      setConfig({
-        duration: 2,
-        enabled: true,
-        syncTouch: true
+      setOptions({ duration: 0 })
+    } else if (isMobile) {
+      setOptions({
+        // duration: 2,
+        smoothWheel: true,
+        syncTouch: true,
+        syncTouchLerp: 0.075,
+        touchMultiplier: 1.5,
       })
     } else {
-      // Default for other devices
-      setConfig({
+      setOptions({
         duration: 2,
-        enabled: true,
-        syncTouch: true
+        smoothWheel: true,
+        syncTouch: true,
       })
     }
   }, [])
 
-  return config
+  return options
 }

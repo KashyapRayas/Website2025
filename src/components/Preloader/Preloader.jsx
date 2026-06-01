@@ -145,6 +145,7 @@ const Preloader = ({ onComplete, onMidway }) => {
         tl1.to(".preloader-box", {
             height: boxHeight,
             width: boxWidth,
+            rotate: 0,
             duration: 1,
             ease: "power2.inOut",
         });

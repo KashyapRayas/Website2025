@@ -1,5 +1,6 @@
 
 import star from "/star.svg"
+import RevealText from "./RevealText"
 
 const ProjectBigText = ({ text1=null, text2, text3, points=null }) => {
 
@@ -71,7 +72,13 @@ const ProjectBigText = ({ text1=null, text2, text3, points=null }) => {
     return (
         <div style={containerStyle}>
             <h1 style={textStyle1}>{text1}</h1>
-            <h1 style={textStyle2}>{text2}</h1>
+            <RevealText
+                as="h1"
+                style={textStyle2}
+                text={text2}
+                rootMargin="0px"
+                threshold={0}
+            />
             <h1 style={textStyle3}>{text3}</h1>
             {   points !== null &&
                 points.map((item, index) => (

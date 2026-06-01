@@ -1,3 +1,4 @@
+import RevealText from "./RevealText";
 
 const ProjectHeadingParaText = ({ heading, para, headingcolor="var(--off-black)" }) => {
 
@@ -40,7 +41,12 @@ const ProjectHeadingParaText = ({ heading, para, headingcolor="var(--off-black)"
 
     return (
         <div style={containerStyle}>
-            <h3 style={headingStyle}>{heading}<span style={spanStyle}>.</span></h3>
+            <RevealText
+                as="h3"
+                style={headingStyle}
+                text={heading}
+                trail={{ text: ".", style: spanStyle }}
+            />
             <h3 style={paraStyle}>{para}</h3>
         </div>
     );

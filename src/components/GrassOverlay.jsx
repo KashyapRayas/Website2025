@@ -4,7 +4,8 @@ import React, {
   useEffect,
   useRef,
   useLayoutEffect,
-  useMemo
+  useMemo,
+  useCallback
 } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -81,6 +82,33 @@ const GrassOverlay = ({
   isLoaded = true,
 }) => {
   const componentRef = useRef(null);
+  const bladeRefs = useRef([]);
+
+  const handleBladeEnter = useCallback((e, idx) => {
+    const el = bladeRefs.current[idx];
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const fromLeft = e.clientX <= rect.left + rect.width / 2;
+    gsap.to(el, {
+      rotation: fromLeft ? 32 : -32,
+      transformOrigin: "50% 100%",
+      duration: 0.22,
+      ease: "power2.out",
+      overwrite: true,
+    });
+  }, []);
+
+  const handleBladeLeave = useCallback((idx) => {
+    const el = bladeRefs.current[idx];
+    if (!el) return;
+    gsap.to(el, {
+      rotation: 0,
+      transformOrigin: "50% 100%",
+      duration: 1.1,
+      ease: "elastic.out(1.15, 0.38)",
+      overwrite: true,
+    });
+  }, []);
 
   const [layout, setLayout] = useState({
     width: 0,
@@ -259,7 +287,7 @@ return (
             transform: `translateY(${translateY})`
           }}
         >
-          {config.top.map((item) => (
+          {config.top.map((item, i) => (
             <g
               key={item.id}
               className="grass-blade"
@@ -269,18 +297,27 @@ return (
               }}
               transform={`translate(${item.x}, ${STRIP_HEIGHT}) scale(${item.scale}) rotate(${item.rotation})`}
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox={item.data.viewBox}
-                x="-8"
-                y="-16"
-                overflow="visible"
+              <g
+                ref={el => { bladeRefs.current[i] = el; }}
+                style={{ pointerEvents: "all" }}
+                onMouseEnter={e => handleBladeEnter(e, i)}
+                onMouseLeave={() => handleBladeLeave(i)}
               >
-                {item.data.paths.map((d, i) => (
-                  <path key={i} d={d} fill={color} />
-                ))}
-              </svg>
+                {/* transparent hit area — easier to hover than just the thin paths */}
+                <rect x="-9" y="-18" width="18" height="19" fill="transparent" />
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox={item.data.viewBox}
+                  x="-8"
+                  y="-16"
+                  overflow="visible"
+                >
+                  {item.data.paths.map((d, j) => (
+                    <path key={j} d={d} fill={color} />
+                  ))}
+                </svg>
+              </g>
             </g>
           ))}
         </svg>
