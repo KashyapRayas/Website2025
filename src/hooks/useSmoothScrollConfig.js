@@ -17,7 +17,7 @@ export function useSmoothScrollConfig() {
       setOptions({
         duration: 2,
         smoothWheel: true,
-        syncTouch: true,
+        // syncTouch: true,
         // syncTouchLerp: 0.075,
         // touchMultiplier: 1.5,
       })
