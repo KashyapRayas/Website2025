@@ -23,6 +23,7 @@ import Hero from "../components/Hero/Hero";
 import AnimatedMan from "../components/AnimatedMan";
 import GrassOverlay from "../components/GrassOverlay";
 import LegoStreakCanvas from "../components/LegoStreakCanvas";
+import { useCardCount } from "../hooks/useCardCount";
 
 gsap.registerPlugin(CustomEase, ScrollTrigger);
 
@@ -375,6 +376,7 @@ const Home = forwardRef(
     ref
   ) => {
     const { playHover, playClick } = useButtonSounds();
+    const cardCount = useCardCount();
     const [projects, setProjects] = useState(null);
     const [recentHovered, setRecentHovered] = useState(false);
     const [recentSelected, setRecentSelected] = useState(false);
@@ -997,7 +999,7 @@ const Home = forwardRef(
                       index={i}
                       containerHover={cardsHovered}
                       deckHovered={deckHovered}
-                      hasDesign={i <= 2}
+                      hasDesign={i <= 3}
                     />
                   ))}
                 </div>
@@ -1136,7 +1138,7 @@ const Home = forwardRef(
               <div className={styles.top}>
                 <Metric
                   name={"CARDS COLLECTED"}
-                  count={3}
+                  count={cardCount}
                   isLoaded={isLoaded}
                   delay={0}
                 />

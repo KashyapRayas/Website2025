@@ -11,11 +11,13 @@ import { useGSAP } from "@gsap/react";
 import GrassOverlay from "../components/GrassOverlay";
 import AnimatedArrow from "../components/AnimatedArrow";
 import { useButtonSounds } from "../hooks/useButtonSounds";
+import { useCardCount } from "../hooks/useCardCount";
 
 gsap.registerPlugin(CustomEase, ScrollTrigger);
 
 const Home = forwardRef(
   ({ isLoaded, isLoadedforHero, onModifierDeckSelect, returnedFrom }, ref) => {
+    const cardCount = useCardCount();
     const rectRef = useRef(null);
     const heroRef = useRef(null);
     const parallaxRef = useRef(null);
@@ -426,11 +428,11 @@ const Home = forwardRef(
                   </div>
                 </div>
                 {/* Front-facing cards with flip animation */}
-                {[0, 1, 2].map((i) => (
+                {[0, 1, 2, 3].map((i) => (
                   <div
                     key={i}
                     className={styles.homeCard}
-                    style={{ zIndex: i === 1 ? 5 : i + 1 }}
+                    style={{ zIndex: i === 1 ? 5 : i === 3 ? 2 : i + 1 }}
                   >
                     <div className={styles.homeCardInner}>
                       <div className={styles.homeCardFront}>
@@ -459,7 +461,7 @@ const Home = forwardRef(
             <div className={styles.top}>
               <Metric
                 name={"CARDS COLLECTED"}
-                count={3}
+                count={cardCount}
                 isLoaded={isLoaded}
                 delay={0}
               />

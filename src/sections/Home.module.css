@@ -583,11 +583,11 @@
 }
 
 .homeCard:nth-child(4) {
-  transform: translateX(240px) translateY(75px);
+  transform: translateX(210px) translateY(70px);
 }
 
 .homeCard:nth-child(5) {
-  transform: translateX(-240px) translateY(75px);
+  transform: translateX(-210px) translateY(70px);
 }
 
 .homeCard:nth-child(6) {

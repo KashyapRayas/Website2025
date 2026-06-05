@@ -136,9 +136,9 @@ const About = forwardRef((_, ref) => {
 
   const goals = [
     { text: "Design a VR experience", checked: true },
-    { text: "Finish reading - The Courage To Be Disliked", checked: true },
     { text: "Play Death Stranding 2" , checked: true },
-    { text: "Mod a Casio watch" },
+    { text: "Mod a Casio watch" , checked: true  },
+    { text: "Finish reading - Crime & Punishment"},
     { text: "Pursue a HCI Master's" },
     { text: "Learn Cardistry" },
   ];

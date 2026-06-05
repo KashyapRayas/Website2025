@@ -433,6 +433,10 @@
   transform: translateX(70px) translateY(45px);
 }
 
+.homeCard:nth-child(6) {
+  transform: translateX(125px) translateY(58px);
+}
+
 .homeCardInner {
   position: relative;
   width: 100%;
