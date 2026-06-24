@@ -126,6 +126,8 @@ const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop, isAnyHovered,
             src={frontImage}
             alt={cardData?.name || `Card ${index + 1}`}
             className={styles.cardImg}
+            loading="lazy"
+            decoding="async"
           />
           {!isLocked && <LegoStreakCanvas hoverPos={hoverPos} isActive={hoverPos.active} imgSrc={frontImage} 
           config={{ 
@@ -137,7 +139,7 @@ const Card = ({ index, isLocked, triggerFlip, cardData, isDesktop, isAnyHovered,
             }} />}
         </div>
         <div className={styles.cardBack}>
-          <img src={backImage} alt="Card Back" className={styles.cardImg} />
+          <img src={backImage} alt="Card Back" className={styles.cardImg} loading="lazy" decoding="async" />
           {!isLocked && <LegoStreakCanvas hoverPos={hoverPos} isActive={hoverPos.active} imgSrc={backImage} config={{ gridSize: 21 }} />}
         </div>
       </div>

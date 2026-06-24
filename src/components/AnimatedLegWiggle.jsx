@@ -58,18 +58,22 @@ const AnimatedLegWiggle = forwardRef((props, ref) => {
         // Enable hover once the reveal animation finishes (fires on play())
         masterTl.current.call(() => setHoverEnabled(true));
 
-        const waveTl = gsap.timeline({ repeat: -1, repeatDelay: 0.9 });
-        waveTl
-            .to(footRd, { fillOpacity: 1, duration: 0.15 })
-            .to(footR,  { fillOpacity: 0, duration: 0.15 }, "<")
-            .to(footLd, { fillOpacity: 0, duration: 0.15 }, "<")
-            .to(footL,  { fillOpacity: 1, duration: 0.15 }, "<")
-            .to(footLd, { fillOpacity: 1, duration: 0.15 }, "+=0.6")
-            .to(footL,  { fillOpacity: 0, duration: 0.15 }, "<")
-            .to(footRd, { fillOpacity: 0, duration: 0.15 }, "<")
-            .to(footR,  { fillOpacity: 1, duration: 0.15 }, "<");
+        // Looping leg-wiggle — skipped under reduced motion (the reveal still
+        // plays on play(); the legs simply hold a static pose).
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            const waveTl = gsap.timeline({ repeat: -1, repeatDelay: 0.9 });
+            waveTl
+                .to(footRd, { fillOpacity: 1, duration: 0.15 })
+                .to(footR,  { fillOpacity: 0, duration: 0.15 }, "<")
+                .to(footLd, { fillOpacity: 0, duration: 0.15 }, "<")
+                .to(footL,  { fillOpacity: 1, duration: 0.15 }, "<")
+                .to(footLd, { fillOpacity: 1, duration: 0.15 }, "+=0.6")
+                .to(footL,  { fillOpacity: 0, duration: 0.15 }, "<")
+                .to(footRd, { fillOpacity: 0, duration: 0.15 }, "<")
+                .to(footR,  { fillOpacity: 1, duration: 0.15 }, "<");
 
-        masterTl.current.add(waveTl);
+            masterTl.current.add(waveTl);
+        }
 
     }, { scope: container });
 

@@ -83,7 +83,13 @@ const AnimatedDownwardArrow = ({ isActive = false, isHovered = false }) => {
     if (isActive) {
       // Fade in the container and start the looping animation.
       gsap.to(container.current, { opacity: 1, duration: 0.3 });
-      tl.current.play();
+      // Reduced motion: show a static, fully-revealed arrow instead of pulsing.
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        tl.current.pause();
+        gsap.set(sortedPaths.current, { opacity: 1 });
+      } else {
+        tl.current.play();
+      }
     } else {
       // Fade out the container and pause the animation at its beginning.
       gsap.to(container.current, {

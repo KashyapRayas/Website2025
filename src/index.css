@@ -62,6 +62,22 @@
     }
 }
 
+/* Reduced motion: neutralize CSS-driven transitions/animations and snap
+   scrolling. JS-driven motion (GSAP loops, canvas/WebGL render loops) is gated
+   separately via inline prefers-reduced-motion checks in the components. */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    html, #root {
+        scroll-behavior: auto !important;
+    }
+}
+
 #root, html {
     position: relative;
     width: 100%;

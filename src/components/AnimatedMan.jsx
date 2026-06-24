@@ -55,15 +55,19 @@ const AnimatedMan = ({ isLoaded }) => {
         // Enable hover once the reveal animation finishes
         masterTl.call(() => setHoverEnabled(true));
 
-        const waveTl = gsap.timeline({ repeat: -1, repeatDelay: 0.9 });
-        waveTl
-            .to("#hand-1", { fillOpacity: 0, duration: 0.15 })
-            .to("#hand-2", { fillOpacity: 1, duration: 0.15 }, "<")
-            .to("#hand-1", { fillOpacity: 1, duration: 0.15 }, "+=0.6")
-            .to("#hand-2", { fillOpacity: 0, duration: 0.15 }, "<");
+        // Looping hand-wave — skipped under reduced motion (the man still fades
+        // in via the reveal above and simply holds a static pose).
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            const waveTl = gsap.timeline({ repeat: -1, repeatDelay: 0.9 });
+            waveTl
+                .to("#hand-1", { fillOpacity: 0, duration: 0.15 })
+                .to("#hand-2", { fillOpacity: 1, duration: 0.15 }, "<")
+                .to("#hand-1", { fillOpacity: 1, duration: 0.15 }, "+=0.6")
+                .to("#hand-2", { fillOpacity: 0, duration: 0.15 }, "<");
 
-        waveRef.current = waveTl;
-        masterTl.add(waveTl);
+            waveRef.current = waveTl;
+            masterTl.add(waveTl);
+        }
 
     }, { scope: container, dependencies: [isLoaded] });
 

@@ -279,6 +279,13 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     const img    = topImgRef.current;
     if (!canvas || !img) return;
 
+    // Reduced motion: skip the Lego-reveal overlay, show the clean image.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      canvas.style.transition = "none";
+      canvas.style.opacity = "0";
+      return;
+    }
+
     const startObserver = () => {
       syncCanvasSize();
       const w = canvas.width, h = canvas.height;
@@ -441,6 +448,9 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
 
     const starRefs = starRefsMap.current[activeIndex];
     if (!starRefs || starRefs.length === 0) return;
+
+    // Reduced motion: leave tag stars static instead of spinning on hover.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     CustomEase.create("wave", "M0,0 C0.6,0, 0.3,1.4, 1,1");
 

@@ -73,7 +73,7 @@ const Footer = ({ inProject = false, lenis, isMobile, onBackWithScroll }) => {
         </div>
 
         <div className="left">
-          <img src={footerImg} alt="Footer Decorative" />
+          <img src={footerImg} alt="Footer Decorative" loading="lazy" decoding="async" />
         </div>
       </div>
 

@@ -611,6 +611,13 @@ const Hero = ({ isLoaded }) => {
     const line = fishingLineRef.current;
     if (!line) return;
 
+    // Reduced motion: hold the line at a static resting height, no loop.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.set(line, { height: "124px" });
+      checkIntersection();
+      return;
+    }
+
     t1.current = gsap.timeline({
       paused: false,
       repeat: -1,
@@ -640,6 +647,7 @@ const Hero = ({ isLoaded }) => {
   // Fisherman bob animation
   useGSAP(() => {
     if (!fishermanRef.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const masterTl = gsap.timeline({ repeat: -1 });
 
@@ -674,6 +682,7 @@ const Hero = ({ isLoaded }) => {
     ].filter(Boolean);
 
     if (!rects.length) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const t2 = gsap.timeline({ repeat: -1, yoyo: true });
     t2.to(rects, {

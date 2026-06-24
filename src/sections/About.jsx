@@ -257,6 +257,8 @@ const About = forwardRef((_, ref) => {
               className={styles.leftFirstS1}
               src={lego_210}
               alt=""
+              loading="lazy"
+              decoding="async"
             />
             <div className={styles.aboutImgWrapper}>
               <PercentageSlider />

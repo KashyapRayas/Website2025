@@ -70,9 +70,11 @@ const Denji = () => {
     height: "100%",
   };
 
-  // Wave animation
+  // Wave animation — skipped under reduced motion (rects hold static).
   useGSAP(
     () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
       CustomEase.create("wave", "M0,0 C0.6,0, 0.1,1.4, 1,1");
 
       const rects = gsap.utils.toArray(".rect", container.current);

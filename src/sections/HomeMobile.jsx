@@ -92,6 +92,7 @@ const Home = forwardRef(
 
     useGSAP(() => {
       if (!rectRef.current) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       CustomEase.create("wave", "M0,0 C0.6,0, 0.3,1.4, 1,1");
 
       const tween = gsap.to(rectRef.current, {
@@ -188,6 +189,7 @@ const Home = forwardRef(
 
     useGSAP(() => {
         if (!cursorRef.current) return;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         gsap.to(cursorRef.current, {
             opacity: 1,
             duration: 0.1,
@@ -419,12 +421,12 @@ const Home = forwardRef(
                 {/* Back-facing cards — rendered first, z-index: -1 keeps them behind */}
                 <div className={styles.homeCard} style={{ zIndex: -1 }}>
                   <div className={styles.homeCardBlank}>
-                    <img src="/cards/cardBack.jpg" className={styles.cardImg} alt="" />
+                    <img src="/cards/cardBack.jpg" className={styles.cardImg} alt="" loading="lazy" decoding="async" />
                   </div>
                 </div>
                 <div className={styles.homeCard} style={{ zIndex: -1 }}>
                   <div className={styles.homeCardBlank}>
-                    <img src="/cards/cardBack.jpg" className={styles.cardImg} alt="" />
+                    <img src="/cards/cardBack.jpg" className={styles.cardImg} alt="" loading="lazy" decoding="async" />
                   </div>
                 </div>
                 {/* Front-facing cards with flip animation */}

@@ -293,7 +293,7 @@ const HomeCard = memo(
           {hasDesign ? (
             <>
               <div className={styles.homeCardFront}>
-                <img src={frontImage} className={styles.cardImg} alt="" />
+                <img src={frontImage} className={styles.cardImg} alt="" loading="lazy" decoding="async" />
                 <LegoStreakCanvas hoverPos={hoverPos} isActive={hoverPos.active} imgSrc={frontImage} config={{ gridSize: 18 }} />
                 <div
                   className={styles.glimmer}
@@ -315,12 +315,12 @@ const HomeCard = memo(
                 />
               </div>
               <div className={styles.homeCardBack}>
-                <img src={backImage} className={styles.cardImg} alt="" />
+                <img src={backImage} className={styles.cardImg} alt="" loading="lazy" decoding="async" />
               </div>
             </>
           ) : (
             <div className={styles.homeCardBlank}>
-              <img src={backImage} className={styles.cardImg} alt="" />
+              <img src={backImage} className={styles.cardImg} alt="" loading="lazy" decoding="async" />
               <div
                 className={styles.glimmer}
                 style={{
@@ -498,6 +498,13 @@ const Home = forwardRef(
       const canvas = recentCanvasRef.current;
       if (!img || !canvas) return;
 
+      // Reduced motion: skip the Lego-reveal animation, show the clean image.
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        canvas.style.transition = "none";
+        canvas.style.opacity = "0";
+        return;
+      }
+
       const start = () => {
         syncRecentCanvasSize();
         const w = canvas.width, h = canvas.height;
@@ -621,6 +628,7 @@ const Home = forwardRef(
     /* — rotation of small star — */
     useGSAP(() => {
       if (!rectRef.current) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       CustomEase.create("wave", "M0,0 C0.6,0, 0.3,1.4, 1,1");
       starTweenRef.current = gsap.to(rectRef.current, {
         rotate: "360deg",
@@ -649,6 +657,7 @@ const Home = forwardRef(
 
     useGSAP(() => {
       if (!cursorRef.current) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       gsap.to(cursorRef.current, {
         opacity: 1,
         duration: 0.1,
