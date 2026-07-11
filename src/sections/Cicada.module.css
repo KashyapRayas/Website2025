@@ -1,0 +1,236 @@
+.cicada {
+    width: 100%;
+    align-self: stretch;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    padding: 0 0 1px 0;
+    box-sizing: border-box;
+  }
+
+  .middle {
+    display: flex;
+    gap: 1px;
+    width: 100%;
+    max-width: 1400px;
+  }
+
+  /* --- RIGHT SIDE (fixed image panel) --- */
+  .left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 636px;
+    align-self: stretch;
+    background-color: var(--off-white);
+    box-sizing: border-box;
+    padding: 30px;
+    border-radius: 9px;
+    position: relative;
+  }
+
+  .figureWrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 9px;
+    border: 3px solid var(--off-teal);
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .figure {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 1;
+    z-index: 1;
+  }
+
+  .figureActive {
+    z-index: 2;
+  }
+
+  /* --- LEFT SIDE (text content) --- */
+  .right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    align-self: stretch;
+    position: relative;
+  }
+
+  .statement {
+    width: 100%;
+    background-color: var(--off-white);
+    padding: 30px;
+    border-radius: 9px;
+    gap: 18px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: 100%;
+    position: relative;
+  }
+
+  .label {
+    display: flex;
+    width: 100%;
+    align-items: center;
+  }
+
+  .iconWrapper {
+    display: flex;
+    width: 0;
+    height: 100%;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+  }
+
+  .iconWrapper span {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--off-black-06);
+  }
+
+  .statement:hover .iconWrapper {
+    width: 18px;
+  }
+
+  .label h3 {
+    font-size: 13px;
+    width: 100%;
+    text-wrap: wrap;
+    font-weight: 400;
+    color: var(--off-black-06);
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .statementH4 {
+    font-size: 42px;
+    width: 100%;
+    text-wrap: wrap;
+    font-weight: 600;
+    color: var(--off-black);
+    margin: 0;
+    line-height: 120%;
+  }
+
+  .statementH4 .statementLora {
+    font-family: "Lora", serif;
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  /* --- COUNTER ROW --- */
+  .counterRow {
+    width: 100%;
+    gap: 1px;
+    display: flex;
+    align-items: stretch;
+    box-sizing: border-box;
+  }
+
+  .legoPattern {
+    display: block;
+    height: auto;
+    width: 180px;
+    flex: 0 0 auto;
+    align-self: flex-start;
+    border-radius: 9px;
+  }
+
+  .counterCard {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px;
+    box-sizing: border-box;
+    background-color: var(--off-white);
+    border-radius: 9px;
+  }
+
+  .counterLabel,
+  .counterCaption {
+    font-size: 13px;
+    width: 100%;
+    font-weight: 400;
+    color: var(--off-black-06);
+    margin: 0;
+  }
+
+  .counterDigits {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .secondsDigit rect {
+    opacity: 1 !important;
+  }
+
+  .colonBlink .colonDotTop,
+  .colonBlink .colonDotBottom {
+    animation: colonBlink 1s ease-in-out;
+  }
+
+  .colonBlink .colonDotBottom {
+    animation-delay: 0.12s;
+  }
+
+  @keyframes colonBlink {
+    0% {
+      opacity: 1;
+    }
+    35% {
+      opacity: 0.15;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* --- RESPONSIVE --- */
+  @media screen and (max-width: 1200px) {
+
+    .middle {
+      flex-direction: column;
+      max-width: 500px;
+    }
+
+    .left {
+      width: 100%;
+      flex: 0 0 300px;
+    }
+
+    .legoPattern {
+      width: auto;
+      align-self: stretch;
+      aspect-ratio: 90 / 178;
+      object-fit: cover;
+      object-position: left center;
+    }
+
+    .legoPatternRight {
+      display: none;
+    }
+
+    .counterRow {
+      height: 200px;
+    }
+
+    .counterCard {
+      height: 100%;
+      gap: 12px;
+    }
+  }

@@ -10,6 +10,7 @@ import Work from '../sections/Work.jsx';
 import About from '../sections/About.jsx';
 import Contact from '../sections/Contact.jsx';
 import Footer from '../sections/Footer.jsx';
+import Cicada from '../sections/Cicada.jsx'
 
 const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, onModifierDeckSelect, isPreloaderDone, returnedFrom, pendingScrollTarget, onScrollTargetConsumed}) => {
     const [linkHovered, setLinkHovered] = useState(false);
@@ -17,6 +18,7 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, onModifierDec
     const aboutRef = useRef(null);
     const workRef = useRef(null);
     const contactRef = useRef(null);
+    const cicadaRef = useRef(null);
     const lenis = useLenis();
     const [isMobile, setIsMobile] = useState(window.innerWidth < 1201);
     const resizeTimeoutRef = useRef(null);
@@ -115,6 +117,7 @@ const Landing = ({isLoaded, onProjectSelect, isIncomingTransition, onModifierDec
             <main>
                 <HomeComponent linkHovered={linkHovered} isLoaded={isPreloaderDone} isLoadedforHero={!isIncomingTransition && isPreloaderDone} handleProjectSelect={onProjectSelect} ref={homeRef} onModifierDeckSelect={onModifierDeckSelect} returnedFrom={returnedFrom}/>
                 <Work ref={workRef} handleProjectSelect={onProjectSelect}/>
+                <Cicada ref={cicadaRef}></Cicada>
                 <About ref={aboutRef} />
                 <Contact ref={contactRef} />
             </main>
