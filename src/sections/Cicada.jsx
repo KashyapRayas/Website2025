@@ -20,13 +20,14 @@ const STATEMENT_SEGMENTS = [
 
 const FIRST_VISIT_KEY = "cicadaFirstVisitAt";
 
-// First-ever visit timestamp, persisted so the counter keeps accumulating
-// across reloads and future visits instead of resetting to 0 each time.
+// First-visit timestamp for this tab session, persisted in sessionStorage so
+// the counter survives reloads and route changes (e.g. visiting the error
+// page challenge and coming back) but resets once the tab is closed.
 function getFirstVisitAt() {
-    const stored = Number(localStorage.getItem(FIRST_VISIT_KEY));
+    const stored = Number(sessionStorage.getItem(FIRST_VISIT_KEY));
     if (stored) return stored;
     const now = Date.now();
-    localStorage.setItem(FIRST_VISIT_KEY, String(now));
+    sessionStorage.setItem(FIRST_VISIT_KEY, String(now));
     return now;
 }
 
