@@ -1,7 +1,157 @@
-import React, { forwardRef, memo, useEffect, useRef, useState } from "react";
+import React, { forwardRef, memo, useEffect, useMemo, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 import styles from './Cicada.module.css'
 import Digit from "../components/Digit";
 import RevealText from "../components/RevealText.jsx";
+
+gsap.registerPlugin(ScrollTrigger);
+
+// Seat rows are named "Row 1".."Row 5" inside stare.svg. Row 3 is the
+// static center row (left untouched); rows 1-2 drift downward on scroll,
+// rows 4-5 drift upward, offset furthest from the center row moving most.
+const ROW_IDS = ["Row 1", "Row 2", "Row 3", "Row 4", "Row 5"];
+const ROW_OFFSETS = [60, 30, 0, -30, -60];
+
+// Fetches an svg file's markup once and shares it across mounts/instances.
+// Fetch is gated by `enabled` so this ~15-20KB payload only loads once the
+// section is actually approaching the viewport, not on initial page load.
+const svgMarkupCache = new Map();
+function useInlineSvg(src, enabled) {
+    const [markup, setMarkup] = useState(() => svgMarkupCache.get(src) ?? null);
+    useEffect(() => {
+        if (!enabled || markup) return;
+        if (svgMarkupCache.has(src)) {
+            setMarkup(svgMarkupCache.get(src));
+            return;
+        }
+        let cancelled = false;
+        fetch(src)
+            .then((res) => res.text())
+            .then((text) => {
+                svgMarkupCache.set(src, text);
+                if (!cancelled) setMarkup(text);
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [src, enabled, markup]);
+    return markup;
+}
+
+const HOVER_ROW_ID = "Row 3";
+
+// Parses a fetched svg string and pulls out the gradient/clip defs plus the
+// given row group, so that row can be transplanted into another svg's DOM
+// (with the fills it depends on) without refetching or re-parsing per hover.
+function extractRowWithDefs(svgText, rowId) {
+    const doc = new DOMParser().parseFromString(svgText, "image/svg+xml");
+    const row = doc.querySelector(`[id="${rowId}"]`);
+    if (!row) return null;
+    const defs = Array.from(doc.querySelectorAll("defs > *"));
+    return { row, defs };
+}
+
+// Inlines the figure svg so the "Row N" groups inside it can be targeted
+// individually and given a staggered scroll-driven y offset, giving the
+// bleacher seats a layered parallax feel instead of moving as one flat image.
+// The static center row (Row 3) additionally gets a look-away overlay:
+// no_stare.svg's Row 3 is transplanted in on top of it, shown by default
+// (and while hovered) and hard-cut to hidden once the figure is "revealed".
+const ParallaxFigure = memo(function ParallaxFigure({ src, hoverSrc, sectionRef, revealed, nearViewport }) {
+    const markup = useInlineSvg(src, nearViewport);
+    const hoverMarkup = useInlineSvg(hoverSrc, nearViewport);
+    const containerRef = useRef(null);
+    const hoverRowRef = useRef(null);
+    const [isHovering, setIsHovering] = useState(false);
+    // Look away by default (before the reveal) and whenever hovered;
+    // otherwise show the base "staring" row underneath.
+    const lookAway = isHovering || !revealed;
+
+    // A fresh { __html: markup } object literal on every render makes React's
+    // prop diff (reference equality) treat it as "changed" and reset the
+    // node's innerHTML each time - wiping the manually transplanted hover
+    // row below. Memoizing keeps the reference stable while markup itself
+    // hasn't changed.
+    const htmlProp = useMemo(() => (markup ? { __html: markup } : undefined), [markup]);
+
+    useGSAP(() => {
+        if (!markup || !containerRef.current || !sectionRef.current) return;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        const svgEl = containerRef.current.querySelector("svg");
+        if (svgEl) svgEl.setAttribute("preserveAspectRatio", "xMidYMid slice");
+
+        const tweens = ROW_IDS.map((id, i) => {
+            const offset = ROW_OFFSETS[i] ?? 0;
+            if (!offset) return null;
+            const el = containerRef.current.querySelector(`[id="${id}"]`);
+            if (!el) return null;
+            gsap.set(el, { y: -offset });
+            return gsap.to(el, {
+                y: offset,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 0.6,
+                },
+            });
+        });
+
+        return () => tweens.forEach((t) => t && t.kill());
+    }, [markup, sectionRef.current]);
+
+    // Transplant no_stare's Row 3 (+ the gradient defs it relies on) into this
+    // svg, stacked on top of the base Row 3, starting fully transparent.
+    useGSAP(() => {
+        if (!markup || !hoverMarkup || !containerRef.current) return;
+        const svgEl = containerRef.current.querySelector("svg");
+        const defsEl = svgEl?.querySelector("defs");
+        const baseRow = containerRef.current.querySelector(`[id="${HOVER_ROW_ID}"]`);
+        const extracted = extractRowWithDefs(hoverMarkup, HOVER_ROW_ID);
+        if (!svgEl || !defsEl || !baseRow || !extracted) return;
+
+        extracted.defs.forEach((def) => defsEl.appendChild(document.importNode(def, true)));
+
+        const hoverRow = document.importNode(extracted.row, true);
+        hoverRow.removeAttribute("id");
+        hoverRow.style.opacity = lookAway ? "1" : "0";
+        hoverRow.style.pointerEvents = "none";
+        baseRow.style.pointerEvents = "none";
+        baseRow.insertAdjacentElement("afterend", hoverRow);
+
+        hoverRowRef.current = hoverRow;
+
+        return () => {
+            hoverRow.remove();
+            hoverRowRef.current = null;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [markup, hoverMarkup]);
+
+    // The base row stays fully opaque underneath at all times; only the
+    // hover row's visibility toggles, directly on top of it. That way there's
+    // never a frame where both are mid-fade and neither reads clearly -
+    // it's a hard cut, just via opacity instead of a DOM swap.
+    useEffect(() => {
+        if (!hoverRowRef.current) return;
+        gsap.set(hoverRowRef.current, { opacity: lookAway ? 1 : 0 });
+    }, [lookAway, hoverMarkup]);
+
+    return (
+        <div
+            ref={containerRef}
+            className={`${styles.figure} ${styles.figureSvg} ${styles.figureActive}`}
+            aria-hidden="true"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            dangerouslySetInnerHTML={htmlProp}
+        />
+    );
+});
 
 // "The only time I set the bar low is for limbo" as reveal segments.
 const STATEMENT_SEGMENTS = [
@@ -85,25 +235,50 @@ const TimeSpentCounter = memo(function TimeSpentCounter() {
     );
 });
 
-const Cicada = forwardRef(({}, ref) => {
-    const [facingViewer, setFacingViewer] = useState(false);
-    const [isHovering, setIsHovering] = useState(false);
+// How long the figure stays "looking away" once in view before revealing
+// the stare, so the swap itself is visible rather than instant.
+const REVEAL_DELAY_MS = 1500;
 
+const Cicada = forwardRef(({}, ref) => {
     const sectionRef = useRef(null);
     const figureRef = useRef(null);
+    const [revealed, setRevealed] = useState(false);
+    const [nearViewport, setNearViewport] = useState(false);
 
-    // While staring at the viewer, hovering the figure briefly looks away.
-    const showStare = facingViewer && !isHovering;
-
-    // Swap which way the figure faces depending on whether the section is in view.
-    // Debounced so a quick scroll past the threshold doesn't flicker the crossfade.
+    // Start fetching the figure svgs a little before they're actually on
+    // screen, instead of on initial mount - this section is well below the
+    // fold, so eagerly loading ~35KB of svg for it would be wasted work on
+    // first paint for anyone who doesn't scroll that far.
     useEffect(() => {
         if (!figureRef.current) return;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setNearViewport(true);
+                    observer.disconnect();
+                }
+            },
+            { rootMargin: "800px 0px" }
+        );
+        observer.observe(figureRef.current);
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (!figureRef.current) return;
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         let timeoutId;
         const observer = new IntersectionObserver(
             ([entry]) => {
                 clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => setFacingViewer(entry.isIntersecting), 200);
+                if (entry.isIntersecting) {
+                    // Skip the deliberate pause for reduced-motion users -
+                    // reveal as soon as the figure is in view.
+                    if (reduceMotion) setRevealed(true);
+                    else timeoutId = setTimeout(() => setRevealed(true), REVEAL_DELAY_MS);
+                } else {
+                    setRevealed(false);
+                }
             },
             { threshold: 0.4 }
         );
@@ -171,24 +346,13 @@ const Cicada = forwardRef(({}, ref) => {
           </div>
 
           <div className={styles.left} ref={figureRef}>
-            <div
-              className={styles.figureWrap}
-              onMouseEnter={() => setIsHovering(true)}
-              onMouseLeave={() => setIsHovering(false)}
-            >
-              <img
-                src="/no_stare.svg"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className={`${styles.figure} ${!showStare ? styles.figureActive : ""}`}
-              />
-              <img
+            <div className={styles.figureWrap}>
+              <ParallaxFigure
                 src="/stare.svg"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className={`${styles.figure} ${showStare ? styles.figureActive : ""}`}
+                hoverSrc="/no_stare.svg"
+                sectionRef={sectionRef}
+                revealed={revealed}
+                nearViewport={nearViewport}
               />
             </div>
           </div>
