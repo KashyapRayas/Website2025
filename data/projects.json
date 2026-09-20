@@ -1,6 +1,16 @@
 {
     "projects": [
         {
+        "name": "MOVIE COLAB VR",
+        "description": "Studio-grade film reviews, without booking a theatre",
+        "img": "/project_imgs/mcvr_1.webp",
+        "tags": [
+            "VR App",
+            "Film Production",
+            "Spatial Design"
+        ]
+        },
+        {
         "name": "SAVVYWISE",
         "description": "An AI-powered research assistant for Australian tax and compliance",
         "img": "/project_imgs/sw_1.webp",

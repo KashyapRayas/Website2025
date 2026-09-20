@@ -1,0 +1,127 @@
+{
+    "content": [
+        {
+            "type": "img",
+            "url": "/project_imgs/mcvr_1.webp",
+            "caption": ""
+        },
+        {
+            "type": "bigtext",
+            "text1": "OVERVIEW",
+            "text2": "Studio-grade film reviews, without booking a theatre",
+            "text3":
+            "A monitor can make a shot look better than it actually is, hiding grain and evening out contrast, so something that looks fine at your desk falls apart from forty feet away. Studios book theatres to review properly, at costs running into the millions, and everyone below that budget reviews on a laptop. Movie Colab VR brings that review room into a headset. It's built for production heads and reviewers, while the artists they're reviewing stay on web and mobile, and that split shaped most of the decisions here. The problem statement came from Vivek Reddy, our CEO, who worked on VR development early in his career as a production engineer. I've owned design on it since we started in September '25."
+        },
+        {
+            "type": "bigtext",
+            "text1": "THE TRANSLATION",
+            "text2": "2D tools, 3D problems",
+            "text3":
+            "The first problem wasn't the product, it was the process. Designing for a headset in Figma brought up more questions than the features did:",
+            "points": [
+                "How far a panel should sit from the user, and how big it needs to be at that distance",
+                "When a screen should attach to an object, and when it should float in the theatre",
+                "How to orient panels so users aren't turning their heads for a basic task",
+                "How to show a 3D experience on a flat frame, so the graphics engineer could build what I meant",
+                "Which patterns from other VR apps actually hold up once you're in a headset"
+            ]
+        },
+        {
+            "type": "bigtext",
+            "text1": "THE RESEARCH",
+            "text2": "Borrowing from everyone in the headset",
+            "text3":
+            "Competitor audits on existing VR products, including plenty that aren't competitors at all, helped us find the patterns worth keeping. From there I set up a system for designing 2D panels and interactions in Figma, with concept frames that showed how it would look inside the headset. Three iterations later we landed on panels that follow Meta's UI system and standards for VR, which also brought in the accessibility and interaction rules that keep the experience smooth and non-nauseating."
+        },
+        {
+            "type": "img",
+            "caption": "Initial conceptualisation of the headset experience in Figma",
+            "url": "/project_imgs/mcvr_2.webp"
+        },
+        {
+            "type": "img",
+            "caption": "An initial iteration which we later greatly improved upon based on Meta's UI system and standards for VR",
+            "url": "/project_imgs/mcvr_3.webp"
+        },
+        {
+            "type": "bigtext",
+            "text1": "THE ENVIRONMENT",
+            "text2": "Keep the theatre, float the rest",
+            "text3":
+            "We had to carry over workflows from Movie Colab Projects on web to stay consistent, and the easy route was to project that web experience onto the theatre screen. But it breaks immersion, merging two separate worlds into one and making the interaction feel less personal. So I went mixed: the theatre and its screen stay as they are, while interfaces and panels pop up in the space around you, keeping the two apart and making the interface personal to each user. Since the environment is separate from the interface, theatre models slot in as modules. That's what let us push it for the Las Vegas Sphere project, where studios could simulate a review without booking the Sphere."
+        },
+        {
+            "type": "video",
+            "caption": "The experience inside the headset",
+            "url": "/project_vids/mcvr_experience.mp4",
+            "poster": "/project_vids/mcvr_experience_poster.webp"
+        },
+        {
+            "type": "img",
+            "caption": "Panels and interfaces across the app",
+            "url": "/project_imgs/mcvr_4.webp"
+        },
+        {
+            "type": "bigtext",
+            "text1": "THE MENU",
+            "text2": "Everything, on hand",
+            "text3":
+            "Frequent actions like play, pause, moving between frames, and opening panels needed a home. A popup menu didn't make sense, it's distracting and constantly in your face, so I attached the menu to the left controller and made it pointable with the right, closer to reaching for a control on a stereo. It's ordered by frequency and kept modular, so we can add options and layers as the product scales. The parts used most often update instantly too, like switching a shot or sequence from the review panel."
+        },
+        {
+            "type": "img",
+            "caption": "Three iterations of the hand menu, from rough concept to the final layout",
+            "url": "/project_imgs/mcvr_5.webp"
+        },
+        {
+            "type": "bigtext",
+            "text1": "THE INTERACTION",
+            "text2": "Two buttons, that's it",
+            "text3":
+            "The goal was to get through the whole app with two buttons, menu and trigger, with the rest as quick keybinds like play and pause that you can still reach from the menu. Two buttons is also easy to sell to a first time user, there isn't much to remember. Where people still needed help, we added infotips, a help section with a video demo for each interaction, and a controls panel on the login page."
+        },
+        {
+            "type": "bigtext",
+            "text1": "ANNOTATIONS",
+            "text2": "Drawing on the big screen",
+            "text3":
+            "Reviewers mark on a shot to show artists what to change, more like doodling on the frame than writing a note, and it happens often enough to need two ways in. The first is a quick annotation drawn on the theatre screen while paused, so the whole theatre sees it, which then opens the annotation panel for finer work with brush color, a message, and a submit option. The second starts from the panel itself, taking a frameshot to annotate in front of you instead. Both are just a held trigger."
+        },
+        {
+            "type": "video",
+            "caption": "Reviewing and commenting on a shot version in the headset",
+            "url": "/project_vids/mcvr_annotation.mp4",
+            "poster": "/project_vids/mcvr_annotation_poster.webp"
+        },
+        {
+            "type": "bigtext",
+            "text1": "THE SESSIONS",
+            "text2": "Where the notes land",
+            "text3":
+            "Sessions are recorded and transcribed by our diarisation engine, and they show up in the web and mobile apps instead of VR. Production heads review in the headset, but the notes are only useful to the artist, who works on web and mobile. The session viewer puts the audio and transcription next to the version reviewed, synced on both the session and annotation timestamps, so artists get both at once. A recent update added a comment viewer that pulls comments from the shot version on screen, so the assigned artist gets feedback without waiting for the session to end."
+        },
+        {
+            "type": "img",
+            "caption": "Session viewer on web, with transcription synced to annotations",
+            "url": "/project_imgs/mcvr_7.webp"
+        },
+        {
+            "type": "bigtext",
+            "text1": "REFLECTIONS",
+            "text2": "Reality, still rendering",
+            "text3":
+            "An executive from Prologue, an Emmy Award winning VFX studio, said it's currently the best user experience in this segment on the market, and the feedback from artists has been just as good. It also helped me find the gaps in the research, affordances nobody has documented yet, which we had to solve our own way. Immersion is the next focus: getting interactions closer to the care and polish of visionOS, and supporting hands-only input, which is minimal in the app right now."
+        }
+    ],
+    "details": {
+        "timeline": "Sep '25 - Present",
+        "company": "VigaET",
+        "tags": [
+            "VR App",
+            "Film Production",
+            "Spatial Design"
+        ],
+        "projectTitle": "MOVIE COLAB VR",
+        "projectLink": "https://moviecolab.com/vr/"
+    }
+}
