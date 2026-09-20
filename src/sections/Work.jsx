@@ -14,7 +14,6 @@ import { CustomEase } from "gsap/CustomEase";
 import { useGSAP } from "@gsap/react";
 import GrassOverlay from "../components/GrassOverlay";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import PixelLock from "/pixelLock.svg";
 import star from "/star.svg";
 import WorkCursor from "../components/WorkCursor";
 
@@ -605,46 +604,6 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
                   fill="var(--off-teal)"
                 />
               </svg>
-            </div>
-          </div>
-
-          <div
-            className={"project locked"}
-            role="button"
-            tabIndex={0}
-            aria-label="Movie Colab VR – case study coming soon"
-            aria-disabled="true"
-            onMouseEnter={playHover}
-            onClick={() => { playClick(2); console.log("It ain't here yet!"); }}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); playClick(2); } }}
-          >
-            <div className="title">
-              <img
-                src={PixelLock}
-                alt=""
-                style={{ paddingRight: "6px", paddingTop: "2px" }}
-              />
-              <h3>MOVIE COLAB VR</h3>
-            </div>
-            <div className="description locked">
-              <p>
-                Case study coming soon! VR screening room for remote film
-                review
-              </p>
-            </div>
-            <div className="tags">
-              <div className="tag">
-                <img src={star} alt="" />
-                Virtual Reality
-              </div>
-              <div className="tag">
-                <img src={star} alt="" />
-                AI Integrated
-              </div>
-              <div className="tag">
-                <img src={star} alt="" />
-                Film Production
-              </div>
             </div>
           </div>
 

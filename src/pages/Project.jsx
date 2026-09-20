@@ -4,6 +4,7 @@ import "./Project.css";
 import ProjectBigText from "../components/ProjectBigText";
 import ProjectParaText from "../components/ProjectParaText";
 import ProjectImage from "../components/ProjectImage";
+import ProjectVideo from "../components/ProjectVideo";
 import ProjectHeadingParaText from "../components/ProjectHeadingParaText";
 import Contact from "../sections/Contact";
 import Footer from "../sections/Footer";
@@ -336,6 +337,15 @@ const Project = ({
                       key={`${selectedProjectName}-${index}`}
                       src={BASE_PATH + item.url}
                       alt={`Project image ${index}`}
+                      caption={item.caption}
+                    />
+                  );
+                case "video":
+                  return (
+                    <ProjectVideo
+                      key={`${selectedProjectName}-${index}`}
+                      src={BASE_PATH + item.url}
+                      poster={item.poster ? BASE_PATH + item.poster : undefined}
                       caption={item.caption}
                     />
                   );
