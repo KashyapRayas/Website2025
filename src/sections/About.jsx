@@ -130,7 +130,7 @@ const About = forwardRef((_, ref) => {
     { text: "Chainsaw Man" },
     { text: "Learning French" },
     { text: "Lego Kits" },
-    { text: "Gym" },
+    { text: "Gym & Philosophy" },
     { text: "The color green" },
   ];
 
@@ -138,7 +138,7 @@ const About = forwardRef((_, ref) => {
     { text: "Design a VR experience", checked: true },
     { text: "Play Death Stranding 2" , checked: true },
     { text: "Mod a Casio watch" , checked: true  },
-    { text: "Finish reading - Crime & Punishment"},
+    { text: "Finish reading - Crime & Punishment", checked: true },
     { text: "Pursue a HCI Master's" },
     { text: "Learn Cardistry" },
   ];

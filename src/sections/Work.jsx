@@ -354,6 +354,11 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     return 0;
   }, [hoveredIndex, selectedIndex]);
 
+  // activeIndex falls back to 0 so the preview image always has something to
+  // show. Spinning stars are a hover/active affordance, so they need a real
+  // hover or selection — on touch, hoveredIndex stays -1 and nothing spins.
+  const hasActiveCard = selectedIndex !== null || hoveredIndex >= 0;
+
   const activeProject = useMemo(() => {
     if (!projectsData || projectsData.length === 0) return {};
     if (activeIndex < 0 || activeIndex >= projectsData.length) return {};
@@ -443,7 +448,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
       }
     });
 
-    if (activeIndex < 0) return;
+    if (activeIndex < 0 || !hasActiveCard) return;
 
     const starRefs = starRefsMap.current[activeIndex];
     if (!starRefs || starRefs.length === 0) return;
@@ -473,7 +478,7 @@ const Work = forwardRef(({ handleProjectSelect }, ref) => {
     return () => {
       tl.kill();
     };
-  }, [activeIndex, projectsData]);
+  }, [activeIndex, hasActiveCard, projectsData]);
 
   // ClipPath reveal animation when active project changes
     useGSAP(() => {
