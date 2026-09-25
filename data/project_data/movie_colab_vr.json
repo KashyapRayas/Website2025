@@ -10,14 +10,14 @@
             "text1": "OVERVIEW",
             "text2": "Studio-grade film reviews, without booking a theatre",
             "text3":
-            "A monitor can make a shot look better than it actually is, hiding grain and evening out contrast, so something that looks fine at your desk falls apart from forty feet away. Studios book theatres to review properly, at costs running into the millions, and everyone below that budget reviews on a laptop. Movie Colab VR brings that review room into a headset. It's built for production heads and reviewers, while the artists they're reviewing stay on web and mobile, and that split shaped most of the decisions here. The problem statement came from Vivek Reddy, our CEO, who worked on VR development early in his career as a production engineer. I've owned design on it since we started in September '25."
+            "Movie Colab is Viga's production management platform, where film and animation teams track shots and review each other's work on web and mobile. A monitor can make a movie shot look better than it actually is, hiding grain and evening out contrast. Studios book theaters to review in-production shots properly, at costs running into the millions, and everyone below that budget reviews on a laptop. At Viga we're trying to democratize filmmaking for teams of any size, so we brought that review room into a VR headset: photorealistic theatres, playback synchronized across every headset so a team spread across cities reviews the same frame, and annotations that the whole room can see. Production heads review in VR while the artists they're reviewing stay on web and mobile, and that split shaped most of the decisions. I've owned design on it since we started in September '25."
         },
         {
             "type": "bigtext",
             "text1": "THE TRANSLATION",
             "text2": "2D tools, 3D problems",
             "text3":
-            "The first problem wasn't the product, it was the process. Designing for a headset in Figma brought up more questions than the features did:",
+            "The hard part came earlier. Designing for a headset in Figma raised more questions than the features themselves:",
             "points": [
                 "How far a panel should sit from the user, and how big it needs to be at that distance",
                 "When a screen should attach to an object, and when it should float in the theatre",
@@ -29,7 +29,7 @@
         {
             "type": "bigtext",
             "text1": "THE RESEARCH",
-            "text2": "Borrowing from everyone in the headset",
+            "text2": "Through the looking glass",
             "text3":
             "Competitor audits on existing VR products, including plenty that aren't competitors at all, helped us find the patterns worth keeping. From there I set up a system for designing 2D panels and interactions in Figma, with concept frames that showed how it would look inside the headset. Three iterations later we landed on panels that follow Meta's UI system and standards for VR, which also brought in the accessibility and interaction rules that keep the experience smooth and non-nauseating."
         },
@@ -85,7 +85,7 @@
             "text1": "ANNOTATIONS",
             "text2": "Drawing on the big screen",
             "text3":
-            "Reviewers mark on a shot to show artists what to change, more like doodling on the frame than writing a note, and it happens often enough to need two ways in. The first is a quick annotation drawn on the theatre screen while paused, so the whole theatre sees it, which then opens the annotation panel for finer work with brush color, a message, and a submit option. The second starts from the panel itself, taking a frameshot to annotate in front of you instead. Both are just a held trigger."
+            "Reviewers mark on a shot to show artists what to change, more like doodling on the frame than writing a note, and it happens often enough to need two ways in. The first is a quick annotation drawn on the theatre screen while paused, so the whole theatre sees it, which then opens the annotation panel for finer work with brush color, a message, and a submit option. The second starts from the panel itself, taking a frameshot to annotate in front of you instead."
         },
         {
             "type": "video",
