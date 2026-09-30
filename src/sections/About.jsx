@@ -269,7 +269,7 @@ const About = forwardRef((_, ref) => {
           </div>
 
             <a
-                href="https://drive.google.com/file/d/12dYdJq4Q5KDVlghvON27KRiGc8sl-ZMm/view?usp=sharing"
+                href="https://drive.google.com/file/d/1GGX_u6EIBeBkoFNA3Sj9gTdqTTeH7RiQ/view?usp=sharing"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="View Kashyap's resume (PDF, opens in new tab)"
