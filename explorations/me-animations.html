@@ -77,6 +77,33 @@
   .desc { margin: -4px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
   .try { font-size: 12.5px; color: var(--off-black); }
   .try b { font-weight: 600; }
+  .card.wide { grid-column: 1 / -1; }
+  .wide-inner { display: grid; grid-template-columns: minmax(240px, 360px) 1fr; gap: 28px; align-items: start; }
+  @media (max-width: 720px) { .wide-inner { grid-template-columns: 1fr; } }
+  .panel { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; font-size: 12.5px; }
+  .controls label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+  .legend { display: inline-flex; flex-wrap: wrap; gap: 12px; color: var(--muted); }
+  .legend span { display: inline-flex; gap: 5px; align-items: center; }
+  .status { font-size: 12.5px; color: var(--muted); margin: 0; min-height: 1.5em; }
+  .mgroup h3 {
+    font: 500 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 6px 0 8px;
+  }
+  .mlist { display: flex; flex-wrap: wrap; gap: 6px; }
+  .m {
+    font: inherit; font-size: 12.5px; color: var(--off-black);
+    border: 1px solid var(--line); background: transparent; border-radius: 99px;
+    padding: 5px 10px 5px 8px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  }
+  .m:hover { border-color: var(--off-black); }
+  .m.on { background: var(--off-black); color: var(--off-white); border-color: var(--off-black); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .t-common { background: #A9B3AF; }
+  .t-uncommon { background: #00A084; }
+  .t-rare { background: #6D5BD0; }
+  .t-ultra { background: #E39A2D; }
+  .hint { font-size: 12.5px; margin: 2px 0 0; min-height: 1.5em; }
   footer {
     position: fixed; left: 0; right: 0; bottom: 0;
     background: var(--off-black); color: var(--off-white);
@@ -271,7 +298,7 @@ function makeRig() {
     fishSy: 1.02,
     bars: [1, 1, 1, 1], barsX: 0, barsY: 0,
     bodyX: 0, bodyY: 0,
-    blush: 0,
+    blush: 0, cross: 0,
   };
 }
 
@@ -304,9 +331,10 @@ function render(r, e, cache) {
   setAttr(e.lashR, "d", M.lashR(cR), cache, "lashR");
   setAttr(e.botR, "d", M.botR(Math.max(0, cR)), cache, "botR");
 
-  const iris = (cx, cy, k) => `translate(${f(r.gx * k)} ${f(r.gy * k)}) translate(${cx} ${cy}) scale(${f(r.pupil)}) translate(${-cx} ${-cy})`;
-  setAttr(e.irisL, "transform", iris(135, 237.5, 1), cache, "irisL");
-  setAttr(e.irisR, "transform", iris(213, 245.5, 1), cache, "irisR");
+  // cross > 0 pulls the irises toward the nose
+  const iris = (cx, cy, ox) => `translate(${f(r.gx + ox)} ${f(r.gy)}) translate(${cx} ${cy}) scale(${f(r.pupil)}) translate(${-cx} ${-cy})`;
+  setAttr(e.irisL, "transform", iris(135, 237.5, r.cross), cache, "irisL");
+  setAttr(e.irisR, "transform", iris(213, 245.5, -r.cross), cache, "irisR");
 
   const brow = (p, y, rot) => `translate(0 ${f(y)}) rotate(${f(rot)} ${p[0]} ${p[1]})`;
   setAttr(e.browL, "transform", brow(PIVOT.browL, r.bLy, r.bLr), cache, "browL");
@@ -659,25 +687,562 @@ const VARIANTS = [
   },
 ];
 
-function spawnZ(card) {
-  const ns = "http://www.w3.org/2000/svg";
-  const el = document.createElementNS(ns, "text");
-  el.textContent = "z";
+/* ------------------------------------------------------------------ */
+/* Rare moments: a weighted, interruptible library of small acts       */
+/* ------------------------------------------------------------------ */
+const TIERS = {
+  common: { label: "Common", p: 0.6, unlock: 0 },
+  uncommon: { label: "Uncommon", p: 0.3, unlock: 0 },
+  rare: { label: "Rare", p: 0.09, unlock: 30 },
+  ultra: { label: "Ultra-rare", p: 0.01, unlock: 60 },
+};
+const LATE_NIGHT = (() => { const h = new Date().getHours(); return h >= 23 || h < 5; })();
+const NEUTRAL = { bLy: 0, bLr: 0, bRy: 0, bRr: 0, closeL: 0, closeR: 0, pupil: 1, hr: 0, hx: 0, hy: 0, blush: 0, cross: 0, bodyX: 0, bodyY: 0 };
+const G = GAZE0;
+const PRIO = { idle: 1, react: 2, peek: 2.5, burst: 3, annoyed: 3.5, manual: 4 };
+
+const MOMENTS = [
+  /* -- when left alone ----------------------------------------------- */
+  { key: "daydream", name: "Daydream", group: "idle", tier: "common", trigger: "Idle, random",
+    async run(c) {
+      c.noBlink();
+      await c.to({ gx: G.x + 5.5, gy: -0.6, pupil: 1.12, closeL: 0.22, closeR: 0.22, bLy: -1.5, bRy: -1.5, hr: -1 }, 1.4, ease.inOut);
+      await c.wait(1.5);
+      await c.to({ gx: G.x + 3.8, gy: -0.2 }, 1.4, ease.inOut);
+      await c.wait(0.8);
+      c.noBlink(false);
+      await c.to({ gx: G.x, gy: G.y, pupil: 1, closeL: 0, closeR: 0 }, 0.18, ease.out3);
+      await c.blink();
+    } },
+  { key: "looksAround", name: "Looks around", group: "idle", tier: "common", trigger: "Idle, random",
+    async run(c) {
+      await c.to({ gx: -1, gy: G.y, hr: -1.5, hx: -1.5, bLr: 3, bRr: -3, bLy: 1, bRy: 1 }, 0.3, ease.out3);
+      await c.wait(0.7);
+      await c.to({ gx: 9, hr: 1.5, hx: 1.5 }, 0.38, ease.inOut);
+      await c.wait(0.7);
+      await c.to({ gx: G.x, hr: 0, hx: 0, bLr: 0, bRr: 0, bLy: 0, bRy: 0 }, 0.3, ease.inOut);
+      await c.blink();
+    } },
+  { key: "thinking", name: "Thinking", group: "idle", tier: "uncommon", trigger: "Idle, random",
+    async run(c) {
+      await c.to({ gx: G.x - 1.2, gy: -0.8, bRy: -6, bRr: -3, hr: -2, hx: -1 }, 0.45, ease.out3);
+      c.mark("…", MARK.dots);
+      for (let i = 0; i < 3; i++) {
+        await c.to({ hy: 1.3 }, 0.16, ease.out);
+        await c.to({ hy: 0 }, 0.2, ease.inOut);
+        await c.wait(0.25);
+      }
+      await c.wait(0.5);
+    } },
+  { key: "humming", name: "Humming", group: "idle", tier: "uncommon", trigger: "Idle, random",
+    async run(c) {
+      c.noBlink();
+      await c.to({ closeL: 0.82, closeR: 0.82, bLy: -2.5, bRy: -2.5, gy: G.y + 1 }, 0.4, ease.inOut);
+      for (let i = 0; i < 6; i++) {
+        if (i % 2 === 0) c.mark("♪", MARK.note());
+        await c.to({ hy: 2, hr: i % 2 ? 1.6 : -1.6 }, 0.22, ease.out);
+        await c.to({ hy: 0 }, 0.26, ease.inOut);
+      }
+      await c.wait(0.2);
+      c.noBlink(false);
+    } },
+  { key: "neckRoll", name: "Neck roll", group: "idle", tier: "uncommon", trigger: "Idle, random",
+    async run(c) {
+      c.noBlink();
+      await c.to({ closeL: 0.9, closeR: 0.9 }, 0.35);
+      for (const [hr, hx, hy] of [[3, 3, 1.5], [0, 0, 4], [-3, -3, 1.5], [0, 0, -2], [0, 0, 0]]) {
+        await c.to({ hr, hx, hy }, 0.42, ease.sine);
+      }
+      c.noBlink(false);
+      await c.to({ closeL: 0, closeR: 0 }, 0.3);
+      await c.blink();
+    } },
+  { key: "nap", name: "Quick nap", group: "idle", tier: "uncommon", trigger: "Idle, random (3× likelier late at night)",
+    async run(c) {
+      c.noBlink();
+      await c.to({ closeL: 0.5, closeR: 0.5, gy: G.y + 1.5 }, 1.2, ease.inOut);
+      await c.to({ closeL: 1, closeR: 1, hr: 3, hy: 4, bLy: 2, bRy: 2 }, 1.4, ease.inOut);
+      c.mark("z", MARK.z()); await c.wait(1.1);
+      c.mark("z", MARK.z()); await c.wait(1.2);
+      await c.to({ closeL: -0.3, closeR: -0.3, bLy: -9, bRy: -9, hr: -1, hy: -4, pupil: 0.8 }, 0.16, ease.out3);
+      c.mark("!", MARK.bang); await c.wait(0.4);
+      c.noBlink(false);
+      await c.to({ closeL: 0, closeR: 0, bLy: 0, bRy: 0, hr: 0, hy: 0, pupil: 1, gy: G.y }, 0.5);
+      await c.blink(); await c.wait(0.12); await c.blink();
+    } },
+  { key: "sneeze", name: "Almost-sneeze", group: "idle", tier: "rare", trigger: "Idle, random (sometimes it fizzles)",
+    async run(c) {
+      c.noBlink();
+      await c.to({ bLy: -4, bRy: -4, closeL: 0.45, closeR: 0.45, hy: -2, hr: -1 }, 0.35, ease.inOut); await c.wait(0.25);
+      await c.to({ bLy: -6, bRy: -6, closeL: 0.65, closeR: 0.65, hy: -4, hr: -2 }, 0.35, ease.inOut); await c.wait(0.25);
+      await c.to({ bLy: -8, bRy: -8, closeL: 0.85, closeR: 0.85, hy: -6, hr: -3, pupil: 0.9 }, 0.4, ease.inOut); await c.wait(0.45);
+      if (Math.random() < 0.4) {
+        c.label("…fizzled");
+        await c.to({ bLy: 1, bRy: 1, bLr: -3, bRr: 3, closeL: 0.35, closeR: 0.35, hy: 1, hr: 0 }, 0.6, ease.inOut);
+        await c.wait(0.9);
+      } else {
+        await c.to({ hy: 7, hr: 3, closeL: 1, closeR: 1, bLy: 3, bRy: 3 }, 0.09, ease.out3);
+        await c.wait(0.18);
+        await c.to({ hy: 0, hr: 0, closeL: 0, closeR: 0, bLy: 0, bRy: 0, pupil: 1 }, 0.5, ease.back);
+        c.noBlink(false);
+        await c.blink(); await c.wait(0.12); await c.blink();
+      }
+    } },
+  { key: "shiver", name: "Shiver", group: "idle", tier: "rare", trigger: "Idle, random",
+    async run(c) {
+      await c.to({ bLy: -4, bRy: -4, closeL: -0.15, closeR: -0.15 }, 0.12);
+      for (let i = 0; i < 8; i++) await c.to({ hx: i % 2 ? 1.4 : -1.4, hr: i % 2 ? 0.6 : -0.6 }, 0.045, ease.linear);
+      await c.to({ hx: 0, hr: 0 }, 0.1);
+      await c.blink(); await c.wait(0.1); await c.blink();
+    } },
+  { key: "fisherman", name: "Glances at the fisherman", group: "idle", tier: "ultra", trigger: "Idle, random (after 60s)",
+    async run(c) {
+      await c.to({ gx: G.x - 2.5, gy: -1.6, closeL: -0.25, closeR: -0.25, bLy: -7, bRy: -7, hy: -1.5, hr: -1 }, 0.6, ease.inOut);
+      await c.wait(0.9);
+      c.mark("?", MARK.what);
+      await c.wait(1.1);
+      await c.to({ gx: G.x, gy: G.y, closeL: 0, closeR: 0, hy: 0, hr: 0 }, 0.4, ease.inOut);
+      // shrug it off
+      await c.to({ bodyY: -3, hy: -3, bLy: -5, bRy: -5 }, 0.22, ease.out);
+      await c.wait(0.25);
+      await c.to({ bodyY: 0, hy: 0, bLy: 0, bRy: 0 }, 0.35, ease.inOut);
+    } },
+
+  /* -- cursor ---------------------------------------------------------- */
+  { key: "crossEyed", name: "Cross-eyed", group: "cursor", tier: "rare", trigger: "Rest the cursor on the nose for ~1.5s",
+    async run(c) {
+      await c.to({ gx: G.x, gy: G.y + 0.5, cross: 4.2, bLr: -4, bRr: 4, bLy: -2, bRy: -2 }, 0.5, ease.inOut);
+      await c.wait(1.1);
+      for (let i = 0; i < 4; i++) await c.to({ hx: i % 2 ? 2 : -2 }, 0.07);
+      await c.to({ hx: 0, cross: 0 }, 0.15);
+      await c.blink();
+    } },
+  { key: "dizzy", name: "Dizzy", group: "cursor", tier: "rare", trigger: "Circle the cursor around the face quickly",
+    async run(c) {
+      c.noBlink();
+      for (let i = 0; i < 28; i++) {
+        const a = i * 0.55;
+        await c.to({ gx: G.x + Math.cos(a) * 4, gy: G.y + Math.sin(a) * 2.2, hr: Math.sin(a * 0.5) * 3, hx: Math.cos(a * 0.5) * 2.5, closeL: 0.15, closeR: 0.15 }, 0.05, ease.linear);
+      }
+      await c.wait(0.15);
+      for (let i = 0; i < 6; i++) await c.to({ hx: i % 2 ? 3 : -3, hr: i % 2 ? 1.2 : -1.2 }, 0.07);
+      c.noBlink(false);
+      await c.to({ hx: 0, hr: 0, gx: G.x, gy: G.y, closeL: 0, closeR: 0 }, 0.2);
+      await c.blink(); await c.wait(0.1); await c.blink();
+    } },
+  { key: "lostYou", name: "Lost you", group: "cursor", tier: "common", trigger: "Leave the card quickly",
+    async run(c, side = 1) {
+      const near = side > 0 ? 9 : -1, far = side > 0 ? -1 : 9;
+      await c.to({ gx: near, gy: G.y, bLr: 3, bRr: -3, bLy: 1.5, bRy: 1.5, hr: side * 1.5 }, 0.25, ease.out3); await c.wait(0.5);
+      await c.to({ gx: far, hr: -side * 1.5 }, 0.4, ease.inOut); await c.wait(0.45);
+      await c.to({ gx: near, hr: side * 1.5 }, 0.4, ease.inOut); await c.wait(0.35);
+      await c.to({ gx: G.x, hr: 0, bLr: 0, bRr: 0, bLy: 0, bRy: 0 }, 0.4);
+      await c.blink();
+    } },
+  { key: "peekaboo", name: "Peekaboo", group: "cursor", tier: "uncommon", trigger: "Leave and come back within 2s",
+    async run(c) {
+      await c.to({ bLy: -8, bRy: -8, closeL: -0.2, closeR: -0.2, hy: -1.5 }, 0.12, ease.out3); await c.wait(0.25);
+      await c.to({ bLy: 0, bRy: 0, closeL: 0.35, closeR: 0.35, hy: 0 }, 0.3, ease.inOut);
+      await c.blink(); await c.wait(0.12); await c.blink();
+      await c.wait(0.3);
+    } },
+  { key: "sideEye", name: "Side-eye", group: "cursor", tier: "uncommon", trigger: "Linger at the left or right edge",
+    async run(c, side = 1) {
+      await c.to({ gx: side > 0 ? 9.2 : -1.2, gy: G.y + 0.3, closeL: 0.38, closeR: 0.38, bLy: side > 0 ? -4 : 2, bRy: side > 0 ? 2 : -4, bRr: side > 0 ? -3 : 0 }, 0.45, ease.inOut);
+      await c.wait(1.6);
+    } },
+  { key: "catBlink", name: "Cat blink", group: "cursor", tier: "rare", trigger: "Keep the cursor still on the face for ~2.5s",
+    async run(c) {
+      c.noBlink();
+      await c.to({ closeL: 1, closeR: 1, bLy: -1, bRy: -1 }, 0.7, ease.inOut); await c.wait(0.45);
+      await c.to({ closeL: 0.3, closeR: 0.3 }, 0.8, ease.inOut); await c.wait(0.8);
+    } },
+  { key: "looksUp", name: "Looks up", group: "cursor", tier: "uncommon", trigger: "Hover over the hair or pool for ~1s",
+    async run(c) {
+      await c.to({ gx: G.x + 0.5, gy: -1.6, closeL: -0.2, closeR: -0.2, bLy: -6, bRy: -6, hy: -1.2 }, 0.4, ease.out3); await c.wait(1.0);
+      await c.to({ gx: G.x + 3 }, 0.3); await c.wait(0.4);
+      await c.to({ gx: G.x - 2 }, 0.4); await c.wait(0.4);
+    } },
+
+  /* -- clicks ---------------------------------------------------------- */
+  { key: "wink", name: "Wink", group: "click", tier: "common", trigger: "Click (random)",
+    async run(c) {
+      c.noBlink();
+      await c.to({ closeL: 1, bLy: 3, bLr: 3, bRy: -5, hr: -3 }, 0.16, ease.out3);
+      await c.wait(0.45);
+    } },
+  { key: "browWiggle", name: "Eyebrow wiggle", group: "click", tier: "common", trigger: "Click (random)",
+    async run(c) {
+      for (let i = 0; i < 2; i++) {
+        await c.to({ bLy: -7, bRy: 1 }, 0.12);
+        await c.to({ bLy: 1, bRy: -7 }, 0.12);
+      }
+      await c.wait(0.1);
+    } },
+  { key: "oneBrow", name: "One-brow raise", group: "click", tier: "common", trigger: "Click (random)",
+    async run(c) {
+      await c.to({ bRy: -9, bRr: -3, bLy: 1.5, hy: -1.5, hr: -1, closeL: 0.15 }, 0.5, ease.inOut);
+      await c.wait(1.1);
+    } },
+  { key: "nodYes", name: "Nod yes", group: "click", tier: "common", trigger: "Click (random)",
+    async run(c) {
+      c.to({ closeL: 0.35, closeR: 0.35, bLy: -2, bRy: -2 }, 0.2);
+      for (let i = 0; i < 2; i++) {
+        await c.to({ hr: 2.8, hy: 4 }, 0.16, ease.out);
+        await c.to({ hr: 0, hy: 0 }, 0.22, ease.inOut);
+      }
+      await c.wait(0.2);
+    } },
+  { key: "shakeNo", name: "Shake no", group: "click", tier: "common", trigger: "Click (random)",
+    async run(c) {
+      c.to({ closeL: 0.2, closeR: 0.2, bLr: 3, bRr: -3 }, 0.2);
+      for (const v of [-3, 3, -3, 3]) await c.to({ hx: v, hr: v * 0.35 }, 0.12, ease.inOut);
+      await c.to({ hx: 0, hr: 0 }, 0.14);
+      await c.wait(0.2);
+    } },
+  { key: "startle", name: "Startle", group: "click", tier: "uncommon", trigger: "Click (random)",
+    async run(c) {
+      await c.to({ hy: -5, closeL: -0.35, closeR: -0.35, pupil: 0.7, bLy: -9, bRy: -9, bodyY: -2 }, 0.1, ease.out3);
+      c.mark("!", MARK.bang);
+      await c.wait(0.5);
+      await c.to({ hy: 0, bodyY: 0 }, 0.5, ease.inOut);
+      await c.blink();
+    } },
+  { key: "deadpan", name: "Deadpan", group: "click", tier: "uncommon", trigger: "Click (random)",
+    async run(c) {
+      c.noBlink();
+      await c.to({ gx: G.x, gy: G.y, closeL: 0.55, closeR: 0.55, bLy: 1, bRy: 1, bLr: 0, bRr: 0, hr: 0 }, 0.35);
+      await c.wait(1.7);
+      await c.to({ closeL: 1, closeR: 1 }, 0.35, ease.inOut);
+      await c.to({ closeL: 0.55, closeR: 0.55 }, 0.4);
+      await c.wait(0.3);
+    } },
+  { key: "eyeRoll", name: "Eye roll", group: "click", tier: "uncommon", trigger: "Click (random)",
+    async run(c) {
+      await c.to({ closeL: 0.25, closeR: 0.25, gx: -1, gy: G.y }, 0.15);
+      await c.to({ gx: G.x - 0.5, gy: -1.6, bLy: -3, bRy: -3 }, 0.22, ease.linear);
+      await c.to({ gx: 9, gy: 0.5 }, 0.25, ease.out);
+      await c.to({ closeL: 0.45, closeR: 0.45, hr: 2, hx: 2 }, 0.3, ease.inOut);
+      await c.wait(0.7);
+    } },
+  { key: "ticklish", name: "Ticklish", group: "click", tier: "rare", trigger: "4+ quick clicks", burst: true,
+    async run(c) {
+      c.noBlink();
+      await c.to({ closeL: 0.72, closeR: 0.72, blush: 0.45, bLy: -3, bRy: -3 }, 0.15);
+      for (let i = 0; i < 8; i++) await c.to({ hx: i % 2 ? 1.8 : -1.8, hr: i % 2 ? 1 : -1, hy: i % 2 ? -1 : 0.5 }, 0.07);
+      await c.to({ hx: 0, hr: 0, hy: 0 }, 0.2); await c.wait(0.6);
+      await c.to({ closeL: 0.3, closeR: 0.3 }, 0.4); await c.wait(0.6);
+      c.noBlink(false);
+      await c.to({ blush: 0 }, 1.2);
+    } },
+  { key: "annoyed", name: "Annoyed", group: "click", tier: "rare", trigger: "Another click burst soon after ticklish", burst: true,
+    async run(c) {
+      await c.to({ bLr: 7, bRr: -7, bLy: 3.5, bRy: 3.5, closeL: 0.45, closeR: 0.45, gx: -1, gy: G.y + 1, hx: -4, hr: -2.5 }, 0.35, ease.out3);
+      c.label("ok, enough");
+      await c.wait(2.6);
+      await c.to({ gx: G.x, hx: 0, hr: 0 }, 0.6, ease.inOut);
+      await c.wait(0.4);
+    } },
+
+  /* -- page ------------------------------------------------------------ */
+  { key: "welcomeBack", name: "Welcome back", group: "page", tier: "uncommon", trigger: "Switch browser tabs and come back",
+    async run(c) {
+      await c.to({ gx: G.x, gy: G.y, bLy: -8, bRy: -8, closeL: -0.2, closeR: -0.2, hy: -1.5 }, 0.14, ease.out3); await c.wait(0.3);
+      await c.to({ bLy: 0, bRy: 0, closeL: 0.3, closeR: 0.3, hy: 0 }, 0.3, ease.inOut);
+      await c.blink(); await c.wait(0.12); await c.blink();
+      await c.wait(0.3);
+    } },
+  { key: "typing", name: "Watches you type", group: "page", tier: "common", trigger: "Press any key",
+    async run(c, card) {
+      await c.to({ gx: G.x, gy: 4.2, closeL: 0.28, closeR: 0.28, hy: 1 }, 0.3, ease.out3);
+      while (now < card.typingUntil) await c.wait(0.1);
+    } },
+  { key: "holdOn", name: "Hold on", group: "page", tier: "common", trigger: "Scroll the page fast",
+    async run(c, card) {
+      c.noBlink();
+      await c.to({ closeL: -0.3, closeR: -0.3, bLy: -7, bRy: -7, pupil: 0.8, hy: -2 }, 0.15, ease.out3);
+      while (now - card.lastScroll < 300) await c.wait(0.05);
+      c.noBlink(false);
+      c.label("phew");
+      await c.to({ closeL: 0.45, closeR: 0.45, bLy: 1, bRy: 1, pupil: 1, hy: 1.5 }, 0.5, ease.inOut);
+      await c.blink();
+      await c.wait(0.5);
+    } },
+];
+const MOMENT = Object.fromEntries(MOMENTS.map((m) => [m.key, m]));
+const GROUPS = [["idle", "When left alone"], ["cursor", "Cursor"], ["click", "Clicks"], ["page", "Page"]];
+
+class Cancel extends Error {}
+function makeDirector(card) {
+  const r = card.rig;
+  const D = { cur: null, prio: 0, id: 0, lastKey: null };
+  const ctx = (id) => {
+    const alive = () => { if (D.id !== id) throw new Cancel(); };
+    // un-awaited calls must not surface the cancel as an unhandled rejection
+    const quiet = (pr) => { pr.catch(() => {}); return pr; };
+    return {
+      to: (props, dur, fn = ease.out) => {
+        if ("gx" in props || "gy" in props) card.gazeLock = true;
+        return quiet(to(r, props, dur, fn).then(alive));
+      },
+      wait: (s) => quiet(wait(s).then(alive)),
+      blink: () => quiet(blinkOnce(r).then(alive)),
+      noBlink: (on = true) => { card.noBlink = on; },
+      mark: (txt, o) => spawnMark(card, txt, o),
+      label: (txt) => card.setChip(txt),
+    };
+  };
+  // higher priority interrupts; equal or lower is dropped (manual plays always win)
+  D.play = async (m, prio, arg) => {
+    if (D.cur && prio <= D.prio && prio !== PRIO.manual) return false;
+    const id = ++D.id;
+    const interrupted = !!D.cur;
+    D.cur = m; D.prio = prio;
+    card.gazeLock = false; card.noBlink = false;
+    card.onMoment(m);
+    try {
+      if (interrupted) { to(r, NEUTRAL, 0.15); await wait(0.15); if (D.id !== id) return true; }
+      await m.run(ctx(id), arg ?? card);
+    } catch (e) {
+      if (!(e instanceof Cancel)) console.error(e);
+    }
+    if (D.id !== id) return true;
+    card.gazeLock = false; card.noBlink = false;
+    to(r, NEUTRAL, 0.45, ease.inOut);
+    D.cur = null; D.prio = 0; D.lastKey = m.key;
+    card.onMoment(null);
+    return true;
+  };
+  return D;
+}
+
+function pickWeighted(card, pool) {
+  pool = pool.filter((m) => m.key !== card.D.lastKey);
+  if (card.preview) return pool[Math.floor(Math.random() * pool.length)];
+  const count = (tier) => pool.filter((m) => m.tier === tier).length;
+  const weight = (m) => (TIERS[m.tier].p / count(m.tier)) * (m.key === "nap" && LATE_NIGHT ? 3 : 1);
+  let x = Math.random() * pool.reduce((s, m) => s + weight(m), 0);
+  for (const m of pool) { x -= weight(m); if (x <= 0) return m; }
+  return pool[pool.length - 1];
+}
+const unlocked = (card, m) => card.preview || (now - card.bornAt) / 1000 >= TIERS[m.tier].unlock;
+
+VARIANTS.push({
+  key: "rare",
+  title: "Rare moments",
+  wide: true,
+  desc: "A library of small acts on top of the blink. Left alone, it plays a random moment every 6–12s, weighted by rarity: rare ones unlock after 30s and ultra-rare after 60s. It also reacts to where your cursor goes, clicks, typing, scrolling and tab switches. User actions always interrupt idle ones, and nothing repeats twice in a row.",
+  tryText: "<b>Leave it</b>, <b>poke around</b> the face, <b>click</b> a few times, or play any moment from the list.",
+  setup(card) {
+    autoBlink(card);
+    const D = (card.D = makeDirector(card));
+    card.bornAt = now;
+    card.preview = false;
+    card.nextIdle = now + 4000;
+    card.lastMove = 0; card.leftAt = -1e9; card.hovering = false; card.vel = 0;
+    card.dwell = { nose: 0, hair: 0, edge: 0 };
+    card.cool = {};
+    card.spin = 0; card.prevA = null;
+    card.clicks = []; card.lastTickle = -1e9;
+    card.typingUntil = 0; card.lastScroll = -1e9;
+    const ready = (key, secs) => {
+      if ((card.cool[key] ?? -1e9) > now) return false;
+      card.cool[key] = now + secs * 1000;
+      return true;
+    };
+    card.ready = ready;
+
+    // panel
+    const extra = card.el.querySelector(".extra");
+    extra.innerHTML = `
+      <div class="controls">
+        <label><input type="checkbox" class="pv"> Fast preview (all tiers unlocked, a moment every 3–5s)</label>
+        <span class="legend">${Object.entries(TIERS).map(([k, t]) => `<span><i class="dot t-${k}"></i>${t.label}</span>`).join("")}</span>
+      </div>
+      <p class="status"></p>
+      ${GROUPS.map(([g, label]) => `
+        <div class="mgroup"><h3>${label}</h3><div class="mlist">
+          ${MOMENTS.filter((m) => m.group === g).map((m) => `<button class="m" type="button" data-k="${m.key}"><i class="dot t-${m.tier}"></i>${m.name}</button>`).join("")}
+        </div></div>`).join("")}
+      <p class="hint"></p>`;
+    const status = extra.querySelector(".status");
+    const hint = extra.querySelector(".hint");
+    const btns = Object.fromEntries([...extra.querySelectorAll(".m")].map((b) => [b.dataset.k, b]));
+    card.status = status;
+    extra.querySelector(".pv").addEventListener("change", (e) => {
+      card.preview = e.target.checked;
+      card.nextIdle = Math.min(card.nextIdle, now + 1500);
+    });
+    Object.values(btns).forEach((b) => {
+      const m = MOMENT[b.dataset.k];
+      b.addEventListener("click", () => {
+        // simulate the trigger so moments that wait on it have something to wait for
+        if (m.key === "typing") card.typingUntil = now + 2000;
+        if (m.key === "holdOn") card.lastScroll = now + 1200;
+        D.play(m, PRIO.manual, m.key === "sideEye" || m.key === "lostYou" ? 1 : undefined);
+      });
+      b.addEventListener("pointerenter", () => (hint.textContent = `${m.name}: ${m.trigger}`));
+      b.addEventListener("pointerleave", () => (hint.textContent = ""));
+    });
+    card.onMoment = (m) => {
+      Object.values(btns).forEach((b) => b.classList.remove("on"));
+      if (m) {
+        btns[m.key].classList.add("on");
+        card.setChip(`${m.name} · ${TIERS[m.tier].label}`);
+      } else {
+        card.setChip("");
+        card.nextIdle = Math.max(card.nextIdle, now + (card.preview ? 1500 : 4000));
+      }
+    };
+
+    // cursor
+    const st = card.stage;
+    let lastEv = null;
+    st.addEventListener("pointerenter", () => {
+      card.hovering = true;
+      if (now - card.leftAt < 2000) D.play(MOMENT.peekaboo, PRIO.peek);
+    });
+    st.addEventListener("pointermove", (e) => {
+      if (lastEv) {
+        const dtm = Math.max(1, e.timeStamp - lastEv.t);
+        card.vel = Math.hypot(e.clientX - lastEv.x, e.clientY - lastEv.y) / dtm;
+      }
+      lastEv = { x: e.clientX, y: e.clientY, t: e.timeStamp };
+      card.lastMove = now;
+    });
+    st.addEventListener("pointerleave", (e) => {
+      card.hovering = false;
+      card.leftAt = now;
+      card.dwell = { nose: 0, hair: 0, edge: 0 };
+      const rect = st.getBoundingClientRect();
+      const side = e.clientX > rect.left + rect.width / 2 ? 1 : -1;
+      if (card.vel > 0.9 && ready("lostYou", 4)) D.play(MOMENT.lostYou, PRIO.react, side);
+    });
+    // clicks: a burst of 4 tickles, a second burst soon after annoys
+    st.addEventListener("click", () => {
+      card.clicks = card.clicks.filter((t) => now - t < 1200);
+      card.clicks.push(now);
+      if (card.clicks.length >= 4) {
+        card.clicks = [];
+        const annoyed = now - card.lastTickle < 8000;
+        card.lastTickle = now;
+        D.play(annoyed ? MOMENT.annoyed : MOMENT.ticklish, annoyed ? PRIO.annoyed : PRIO.burst);
+        return;
+      }
+      D.play(pickWeighted(card, MOMENTS.filter((m) => m.group === "click" && !m.burst)), PRIO.react);
+    });
+
+    // page
+    let hiddenAt = 0;
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) { hiddenAt = performance.now(); return; }
+      if (performance.now() - hiddenAt > 1500) setTimeout(() => D.play(MOMENT.welcomeBack, PRIO.peek), 350);
+    });
+    window.addEventListener("keydown", (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey || !card.visible) return;
+      card.typingUntil = now + 1500;
+      if (D.cur?.key !== "typing") D.play(MOMENT.typing, PRIO.react);
+    });
+    let lastY = window.scrollY, lastT = performance.now();
+    window.addEventListener("scroll", () => {
+      const t = performance.now(), v = Math.abs(window.scrollY - lastY) / Math.max(1, t - lastT);
+      lastY = window.scrollY; lastT = t;
+      card.lastScroll = now;
+      if (v > 2.5 && card.visible && D.cur?.key !== "holdOn") D.play(MOMENT.holdOn, PRIO.react);
+    }, { passive: true });
+  },
+  tick(card, t, dt) {
+    const r = card.rig, D = card.D;
+    ambient(r, t);
+    r.breathe = (1 - Math.cos((t / 3.8) * Math.PI * 2)) / 2;
+    const sp = svgPoint(card);
+    if (!card.gazeLock) {
+      const g = sp ? gazeToward(card, sp, card.hovering ? 0.75 : 0.45) : GAZE0;
+      r.gx = damp(r.gx, g.x, 7, dt); r.gy = damp(r.gy, g.y, 7, dt);
+    }
+
+    // cursor detectors (only when nothing more important is playing)
+    if (card.hovering && sp && D.prio < PRIO.react) {
+      const dw = card.dwell;
+      dw.nose = Math.hypot(sp.x - 163, sp.y - 292) < 26 ? dw.nose + dt : 0;
+      dw.hair = sp.y > 90 && sp.y < 200 && sp.x > 85 && sp.x < 345 ? dw.hair + dt : 0;
+      dw.edge = sp.x < 45 || sp.x > 330 ? dw.edge + dt : 0;
+      const still = now - card.lastMove > 2500 && Math.hypot(sp.x - 185, sp.y - 280) < 100;
+      if (dw.nose > 1.4 && card.ready("crossEyed", 8)) D.play(MOMENT.crossEyed, PRIO.react);
+      else if (dw.hair > 1.0 && card.ready("looksUp", 10)) D.play(MOMENT.looksUp, PRIO.react);
+      else if (dw.edge > 1.2 && card.ready("sideEye", 8)) D.play(MOMENT.sideEye, PRIO.react, sp.x > 187 ? 1 : -1);
+      else if (still && card.ready("catBlink", 20)) D.play(MOMENT.catBlink, PRIO.react);
+
+      // circling the face fast makes it dizzy
+      const a = Math.atan2(sp.y - 270, sp.x - 190), d = Math.hypot(sp.x - 190, sp.y - 270);
+      if (card.prevA != null && d > 40 && d < 230) {
+        let da = a - card.prevA;
+        while (da > Math.PI) da -= 2 * Math.PI;
+        while (da < -Math.PI) da += 2 * Math.PI;
+        card.spin += da;
+      }
+      card.prevA = a;
+      if (Math.abs(card.spin) > Math.PI * 2 * 1.4) { card.spin = 0; if (card.ready("dizzy", 6)) D.play(MOMENT.dizzy, PRIO.react); }
+    } else {
+      card.prevA = null;
+    }
+    card.spin *= Math.exp(-dt * 0.7);
+
+    // idle scheduler
+    // idle waits longer while the cursor rests on the card, so dwell reactions get their turn
+    const resting = card.preview || now - card.lastMove > (card.hovering ? 5000 : 2000);
+    if (!D.cur && now > card.nextIdle && resting) {
+      const pool = MOMENTS.filter((m) => m.group === "idle" && unlocked(card, m));
+      D.play(pickWeighted(card, pool), PRIO.idle);
+      const [lo, hi] = card.preview ? [3, 5] : [6, 12];
+      card.nextIdle = now + (lo + Math.random() * (hi - lo)) * 1000;
+    }
+
+    // status line, twice a second
+    if (!card.statusAt || now - card.statusAt > 500) {
+      card.statusAt = now;
+      const el = (now - card.bornAt) / 1000;
+      const parts = [];
+      if (card.preview) parts.push("All tiers unlocked");
+      else {
+        parts.push(el < 30 ? `Rare unlocks in ${Math.ceil(30 - el)}s` : "Rare unlocked");
+        parts.push(el < 60 ? `ultra-rare in ${Math.ceil(60 - el)}s` : "ultra-rare unlocked");
+      }
+      if (LATE_NIGHT) parts.push("late night: naps are 3× likelier");
+      card.status.textContent = parts.join(" · ");
+    }
+  },
+});
+
+// floating text above the head (z, !, ?, ♪, …)
+function spawnMark(card, text, o = {}) {
+  const { x = 300, y = 200, size = 18, dx = 30, dy = -80, dur = 2.4, hold = 1.6 } = o;
+  const el = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  el.textContent = text;
   el.setAttribute("fill", C.white);
   el.setAttribute("font-family", "ui-monospace, Menlo, monospace");
   el.setAttribute("font-weight", "600");
-  el.setAttribute("font-size", "18");
+  el.setAttribute("font-size", size);
+  el.setAttribute("text-anchor", "middle");
   card.els.fx.appendChild(el);
-  const z = { x: 300, y: 222, s: 0.5, o: 0 };
+  const z = { x, y, s: 0.5, o: 0 };
   const apply = () => {
     el.setAttribute("transform", `translate(${f(z.x)} ${f(z.y)}) scale(${f(z.s)})`);
     el.setAttribute("opacity", f(z.o));
   };
   card.sprites.push(apply);
-  to(z, { o: 1 }, 0.4);
-  to(z, { x: 336 + Math.random() * 10, y: 140, s: 1.3 }, 2.6, ease.out);
-  wait(1.8).then(() => to(z, { o: 0 }, 0.8)).then(() => { el.remove(); card.sprites.splice(card.sprites.indexOf(apply), 1); });
+  to(z, { o: 1 }, 0.25);
+  to(z, { x: x + dx, y: y + dy, s: 1.25 }, dur, ease.out);
+  wait(hold).then(() => to(z, { o: 0 }, 0.6)).then(() => { el.remove(); card.sprites.splice(card.sprites.indexOf(apply), 1); });
 }
+const MARK = {
+  z: () => ({ x: 300, y: 222, dx: 36 + Math.random() * 10, dy: -82, dur: 2.6, hold: 1.8 }),
+  bang: { x: 296, y: 182, size: 28, dx: 4, dy: -26, dur: 0.45, hold: 0.8 },
+  what: { x: 262, y: 96, size: 24, dx: 8, dy: -30, dur: 1, hold: 1.3 },
+  note: () => ({ x: 312, y: 215, dx: 26 + Math.random() * 12, dy: -70, size: 18, dur: 2, hold: 1.3 }),
+  dots: { x: 292, y: 180, size: 22, dx: 10, dy: -28, dur: 1.4, hold: 1.4 },
+};
+function spawnZ(card) { spawnMark(card, "z", MARK.z()); }
 
 /* ------------------------------------------------------------------ */
 /* Page                                                                */
@@ -697,12 +1262,13 @@ const updateFooter = () => {
 
 const cards = VARIANTS.map((v, i) => {
   const el = document.createElement("article");
-  el.className = "card";
-  el.innerHTML = `
-    <div class="stage">${svgMarkup(v.key)}<span class="chip"></span></div>
+  el.className = v.wide ? "card wide" : "card";
+  const stage = `<div class="stage">${svgMarkup(v.key)}<span class="chip"></span></div>`;
+  const info = `
     <div class="meta"><span class="num">${String(i).padStart(2, "0")}</span><h2>${v.title}</h2><button class="pick" type="button">Pick</button></div>
     <p class="desc">${v.desc}</p>
     <div class="try">${v.tryText}</div>`;
+  el.innerHTML = v.wide ? `<div class="wide-inner">${stage}<div class="panel">${info}<div class="extra"></div></div></div>` : stage + info;
   grid.appendChild(el);
   const svg = el.querySelector("svg");
   const chip = el.querySelector(".chip");
