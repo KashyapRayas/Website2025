@@ -5,7 +5,8 @@ import { gsap } from "gsap";
 //   - Dozes off after 5 min on the site once left alone; hovering or tapping wakes him.
 //   - Dizzy when the visitor rushes back up to home.
 //   - Shy after ~10s of hovering over him (desktop only).
-// Motion style is deliberately minimal: soft easing, small amplitudes, no rapid shakes.
+// Motion style: lively but not frantic. Repeated shakes are short and damped (each swing
+// smaller and slower than the last), and easing stays soft.
 // The fisherman, boat and line are never moved; only the boat's waterline clip follows the head.
 
 // Module scope so the timer survives the hero remounting during the session.
@@ -206,43 +207,48 @@ export function usePortraitMoments({ refs, lenis, geometry = "desktop", hoverMom
     });
 
     const wake = () => play("wake", async ({ step, wait, blink }) => {
-      await step({ closeL: -0.15, closeR: -0.15, bLy: -5, bRy: -5, hr: -0.6, hy: -2, pupil: 0.9, gx: GAZE.x, gy: GAZE.y }, 0.3, "power2.out");
+      await step({ closeL: -0.24, closeR: -0.24, bLy: -7, bRy: -7, hr: -0.8, hy: -3, pupil: 0.9, gx: GAZE.x, gy: GAZE.y }, 0.2, "power3.out");
       await wait(0.35);
-      await step({ closeL: 0, closeR: 0, bLy: 0, bRy: 0, hr: 0, hy: 0, pupil: 1 }, 0.7);
+      await step({ closeL: 0, closeR: 0, bLy: 0, bRy: 0, hr: 0, hy: 0, pupil: 1 }, 0.55);
+      await blink();
+      await wait(0.14);
       await blink();
       lastWake = performance.now();
     });
 
-    const dizzy = () => play("dizzy", async ({ step }) => {
-      // eyes drift round one and a half times while the head sways gently with them
-      const steps = 24;
+    const dizzy = () => play("dizzy", async ({ step, wait, blink }) => {
+      // eyes whirl round twice while the head wobbles with them
+      const steps = 28;
       for (let i = 1; i <= steps; i++) {
-        const a = (i / steps) * Math.PI * 3;
-        await step({ gx: GAZE.x + Math.cos(a) * 3, gy: GAZE.y + Math.sin(a) * 1.6, hr: Math.sin(a * 0.5) * 1.4, hx: Math.sin(a * 0.5) * 1.1, closeL: 0.15, closeR: 0.15 }, 0.085, "none");
+        const a = (i / steps) * Math.PI * 4;
+        await step({ gx: GAZE.x + Math.cos(a) * 3.6, gy: GAZE.y + Math.sin(a) * 2, hr: Math.sin(a * 0.5) * 2.3, hx: Math.sin(a * 0.5) * 1.9, closeL: 0.15, closeR: 0.15 }, 0.065, "none");
       }
-      // clear the head: eyes close, one slow small shake, eyes open
-      await step({ closeL: 0.75, closeR: 0.75, gx: GAZE.x, gy: GAZE.y }, 0.4);
-      await step({ hx: -1, hr: -0.5 }, 0.4);
-      await step({ hx: 1, hr: 0.5 }, 0.5);
-      await step({ hx: 0, hr: 0 }, 0.4);
-      await step({ closeL: 0, closeR: 0 }, 0.4);
+      // shake it off: a few quick swings that settle
+      await step({ closeL: 0.7, closeR: 0.7, gx: GAZE.x, gy: GAZE.y }, 0.22);
+      for (const [v, d] of [[-2, 0.13], [1.6, 0.15], [-1.1, 0.16], [0.5, 0.17], [0, 0.2]]) {
+        await step({ hx: v, hr: v * 0.5 }, d);
+      }
+      await step({ closeL: 0, closeR: 0 }, 0.3);
+      await blink();
+      await wait(0.12);
+      await blink();
     });
 
     const shy = () => play("shy", async ({ step, wait, blink }) => {
       const away = { gx: GAZE.x - 4.5, gy: GAZE.y + 2.5 };
-      await step({ ...away, blush: 0.5, bLy: -2, bLr: -6, bRy: -2, bRr: 5, closeL: 0.25, closeR: 0.25, hr: -1.8, hx: -3, hy: 1.5 }, 0.9);
+      await step({ ...away, blush: 0.5, bLy: -2, bLr: -6.5, bRy: -2, bRr: 5.5, closeL: 0.25, closeR: 0.25, hr: -2.2, hx: -3.5, hy: 1.8 }, 0.8);
       // stays bashful while hovered, sneaking the odd glance back
       const start = performance.now();
       while (hovering && performance.now() - start < 9000) {
-        await wait(1.8);
+        await wait(1.7);
         if (!hovering) break;
-        await step({ gx: GAZE.x + 2, gy: GAZE.y + 1 }, 0.4);
-        await wait(0.5);
-        await step(away, 0.45);
+        await step({ gx: GAZE.x + 2, gy: GAZE.y + 1 }, 0.3, "power1.out");
+        await wait(0.45);
+        await step(away, 0.38);
         await blink();
         await step({ closeL: 0.25, closeR: 0.25 }, 0.2);
       }
-      await step({ blush: 0 }, 1);
+      await step({ blush: 0 }, 0.9);
     });
 
     // ---- triggers --------------------------------------------------------

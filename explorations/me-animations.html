@@ -231,6 +231,7 @@ const ease = {
   inOut: (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2),
   sine: (t) => -(Math.cos(Math.PI * t) - 1) / 2,
   back: (t) => { const c = 2.2; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); },
+  backSoft: (t) => { const c = 1.1; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); },
 };
 // cubic-bezier, used for the site's "wave" CustomEase (M0,0 C0.6,0 0.1,1.4 1,1)
 const bezier = (x1, y1, x2, y2) => {
@@ -432,7 +433,7 @@ const VARIANTS = [
       card.stage.addEventListener("click", async () => {
         const r = card.rig;
         card.quiz = true;
-        to(r, { bRy: -6, bLy: 1, bRr: -2.5 }, 0.45, ease.inOut);
+        to(r, { bRy: -6.5, bLy: 1.2, bRr: -2.8 }, 0.38, ease.backSoft);
         await wait(1.3);
         card.quiz = false;
         to(r, { bRr: 0 }, 0.4);
@@ -502,7 +503,7 @@ const VARIANTS = [
       autoBlink(card);
       const moods = [
         ["neutral", { bLy: 0, bLr: 0, bRy: 0, bRr: 0, closeL: 0, closeR: 0, pupil: 1, hr: 0, hy: 0 }],
-        ["surprised", { bLy: -6, bLr: 0, bRy: -6, bRr: 0, closeL: -0.2, closeR: -0.2, pupil: 0.9, hr: 0, hy: -2 }],
+        ["surprised", { bLy: -7, bLr: 0, bRy: -7, bRr: 0, closeL: -0.25, closeR: -0.25, pupil: 0.85, hr: 0, hy: -2.5 }],
         ["suspicious", { bLy: 3, bLr: 5, bRy: -6, bRr: -3, closeL: 0.5, closeR: 0.42, pupil: 1, hr: -1.5, hy: 0 }],
         ["happy", { bLy: -3, bLr: 0, bRy: -3, bRr: 0, closeL: 0.62, closeR: 0.62, pupil: 1, hr: 1.5, hy: -1 }],
         ["wink", { bLy: 3, bLr: 3, bRy: -5, bRr: 0, closeL: 1, closeR: 0, pupil: 1, hr: -3, hy: 0 }],
@@ -511,7 +512,7 @@ const VARIANTS = [
       card.stage.addEventListener("click", () => {
         card.mood = (card.mood + 1) % moods.length;
         const [name, s] = moods[card.mood];
-        to(card.rig, s, 0.45, ease.inOut);
+        to(card.rig, s, 0.38, name === "surprised" ? ease.backSoft : ease.out3);
         card.setChip(name === "neutral" ? "" : name);
       });
     },
@@ -543,11 +544,11 @@ const VARIANTS = [
         card.state = "waking";
         card.noBlink = true;
         const r = card.rig;
-        await to(r, { closeL: -0.15, closeR: -0.15, bLy: -5, bRy: -5, hr: -0.6, hy: -2, pupil: 0.9 }, 0.3, ease.out);
+        await to(r, { closeL: -0.24, closeR: -0.24, bLy: -7, bRy: -7, hr: -0.8, hy: -3, pupil: 0.9 }, 0.2, ease.out3);
         await wait(0.35);
-        to(r, { hr: 0, hy: 0, bLy: 0, bRy: 0, closeL: 0, closeR: 0, pupil: 1 }, 0.7, ease.inOut);
-        await wait(0.4);
-        await blinkOnce(r);
+        to(r, { hr: 0, hy: 0, bLy: 0, bRy: 0, closeL: 0, closeR: 0, pupil: 1 }, 0.55, ease.inOut);
+        await wait(0.3);
+        await blinkOnce(r); await wait(0.14); await blinkOnce(r);
         card.noBlink = false;
         card.state = "awake";
         card.lastActive = now;
@@ -628,8 +629,8 @@ const VARIANTS = [
       const r = card.rig;
       const nod = async (times, depth) => {
         for (let i = 0; i < times; i++) {
-          await to(r, { hr: depth * 0.6, hy: depth }, 0.3, ease.inOut);
-          await to(r, { hr: 0, hy: 0 }, 0.35, ease.inOut);
+          await to(r, { hr: depth * 0.65, hy: depth }, 0.21, ease.out);
+          await to(r, { hr: 0, hy: 0 }, 0.27, ease.inOut);
         }
       };
       card.stage.addEventListener("pointerenter", async () => {
@@ -637,10 +638,10 @@ const VARIANTS = [
         card.busy = true;
         card.setChip("hey");
         // eyebrow flash: up, hold a beat, settle
-        await to(r, { bLy: -5, bRy: -5, closeL: -0.12, closeR: -0.12 }, 0.25, ease.inOut);
+        await to(r, { bLy: -6.5, bRy: -6.5, closeL: -0.16, closeR: -0.16 }, 0.18, ease.out3);
         await wait(0.18);
         to(r, { bLy: 0, bRy: 0, closeL: 0.5, closeR: 0.5 }, 0.3, ease.inOut);
-        await nod(1, 2.5);
+        await nod(1, 3.2);
         await wait(0.6);
         to(r, { closeL: 0, closeR: 0 }, 0.4, ease.inOut);
         card.setChip("");
@@ -651,7 +652,7 @@ const VARIANTS = [
         card.busy = true;
         card.setChip("yes");
         to(r, { bLy: -3, bRy: -3, closeL: 0.3, closeR: 0.3 }, 0.2);
-        await nod(2, 3);
+        await nod(2, 4);
         to(r, { bLy: 0, bRy: 0, closeL: 0, closeR: 0 }, 0.35);
         card.setChip("");
         card.busy = false;
@@ -705,49 +706,49 @@ const G = GAZE0;
 // doze sits above the reactions, so only a hover or click (burst level) wakes him
 const PRIO = { idle: 1, react: 2, peek: 2.5, doze: 2.6, burst: 3, annoyed: 3.5, manual: 4 };
 
-// Motion style: minimal. No rapid back-and-forth (at most a swing or two, each 0.3s+),
-// small amplitudes, soft easing, no overshoot.
+// Motion style: lively but not frantic. Quick reactions are allowed, repeated shakes are short
+// and damped (each swing smaller and slower than the last), overshoot is kept gentle.
 const MOMENTS = [
   /* -- when left alone ----------------------------------------------- */
   { key: "daydream", name: "Daydream", group: "idle", tier: "common", trigger: "Idle, random",
     async run(c) {
       c.noBlink();
-      await c.to({ gx: G.x + 5, gy: -0.4, pupil: 1.08, closeL: 0.2, closeR: 0.2, bLy: -1.2, bRy: -1.2, hr: -0.8 }, 1.6, ease.inOut);
+      await c.to({ gx: G.x + 5.3, gy: -0.5, pupil: 1.1, closeL: 0.21, closeR: 0.21, bLy: -1.4, bRy: -1.4, hr: -0.9 }, 1.5, ease.inOut);
       await c.wait(1.5);
-      await c.to({ gx: G.x + 3.6, gy: -0.1 }, 1.6, ease.inOut);
+      await c.to({ gx: G.x + 3.7, gy: -0.15 }, 1.5, ease.inOut);
       await c.wait(0.8);
       c.noBlink(false);
-      await c.to({ gx: G.x, gy: G.y, pupil: 1, closeL: 0, closeR: 0, hr: 0 }, 0.45, ease.inOut);
+      await c.to({ gx: G.x, gy: G.y, pupil: 1, closeL: 0, closeR: 0, hr: 0 }, 0.28, ease.out3);
       await c.blink();
     } },
   { key: "looksAround", name: "Looks around", group: "idle", tier: "common", trigger: "Idle, random",
     async run(c) {
-      await c.to({ gx: -0.5, gy: G.y, hr: -1, hx: -1, bLr: 2, bRr: -2, bLy: 0.8, bRy: 0.8 }, 0.5, ease.inOut);
-      await c.wait(0.8);
-      await c.to({ gx: 8.5, hr: 1, hx: 1 }, 0.7, ease.inOut);
-      await c.wait(0.8);
-      await c.to({ gx: G.x, hr: 0, hx: 0, bLr: 0, bRr: 0, bLy: 0, bRy: 0 }, 0.5, ease.inOut);
+      await c.to({ gx: -0.8, gy: G.y, hr: -1.3, hx: -1.3, bLr: 2.5, bRr: -2.5, bLy: 0.9, bRy: 0.9 }, 0.38, ease.out3);
+      await c.wait(0.75);
+      await c.to({ gx: 8.8, hr: 1.3, hx: 1.3 }, 0.5, ease.inOut);
+      await c.wait(0.75);
+      await c.to({ gx: G.x, hr: 0, hx: 0, bLr: 0, bRr: 0, bLy: 0, bRy: 0 }, 0.38, ease.inOut);
       await c.blink();
     } },
   { key: "thinking", name: "Thinking", group: "idle", tier: "uncommon", trigger: "Idle, random",
     async run(c) {
-      await c.to({ gx: G.x - 1, gy: -0.6, bRy: -5, bRr: -2.5, hr: -1.5, hx: -0.8 }, 0.6, ease.inOut);
+      await c.to({ gx: G.x - 1.1, gy: -0.7, bRy: -5.5, bRr: -2.8, hr: -1.8, hx: -0.9 }, 0.5, ease.out3);
       c.mark("…", MARK.dots);
-      for (let i = 0; i < 2; i++) {
-        await c.to({ hy: 0.8 }, 0.3, ease.inOut);
-        await c.to({ hy: 0 }, 0.35, ease.inOut);
-        await c.wait(0.3);
+      for (let i = 0; i < 3; i++) {
+        await c.to({ hy: 1.1 }, 0.2, ease.out);
+        await c.to({ hy: 0 }, 0.25, ease.inOut);
+        await c.wait(0.25);
       }
-      await c.wait(0.6);
+      await c.wait(0.5);
     } },
   { key: "humming", name: "Humming", group: "idle", tier: "uncommon", trigger: "Idle, random",
     async run(c) {
       c.noBlink();
-      await c.to({ closeL: 0.8, closeR: 0.8, bLy: -2, bRy: -2, gy: G.y + 1 }, 0.5, ease.inOut);
-      for (let i = 0; i < 4; i++) {
+      await c.to({ closeL: 0.81, closeR: 0.81, bLy: -2.2, bRy: -2.2, gy: G.y + 1 }, 0.45, ease.inOut);
+      for (let i = 0; i < 6; i++) {
         if (i % 2 === 0) c.mark("♪", MARK.note());
-        await c.to({ hy: 1.2, hr: i % 2 ? 0.9 : -0.9 }, 0.35, ease.sine);
-        await c.to({ hy: 0 }, 0.4, ease.sine);
+        await c.to({ hy: 1.6, hr: i % 2 ? 1.3 : -1.3 }, 0.27, ease.out);
+        await c.to({ hy: 0 }, 0.31, ease.inOut);
       }
       await c.wait(0.2);
       c.noBlink(false);
@@ -755,12 +756,12 @@ const MOMENTS = [
   { key: "neckRoll", name: "Neck roll", group: "idle", tier: "uncommon", trigger: "Idle, random",
     async run(c) {
       c.noBlink();
-      await c.to({ closeL: 0.9, closeR: 0.9 }, 0.45, ease.inOut);
-      for (const [hr, hx, hy] of [[2, 2, 1], [0, 0, 2.6], [-2, -2, 1], [0, 0, -1.2], [0, 0, 0]]) {
-        await c.to({ hr, hx, hy }, 0.6, ease.sine);
+      await c.to({ closeL: 0.9, closeR: 0.9 }, 0.4, ease.inOut);
+      for (const [hr, hx, hy] of [[2.6, 2.6, 1.3], [0, 0, 3.4], [-2.6, -2.6, 1.3], [0, 0, -1.6], [0, 0, 0]]) {
+        await c.to({ hr, hx, hy }, 0.5, ease.sine);
       }
       c.noBlink(false);
-      await c.to({ closeL: 0, closeR: 0 }, 0.4, ease.inOut);
+      await c.to({ closeL: 0, closeR: 0 }, 0.35, ease.inOut);
       await c.blink();
     } },
   { key: "doze", name: "Dozes off", group: "idle", tier: "rare", timed: true,
@@ -768,13 +769,13 @@ const MOMENTS = [
     async run(c, card) {
       card.dozing = true;
       c.noBlink();
-      await c.to({ closeL: 0.45, closeR: 0.45, gy: G.y + 1.5, bLy: 1, bRy: 1 }, 1.6, ease.inOut);
+      await c.to({ closeL: 0.45, closeR: 0.45, gy: G.y + 1.5, bLy: 1, bRy: 1 }, 1.4, ease.inOut);
       // heavy lids fight a couple of times before giving in
       for (let i = 0; i < 2; i++) {
-        await c.to({ closeL: 0.25, closeR: 0.25, hy: 0 }, 0.7, ease.inOut);
-        await c.to({ closeL: 0.6, closeR: 0.6, hr: 1.5, hy: 2 }, 1.2, ease.inOut);
+        await c.to({ closeL: 0.25, closeR: 0.25, hy: 0 }, 0.6, ease.out);
+        await c.to({ closeL: 0.6, closeR: 0.6, hr: 1.5, hy: 2 }, 1.1, ease.inOut);
       }
-      await c.to({ closeL: 1, closeR: 1, hr: 3.5, hy: 4.5, bLy: 2, bRy: 2 }, 1.6, ease.inOut);
+      await c.to({ closeL: 1, closeR: 1, hr: 3.5, hy: 4.5, bLy: 2, bRy: 2 }, 1.5, ease.inOut);
       card.asleep = true;
       c.label("asleep · hover to wake");
       let nextZ = 0;
@@ -786,179 +787,180 @@ const MOMENTS = [
   { key: "sneeze", name: "Almost-sneeze", group: "idle", tier: "rare", trigger: "Idle, random (sometimes it fizzles)",
     async run(c) {
       c.noBlink();
-      await c.to({ bLy: -3, bRy: -3, closeL: 0.4, closeR: 0.4, hy: -1.2, hr: -0.6 }, 0.45, ease.inOut); await c.wait(0.25);
-      await c.to({ bLy: -4.5, bRy: -4.5, closeL: 0.65, closeR: 0.65, hy: -2.4, hr: -1.2 }, 0.45, ease.inOut); await c.wait(0.3);
+      await c.to({ bLy: -3.5, bRy: -3.5, closeL: 0.42, closeR: 0.42, hy: -1.8, hr: -0.8 }, 0.38, ease.inOut); await c.wait(0.22);
+      await c.to({ bLy: -5, bRy: -5, closeL: 0.62, closeR: 0.62, hy: -3.4, hr: -1.6 }, 0.38, ease.inOut); await c.wait(0.22);
+      await c.to({ bLy: -6.5, bRy: -6.5, closeL: 0.82, closeR: 0.82, hy: -4.8, hr: -2.4, pupil: 0.92 }, 0.4, ease.inOut); await c.wait(0.4);
       if (Math.random() < 0.4) {
         c.label("…fizzled");
-        await c.to({ bLy: 0.5, bRy: 0.5, bLr: -2, bRr: 2, closeL: 0.3, closeR: 0.3, hy: 0.6, hr: 0 }, 0.8, ease.inOut);
+        await c.to({ bLy: 1, bRy: 1, bLr: -2.5, bRr: 2.5, closeL: 0.32, closeR: 0.32, hy: 0.8, hr: 0 }, 0.7, ease.inOut);
         await c.wait(0.9);
       } else {
-        await c.to({ hy: 3, hr: 1.2, closeL: 1, closeR: 1, bLy: 2, bRy: 2 }, 0.18, ease.out);
-        await c.wait(0.2);
-        await c.to({ hy: 0, hr: 0, closeL: 0, closeR: 0, bLy: 0, bRy: 0 }, 0.7, ease.inOut);
+        await c.to({ hy: 5, hr: 2.2, closeL: 1, closeR: 1, bLy: 2.5, bRy: 2.5 }, 0.12, ease.out3);
+        await c.wait(0.18);
+        await c.to({ hy: 0, hr: 0, closeL: 0, closeR: 0, bLy: 0, bRy: 0, pupil: 1 }, 0.55, ease.backSoft);
         c.noBlink(false);
-        await c.blink();
+        await c.blink(); await c.wait(0.14); await c.blink();
       }
     } },
   { key: "shiver", name: "Shiver", group: "idle", tier: "rare", trigger: "Idle, random",
     async run(c) {
-      // a single small shudder through the shoulders
-      await c.to({ bLy: -2.5, bRy: -2.5, bodyY: -1.2, hy: -1.2, closeL: 0.2, closeR: 0.2 }, 0.3, ease.inOut);
-      await c.to({ hx: -0.6 }, 0.12, ease.sine);
-      await c.to({ hx: 0.6 }, 0.14, ease.sine);
-      await c.to({ hx: 0, bodyY: 0, hy: 0 }, 0.45, ease.inOut);
-      await c.blink();
+      await c.to({ bLy: -3.5, bRy: -3.5, closeL: -0.12, closeR: -0.12, bodyY: -0.8 }, 0.14);
+      // a short tremble that dies down
+      for (const [v, d] of [[1, 0.06], [-1, 0.06], [0.8, 0.065], [-0.6, 0.07], [0.3, 0.08]]) {
+        await c.to({ hx: v, hr: v * 0.45 }, d, ease.sine);
+      }
+      await c.to({ hx: 0, hr: 0, bodyY: 0 }, 0.18, ease.inOut);
+      await c.blink(); await c.wait(0.12); await c.blink();
     } },
   { key: "fisherman", name: "Glances at the fisherman", group: "idle", tier: "ultra", trigger: "Idle, random (after 60s)",
     async run(c) {
-      await c.to({ gx: G.x - 2.5, gy: -1.6, closeL: -0.15, closeR: -0.15, bLy: -5, bRy: -5, hy: -1.2, hr: -0.8 }, 0.8, ease.inOut);
+      await c.to({ gx: G.x - 2.5, gy: -1.6, closeL: -0.2, closeR: -0.2, bLy: -6, bRy: -6, hy: -1.4, hr: -0.9 }, 0.7, ease.inOut);
       await c.wait(0.9);
       c.mark("?", MARK.what);
       await c.wait(1.1);
-      await c.to({ gx: G.x, gy: G.y, closeL: 0, closeR: 0, hy: 0, hr: 0 }, 0.6, ease.inOut);
-      // a small shrug
-      await c.to({ bodyY: -2, hy: -2, bLy: -3, bRy: -3 }, 0.35, ease.inOut);
-      await c.wait(0.2);
-      await c.to({ bodyY: 0, hy: 0, bLy: 0, bRy: 0 }, 0.5, ease.inOut);
+      await c.to({ gx: G.x, gy: G.y, closeL: 0, closeR: 0, hy: 0, hr: 0 }, 0.5, ease.inOut);
+      // shrug it off
+      await c.to({ bodyY: -2.5, hy: -2.5, bLy: -4, bRy: -4 }, 0.28, ease.out);
+      await c.wait(0.22);
+      await c.to({ bodyY: 0, hy: 0, bLy: 0, bRy: 0 }, 0.42, ease.inOut);
     } },
 
   /* -- cursor ---------------------------------------------------------- */
   { key: "crossEyed", name: "Cross-eyed", group: "cursor", tier: "rare", trigger: "Rest the cursor on the nose for ~1.5s",
     async run(c) {
-      await c.to({ gx: G.x, gy: G.y + 0.5, cross: 3.8, bLr: -3, bRr: 3, bLy: -1.5, bRy: -1.5 }, 0.7, ease.inOut);
+      await c.to({ gx: G.x, gy: G.y + 0.5, cross: 4, bLr: -3.5, bRr: 3.5, bLy: -1.8, bRy: -1.8 }, 0.55, ease.inOut);
       await c.wait(1.1);
-      c.noBlink();
-      await c.to({ closeL: 1, closeR: 1 }, 0.25, ease.inOut);
-      await c.to({ cross: 0 }, 0.01);
-      await c.wait(0.1);
-      c.noBlink(false);
-      await c.to({ closeL: 0, closeR: 0, bLr: 0, bRr: 0, bLy: 0, bRy: 0 }, 0.35, ease.inOut);
+      // shake it off while the eyes uncross
+      c.to({ cross: 0 }, 0.45, ease.inOut);
+      for (const [v, d] of [[-1.5, 0.12], [1.2, 0.14], [-0.6, 0.15], [0, 0.15]]) await c.to({ hx: v, hr: v * 0.4 }, d, ease.sine);
+      await c.blink();
     } },
   { key: "shy", name: "Shy", group: "cursor", tier: "uncommon", trigger: "Keep the cursor on him for ~10s",
     async run(c, card) {
-      await c.to({ gx: -0.5, gy: G.y + 2.5, blush: 0.5, bLy: -2, bLr: -6, bRy: -2, bRr: 5, closeL: 0.25, closeR: 0.25, hr: -1.8, hx: -3, hy: 1.5 }, 0.9, ease.inOut);
+      await c.to({ gx: -0.5, gy: G.y + 2.5, blush: 0.5, bLy: -2, bLr: -6.5, bRy: -2, bRr: 5.5, closeL: 0.25, closeR: 0.25, hr: -2.2, hx: -3.5, hy: 1.8 }, 0.8, ease.inOut);
       // stays bashful while you hover, sneaking the odd glance back at you
       const start = now;
       while (card.hovering && now - start < 9000) {
-        await c.wait(1.8);
+        await c.wait(1.7);
         if (!card.hovering) break;
-        await c.to({ gx: G.x + 2, gy: G.y + 1 }, 0.4, ease.inOut);
-        await c.wait(0.5);
-        await c.to({ gx: -0.5, gy: G.y + 2.5 }, 0.45, ease.inOut);
+        await c.to({ gx: G.x + 2, gy: G.y + 1 }, 0.3, ease.out);
+        await c.wait(0.45);
+        await c.to({ gx: -0.5, gy: G.y + 2.5 }, 0.38, ease.inOut);
       }
-      await c.to({ blush: 0 }, 1, ease.inOut);
+      await c.to({ blush: 0 }, 0.9, ease.inOut);
     } },
   { key: "lostYou", name: "Lost you", group: "cursor", tier: "common", trigger: "Leave the card quickly",
     async run(c, side = 1) {
-      const near = side > 0 ? 8.5 : -0.5, far = side > 0 ? -0.5 : 8.5;
-      await c.to({ gx: near, gy: G.y, bLr: 2, bRr: -2, bLy: 1, bRy: 1, hr: side }, 0.4, ease.inOut); await c.wait(0.5);
-      await c.to({ gx: far, hr: -side }, 0.6, ease.inOut); await c.wait(0.5);
-      await c.to({ gx: G.x, hr: 0, bLr: 0, bRr: 0, bLy: 0, bRy: 0 }, 0.5, ease.inOut);
+      const near = side > 0 ? 8.8 : -0.8, far = side > 0 ? -0.8 : 8.8;
+      await c.to({ gx: near, gy: G.y, bLr: 2.5, bRr: -2.5, bLy: 1.2, bRy: 1.2, hr: side * 1.3 }, 0.3, ease.out3); await c.wait(0.5);
+      await c.to({ gx: far, hr: -side * 1.3 }, 0.48, ease.inOut); await c.wait(0.45);
+      await c.to({ gx: near, hr: side * 1.3 }, 0.45, ease.inOut); await c.wait(0.35);
+      await c.to({ gx: G.x, hr: 0, bLr: 0, bRr: 0, bLy: 0, bRy: 0 }, 0.45, ease.inOut);
       await c.blink();
     } },
   { key: "peekaboo", name: "Peekaboo", group: "cursor", tier: "uncommon", trigger: "Leave and come back within 2s",
     async run(c) {
-      await c.to({ bLy: -5, bRy: -5, closeL: -0.12, closeR: -0.12, hy: -0.8 }, 0.25, ease.inOut); await c.wait(0.3);
-      await c.to({ bLy: 0, bRy: 0, closeL: 0.3, closeR: 0.3, hy: 0 }, 0.45, ease.inOut);
-      await c.blink();
-      await c.wait(0.4);
+      await c.to({ bLy: -6.5, bRy: -6.5, closeL: -0.16, closeR: -0.16, hy: -1.2 }, 0.17, ease.out3); await c.wait(0.28);
+      await c.to({ bLy: 0, bRy: 0, closeL: 0.32, closeR: 0.32, hy: 0 }, 0.38, ease.inOut);
+      await c.blink(); await c.wait(0.14); await c.blink();
+      await c.wait(0.3);
     } },
   { key: "sideEye", name: "Side-eye", group: "cursor", tier: "uncommon", trigger: "Linger at the left or right edge",
     async run(c, side = 1) {
-      await c.to({ gx: side > 0 ? 9 : -1, gy: G.y + 0.3, closeL: 0.35, closeR: 0.35, bLy: side > 0 ? -3 : 1.5, bRy: side > 0 ? 1.5 : -3, bRr: side > 0 ? -2 : 0 }, 0.6, ease.inOut);
+      await c.to({ gx: side > 0 ? 9.1 : -1.1, gy: G.y + 0.3, closeL: 0.36, closeR: 0.36, bLy: side > 0 ? -3.5 : 1.8, bRy: side > 0 ? 1.8 : -3.5, bRr: side > 0 ? -2.5 : 0 }, 0.5, ease.inOut);
       await c.wait(1.6);
     } },
   { key: "catBlink", name: "Cat blink", group: "cursor", tier: "rare", trigger: "Keep the cursor still on the face for ~2.5s",
     async run(c) {
       c.noBlink();
-      await c.to({ closeL: 1, closeR: 1, bLy: -1, bRy: -1 }, 0.8, ease.inOut); await c.wait(0.45);
-      await c.to({ closeL: 0.3, closeR: 0.3 }, 0.9, ease.inOut); await c.wait(0.8);
+      await c.to({ closeL: 1, closeR: 1, bLy: -1, bRy: -1 }, 0.75, ease.inOut); await c.wait(0.45);
+      await c.to({ closeL: 0.3, closeR: 0.3 }, 0.85, ease.inOut); await c.wait(0.8);
     } },
   { key: "looksUp", name: "Looks up", group: "cursor", tier: "uncommon", trigger: "Hover over the hair or pool for ~1s",
     async run(c) {
-      await c.to({ gx: G.x + 0.5, gy: -1.5, closeL: -0.12, closeR: -0.12, bLy: -4, bRy: -4, hy: -0.8 }, 0.6, ease.inOut); await c.wait(1.0);
-      await c.to({ gx: G.x + 2.5 }, 0.5, ease.inOut); await c.wait(0.4);
-      await c.to({ gx: G.x - 1.5 }, 0.6, ease.inOut); await c.wait(0.4);
+      await c.to({ gx: G.x + 0.5, gy: -1.6, closeL: -0.16, closeR: -0.16, bLy: -5, bRy: -5, hy: -1 }, 0.48, ease.out3); await c.wait(1.0);
+      await c.to({ gx: G.x + 2.8 }, 0.38, ease.inOut); await c.wait(0.4);
+      await c.to({ gx: G.x - 1.8 }, 0.48, ease.inOut); await c.wait(0.4);
     } },
 
   /* -- clicks ---------------------------------------------------------- */
   { key: "wink", name: "Wink", group: "click", tier: "common", trigger: "Click (random)",
     async run(c) {
       c.noBlink();
-      await c.to({ closeL: 1, bLy: 2, bLr: 2, bRy: -3.5, hr: -1.5 }, 0.25, ease.inOut);
+      await c.to({ closeL: 1, bLy: 2.5, bLr: 2.5, bRy: -4.3, hr: -2.3 }, 0.2, ease.out3);
       await c.wait(0.45);
     } },
   { key: "browWiggle", name: "Eyebrow wiggle", group: "click", tier: "common", trigger: "Click (random)",
     async run(c) {
-      await c.to({ bLy: -4, bRy: 0.5 }, 0.3, ease.inOut);
-      await c.to({ bLy: 0.5, bRy: -4 }, 0.35, ease.inOut);
-      await c.wait(0.2);
+      for (let i = 0; i < 2; i++) {
+        await c.to({ bLy: -5.5, bRy: 0.8 }, 0.16, ease.inOut);
+        await c.to({ bLy: 0.8, bRy: -5.5 }, 0.16, ease.inOut);
+      }
+      await c.wait(0.15);
     } },
   { key: "oneBrow", name: "One-brow raise", group: "click", tier: "common", trigger: "Click (random)",
     async run(c) {
-      await c.to({ bRy: -7, bRr: -2.5, bLy: 1, hy: -1, hr: -0.8, closeL: 0.15 }, 0.6, ease.inOut);
+      await c.to({ bRy: -8, bRr: -2.8, bLy: 1.2, hy: -1.2, hr: -0.9, closeL: 0.15 }, 0.55, ease.inOut);
       await c.wait(1.1);
     } },
   { key: "nodYes", name: "Nod yes", group: "click", tier: "common", trigger: "Click (random)",
     async run(c) {
-      c.to({ closeL: 0.3, closeR: 0.3, bLy: -1.5, bRy: -1.5 }, 0.3);
+      c.to({ closeL: 0.32, closeR: 0.32, bLy: -1.8, bRy: -1.8 }, 0.25);
       for (let i = 0; i < 2; i++) {
-        await c.to({ hr: 1.6, hy: 2.4 }, 0.3, ease.inOut);
-        await c.to({ hr: 0, hy: 0 }, 0.35, ease.inOut);
+        await c.to({ hr: 2.2, hy: 3.2 }, 0.21, ease.out);
+        await c.to({ hr: 0, hy: 0 }, 0.27, ease.inOut);
       }
       await c.wait(0.2);
     } },
   { key: "shakeNo", name: "Shake no", group: "click", tier: "common", trigger: "Click (random)",
     async run(c) {
-      c.to({ closeL: 0.2, closeR: 0.2, bLr: 2, bRr: -2 }, 0.3);
-      for (const v of [-1.8, 1.8]) await c.to({ hx: v, hr: v * 0.3 }, 0.32, ease.sine);
-      await c.to({ hx: 0, hr: 0 }, 0.3, ease.sine);
-      await c.wait(0.3);
+      c.to({ closeL: 0.2, closeR: 0.2, bLr: 2.5, bRr: -2.5 }, 0.25);
+      for (const [v, d] of [[-2.4, 0.17], [2.4, 0.18], [-1.6, 0.18], [0, 0.2]]) await c.to({ hx: v, hr: v * 0.33 }, d, ease.inOut);
+      await c.wait(0.25);
     } },
   { key: "startle", name: "Startle", group: "click", tier: "uncommon", trigger: "Click (random)",
     async run(c) {
-      await c.to({ hy: -2.5, closeL: -0.2, closeR: -0.2, pupil: 0.9, bLy: -6, bRy: -6, bodyY: -1 }, 0.2, ease.out);
+      await c.to({ hy: -3.8, closeL: -0.28, closeR: -0.28, pupil: 0.84, bLy: -7.5, bRy: -7.5, bodyY: -1.5 }, 0.14, ease.out3);
       await c.wait(0.5);
-      await c.to({ hy: 0, bodyY: 0 }, 0.6, ease.inOut);
+      await c.to({ hy: 0, bodyY: 0 }, 0.5, ease.inOut);
       await c.blink();
     } },
   { key: "deadpan", name: "Deadpan", group: "click", tier: "uncommon", trigger: "Click (random)",
     async run(c) {
       c.noBlink();
-      await c.to({ gx: G.x, gy: G.y, closeL: 0.55, closeR: 0.55, bLy: 1, bRy: 1, bLr: 0, bRr: 0, hr: 0 }, 0.45, ease.inOut);
+      await c.to({ gx: G.x, gy: G.y, closeL: 0.55, closeR: 0.55, bLy: 1, bRy: 1, bLr: 0, bRr: 0, hr: 0 }, 0.4, ease.inOut);
       await c.wait(1.7);
-      await c.to({ closeL: 1, closeR: 1 }, 0.4, ease.inOut);
-      await c.to({ closeL: 0.55, closeR: 0.55 }, 0.45, ease.inOut);
+      await c.to({ closeL: 1, closeR: 1 }, 0.38, ease.inOut);
+      await c.to({ closeL: 0.55, closeR: 0.55 }, 0.42, ease.inOut);
       await c.wait(0.3);
     } },
   { key: "eyeRoll", name: "Eye roll", group: "click", tier: "uncommon", trigger: "Click (random)",
     async run(c) {
-      await c.to({ closeL: 0.25, closeR: 0.25, gx: -0.5, gy: G.y }, 0.25, ease.inOut);
-      await c.to({ gx: G.x - 0.5, gy: -1.5, bLy: -2.5, bRy: -2.5 }, 0.35, ease.linear);
-      await c.to({ gx: 8.5, gy: 0.5 }, 0.4, ease.out);
-      await c.to({ closeL: 0.42, closeR: 0.42, hr: 1.2, hx: 1.2 }, 0.45, ease.inOut);
+      await c.to({ closeL: 0.25, closeR: 0.25, gx: -0.8, gy: G.y }, 0.2, ease.inOut);
+      await c.to({ gx: G.x - 0.5, gy: -1.6, bLy: -2.8, bRy: -2.8 }, 0.28, ease.linear);
+      await c.to({ gx: 8.8, gy: 0.5 }, 0.32, ease.out);
+      await c.to({ closeL: 0.44, closeR: 0.44, hr: 1.6, hx: 1.6 }, 0.38, ease.inOut);
       await c.wait(0.7);
     } },
   { key: "ticklish", name: "Ticklish", group: "click", tier: "rare", trigger: "4+ quick clicks", burst: true,
     async run(c) {
       c.noBlink();
-      // a quiet laugh: squint, blush and two soft bobs
-      await c.to({ closeL: 0.6, closeR: 0.6, blush: 0.35, bLy: -2, bRy: -2 }, 0.3, ease.inOut);
-      for (let i = 0; i < 2; i++) {
-        await c.to({ hy: -0.8, hr: i % 2 ? 0.6 : -0.6 }, 0.3, ease.sine);
-        await c.to({ hy: 0.4 }, 0.32, ease.sine);
+      await c.to({ closeL: 0.66, closeR: 0.66, blush: 0.4, bLy: -2.5, bRy: -2.5 }, 0.2);
+      // giggles that die down
+      for (const [v, d] of [[1.3, 0.09], [-1.3, 0.09], [1, 0.1], [-0.7, 0.11], [0.3, 0.12]]) {
+        await c.to({ hx: v, hr: v * 0.6, hy: v > 0 ? -0.8 : 0.4 }, d, ease.sine);
       }
-      await c.to({ hy: 0, hr: 0 }, 0.35, ease.inOut); await c.wait(0.5);
-      await c.to({ closeL: 0.3, closeR: 0.3 }, 0.5, ease.inOut); await c.wait(0.5);
+      await c.to({ hx: 0, hr: 0, hy: 0 }, 0.25, ease.inOut); await c.wait(0.55);
+      await c.to({ closeL: 0.3, closeR: 0.3 }, 0.45, ease.inOut); await c.wait(0.55);
       c.noBlink(false);
       await c.to({ blush: 0 }, 1.2, ease.inOut);
     } },
   { key: "annoyed", name: "Annoyed", group: "click", tier: "rare", trigger: "Another click burst soon after ticklish", burst: true,
     async run(c) {
-      await c.to({ bLr: 5, bRr: -5, bLy: 2.5, bRy: 2.5, closeL: 0.45, closeR: 0.45, gx: -0.5, gy: G.y + 1, hx: -2.5, hr: -1.5 }, 0.6, ease.inOut);
+      await c.to({ bLr: 6, bRr: -6, bLy: 3, bRy: 3, closeL: 0.45, closeR: 0.45, gx: -0.8, gy: G.y + 1, hx: -3.3, hr: -2 }, 0.45, ease.out3);
       c.label("ok, enough");
       await c.wait(2.6);
-      await c.to({ gx: G.x, hx: 0, hr: 0 }, 0.8, ease.inOut);
+      await c.to({ gx: G.x, hx: 0, hr: 0 }, 0.7, ease.inOut);
       await c.wait(0.4);
     } },
 
@@ -966,51 +968,51 @@ const MOMENTS = [
   { key: "dizzy", name: "Dizzy", group: "page", tier: "rare", trigger: "Scroll quickly back up to home (the top of this page)",
     async run(c) {
       c.noBlink();
-      // eyes drift round once and a half, the head sways gently with them
-      const steps = 24;
+      // eyes whirl round twice while the head wobbles with them
+      const steps = 28;
       for (let i = 1; i <= steps; i++) {
-        const a = (i / steps) * Math.PI * 3;
-        await c.to({ gx: G.x + Math.cos(a) * 3, gy: G.y + Math.sin(a) * 1.6, hr: Math.sin(a * 0.5) * 1.4, hx: Math.sin(a * 0.5) * 1.1, closeL: 0.15, closeR: 0.15 }, 0.085, ease.linear);
+        const a = (i / steps) * Math.PI * 4;
+        await c.to({ gx: G.x + Math.cos(a) * 3.6, gy: G.y + Math.sin(a) * 2, hr: Math.sin(a * 0.5) * 2.3, hx: Math.sin(a * 0.5) * 1.9, closeL: 0.15, closeR: 0.15 }, 0.065, ease.linear);
       }
-      // clear the head: close the eyes, one slow small shake, open
-      await c.to({ closeL: 0.75, closeR: 0.75, gx: G.x, gy: G.y }, 0.4, ease.inOut);
-      await c.to({ hx: -1, hr: -0.5 }, 0.4, ease.sine);
-      await c.to({ hx: 1, hr: 0.5 }, 0.5, ease.sine);
-      await c.to({ hx: 0, hr: 0 }, 0.4, ease.sine);
+      // shake it off: a few quick swings that settle
+      await c.to({ closeL: 0.7, closeR: 0.7, gx: G.x, gy: G.y }, 0.22, ease.inOut);
+      for (const [v, d] of [[-2, 0.13], [1.6, 0.15], [-1.1, 0.16], [0.5, 0.17], [0, 0.2]]) {
+        await c.to({ hx: v, hr: v * 0.5 }, d, ease.sine);
+      }
       c.noBlink(false);
-      await c.to({ closeL: 0, closeR: 0 }, 0.4, ease.inOut);
-      await c.blink();
+      await c.to({ closeL: 0, closeR: 0 }, 0.3, ease.inOut);
+      await c.blink(); await c.wait(0.12); await c.blink();
     } },
   { key: "welcomeBack", name: "Welcome back", group: "page", tier: "uncommon", trigger: "Switch browser tabs and come back",
     async run(c) {
-      await c.to({ gx: G.x, gy: G.y, bLy: -5, bRy: -5, closeL: -0.12, closeR: -0.12, hy: -0.8 }, 0.3, ease.inOut); await c.wait(0.35);
-      await c.to({ bLy: 0, bRy: 0, closeL: 0.25, closeR: 0.25, hy: 0 }, 0.45, ease.inOut);
-      await c.blink();
-      await c.wait(0.4);
+      await c.to({ gx: G.x, gy: G.y, bLy: -6.5, bRy: -6.5, closeL: -0.16, closeR: -0.16, hy: -1.2 }, 0.2, ease.out3); await c.wait(0.3);
+      await c.to({ bLy: 0, bRy: 0, closeL: 0.28, closeR: 0.28, hy: 0 }, 0.38, ease.inOut);
+      await c.blink(); await c.wait(0.14); await c.blink();
+      await c.wait(0.3);
     } },
   { key: "typing", name: "Watches you type", group: "page", tier: "common", trigger: "Press any key",
     async run(c, card) {
-      await c.to({ gx: G.x, gy: 4.2, closeL: 0.28, closeR: 0.28, hy: 0.8 }, 0.45, ease.inOut);
+      await c.to({ gx: G.x, gy: 4.2, closeL: 0.28, closeR: 0.28, hy: 0.9 }, 0.38, ease.out3);
       while (now < card.typingUntil) await c.wait(0.1);
     } },
   { key: "holdOn", name: "Hold on", group: "page", tier: "common", trigger: "Scroll the page fast",
     async run(c, card) {
       c.noBlink();
-      await c.to({ closeL: -0.18, closeR: -0.18, bLy: -4.5, bRy: -4.5, pupil: 0.92, hy: -1.2 }, 0.3, ease.inOut);
+      await c.to({ closeL: -0.24, closeR: -0.24, bLy: -6, bRy: -6, pupil: 0.86, hy: -1.6 }, 0.2, ease.out3);
       while (now - card.lastScroll < 300) await c.wait(0.05);
       c.noBlink(false);
       c.label("phew");
-      await c.to({ closeL: 0.4, closeR: 0.4, bLy: 0.5, bRy: 0.5, pupil: 1, hy: 0.8 }, 0.6, ease.inOut);
+      await c.to({ closeL: 0.42, closeR: 0.42, bLy: 0.8, bRy: 0.8, pupil: 1, hy: 1.2 }, 0.55, ease.inOut);
       await c.blink();
       await c.wait(0.5);
     } },
 ];
 const WAKE = { key: "wake", name: "Woken up", group: "hidden", tier: "rare", noReset: true,
   async run(c, card) {
-    await c.to({ closeL: -0.15, closeR: -0.15, bLy: -5, bRy: -5, hr: -0.6, hy: -2, pupil: 0.9 }, 0.3, ease.out);
+    await c.to({ closeL: -0.24, closeR: -0.24, bLy: -7, bRy: -7, hr: -0.8, hy: -3, pupil: 0.9 }, 0.2, ease.out3);
     await c.wait(0.35);
-    await c.to({ closeL: 0, closeR: 0, bLy: 0, bRy: 0, hr: 0, hy: 0, pupil: 1, gy: G.y }, 0.7, ease.inOut);
-    await c.blink();
+    await c.to({ closeL: 0, closeR: 0, bLy: 0, bRy: 0, hr: 0, hy: 0, pupil: 1, gy: G.y }, 0.55, ease.inOut);
+    await c.blink(); await c.wait(0.14); await c.blink();
     card.lastWake = now;
   } };
 const MOMENT = Object.fromEntries([...MOMENTS, WAKE].map((m) => [m.key, m]));
