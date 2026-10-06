@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portrait Animations</title>
+<style>
+  :root {
+    --off-white: #FBFFFD;
+    --off-black: #121312;
+    --off-teal: #C2E9E7;
+    --light-off-teal: #ECF8F5;
+    --dark-green: #00A084;
+    --light-green: #4EDF88;
+    --muted: rgba(18, 19, 18, 0.56);
+    --line: rgba(18, 19, 18, 0.12);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--off-white);
+    color: var(--off-black);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 48px 16px 24px;
+  }
+  header h1 { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 8px; }
+  header p { margin: 0; color: var(--muted); max-width: 640px; line-height: 1.5; font-size: 15px; }
+  main {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 8px 16px 64px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 28px 20px;
+  }
+  .card { display: flex; flex-direction: column; gap: 12px; }
+  .stage {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--dark-green);
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: 2px solid transparent;
+    outline-offset: 3px;
+    transition: outline-color .2s;
+  }
+  .card.picked .stage { outline-color: var(--off-black); }
+  .stage svg { display: block; width: 100%; height: auto; }
+  .chip {
+    position: absolute; left: 10px; bottom: 10px;
+    font: 500 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: .04em; text-transform: uppercase;
+    background: var(--off-white); color: var(--off-black);
+    padding: 6px 8px; border-radius: 99px;
+    opacity: 0; transform: translateY(4px);
+    transition: opacity .25s, transform .25s;
+    pointer-events: none;
+  }
+  .chip.on { opacity: 1; transform: none; }
+  .meta { display: flex; align-items: baseline; gap: 10px; }
+  .num { font: 500 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); }
+  .meta h2 { font-size: 16px; font-weight: 600; margin: 0; letter-spacing: -0.01em; flex: 1; }
+  .pick {
+    font: inherit; font-size: 12px; font-weight: 500;
+    border: 1px solid var(--line); background: transparent; color: var(--off-black);
+    padding: 5px 10px; border-radius: 99px; cursor: pointer;
+  }
+  .pick:hover { border-color: var(--off-black); }
+  .card.picked .pick { background: var(--off-black); color: var(--off-white); border-color: var(--off-black); }
+  .desc { margin: -4px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+  .try { font-size: 12.5px; color: var(--off-black); }
+  .try b { font-weight: 600; }
+  footer {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    background: var(--off-black); color: var(--off-white);
+    font-size: 13px; padding: 12px 16px; text-align: center;
+    transform: translateY(100%); transition: transform .3s;
+  }
+  footer.on { transform: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Portrait animation variants</h1>
+  <p>Each one keeps the current blink, then animates one new trait. Hover, move the cursor around and click each portrait. Mark the ones you like with <b>Pick</b>.</p>
+</header>
+<main id="grid"></main>
+<footer id="picked"></footer>
+
+<script>
+(() => {
+"use strict";
+
+/* ------------------------------------------------------------------ */
+/* Artwork (same rig as Hero.jsx, me.svg palette)                      */
+/* ------------------------------------------------------------------ */
+const C = { white: "#FBFFFD", black: "#121312", teal: "#C2E9E7", lteal: "#ECF8F5", green: "#00A084", lgreen: "#4EDF88" };
+
+const P = {
+  irisR: "M221.5 245.5C221.5 250.194 217.694 254 213 254C208.306 254 204.5 250.194 204.5 245.5C204.5 240.806 208.306 237 213 237C217.694 237 221.5 240.806 221.5 245.5Z",
+  irisL: "M143 237.5C143 241.918 139.418 245.5 135 245.5C130.582 245.5 127 241.918 127 237.5C127 233.082 130.582 229.5 135 229.5C139.418 229.5 143 233.082 143 237.5Z",
+  lidR: ["M237.5 250C225 236 206 239 202 241V232.5H236.5L237.5 250Z", "M237.5 251C224 244.5 206.5 243.5 202 244V233.5H236.5L237.5 251Z"],
+  botR: ["M237 251.5C238 260.5 213 275.5 194 247.5C195.6 262.7 217 264.833 227.5 264C237.5 261.6 238 254.667 237 251.5Z", "M237 251.5C217.8 245.9 200.333 246.5 194 247.5C195.6 262.7 217 264.833 227.5 264C237.5 261.6 238 254.667 237 251.5Z"],
+  lashR: ["M201.068 241.56L194.353 245.589C194.14 245.717 194.304 246.041 194.532 245.945L203.051 242.396C203.682 242.133 204.35 241.948 205.029 241.867C221.141 239.96 229.929 247.037 232.787 251.178C232.918 251.367 233.154 251.449 233.371 251.377L236.775 250.242C237.117 250.128 237.226 249.696 236.977 249.435C225.94 237.81 210.43 238.445 203.031 240.663C202.337 240.871 201.689 241.188 201.068 241.56Z", "M201.064 244.56L194.349 246.589C194.136 246.717 194.3 247.041 194.529 246.945L203.027 246.589C203.658 246.326 204.321 246.67 205 246.589C221 247.5 229 249.5 232.784 252.178C232.914 252.367 233.15 252.449 233.367 252.377L236.771 251.242C237.113 251.128 237.222 250.696 236.973 250.434C224.5 245 210.973 244 203 244C202.306 244.208 202 244 201.064 244.56Z"],
+  lidL: ["M124 235C138.5 229.5 148.5 236.5 152.5 239.5C153.3 235.1 152.167 231 151.5 229.5L124 225V235Z", "M124 236.5C138.5 235 148.5 237.5 152.5 240.5C153.3 236.1 152.167 231 151.5 229.5L124 225V236.5Z"],
+  botL: ["M149.5 243C148.417 256 129.5 249.396 121.5 240C125.1 251.2 137.333 252.333 143 251.5C149 248.5 149.333 245 149.5 243Z", "M149.5 243C143.1 239 128.5 239 121.5 240C125.1 251.2 137.333 252.333 143 251.5C148.6 248.7 149.333 245 149.5 243Z"],
+  lashL: ["M119.965 237.201C132.666 229.219 147.56 234.067 152.5 239.5V240.5C142.95 234.399 133.118 234.631 127.135 236.5C124.922 237.399 123.604 238.422 121.5 240L119.843 237.929C119.659 237.699 119.715 237.358 119.965 237.201Z", "M119.965 237.201C133.5 234.5 147 237 152.5 239.5V240.5C141.5 241.5 133.5 239.5 127.135 239.5C124.922 240.399 123.604 238.422 121.5 240L119.843 237.929C119.659 237.699 119.715 237.358 119.965 237.201Z"],
+  browL: "M120.499 210.5C119.791 212.622 118.902 214.379 117.899 215.218C117.69 215.393 117.603 215.691 117.733 215.93L120.135 220.334C120.307 220.649 120.75 220.687 121.016 220.446C126.065 215.893 141.624 222.482 149.499 226.5C140.999 208.5 129.999 206.167 126.499 207C125.332 207.167 121.299 208.1 120.499 210.5Z",
+  browR: "M192.47 210.449C182.438 210.374 180.054 216.557 180.009 220.903C179.731 224.07 183.469 226.697 185.514 226.412C185.539 226.409 185.564 226.4 185.586 226.386C203.001 215.783 234.438 227.735 248.962 235.516C249.16 235.622 249.341 235.36 249.191 235.194C227.517 211.04 204.864 210.541 192.47 210.449Z",
+};
+
+const svgMarkup = (id) => `
+<svg viewBox="0 0 375 480" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<defs>
+  <linearGradient id="g0${id}" x1="145" y1="394.5" x2="271.002" y2="425.583" gradientUnits="userSpaceOnUse"><stop stop-color="${C.teal}"/><stop offset="1" stop-color="${C.lteal}"/></linearGradient>
+  <linearGradient id="g1${id}" x1="150" y1="394" x2="172.836" y2="493.766" gradientUnits="userSpaceOnUse"><stop stop-color="${C.teal}"/><stop offset="1" stop-color="${C.lteal}"/></linearGradient>
+  <clipPath id="fc${id}"><rect x="0" y="0" width="215" height="112"/></clipPath>
+</defs>
+<rect width="375" height="480" fill="${C.green}"/>
+<g data-p="bars">
+  <path data-p="bar" d="M-24 -24H399V165H-24Z" fill="#009178"/>
+  <path data-p="bar" d="M-24 -24H399V150H-24Z" fill="#00826B"/>
+  <path data-p="bar" d="M-24 -24H399V120H-24Z" fill="#00735F"/>
+  <path data-p="bar" d="M-24 -24H399V60H-24Z" fill="#006352"/>
+</g>
+<g data-p="scene">
+  <g data-p="body">
+    <path d="M35.5 423.5L149.5 383.5L276 385.5L404 484H0L8 454C12.8 436 28.3333 426.167 35.5 423.5Z" fill="${C.black}"/>
+    <path d="M142.502 424.5C144.902 407.3 152.169 393.667 155.502 389V328.5L292.5 292L290 315C283.6 325.4 280.333 362.333 279.5 379.5C280.3 387.9 288.5 402 292.5 408C297.7 438.4 256.667 471 235.5 483.5H148L142.502 467.5C137.702 451.1 140.502 432 142.502 424.5Z" fill="${C.white}"/>
+    <path d="M286 309C267.836 379.063 224.732 399.123 194.224 406.714C185.564 408.869 176.519 408.438 167.835 406.382L148.734 401.857C151.243 395.813 153.855 391.309 155.504 389V373.335L286 309Z" fill="url(#g0${id})"/>
+    <path d="M281.072 358.441C280.283 366.475 279.766 374.001 279.499 379.5C280.299 387.9 288.499 402 292.499 408C295.61 426.187 282.171 445.16 266.34 460.147L281.072 358.441Z" fill="${C.lteal}"/>
+    <path d="M173.103 483.5H148L142.502 467.5C137.702 451.1 140.502 432 142.502 424.5C144.701 408.738 150.988 395.971 154.589 390.355L157.5 388.5L173.103 483.5Z" fill="url(#g1${id})"/>
+  </g>
+  <g data-p="head">
+    <path d="M124.404 192.776L127.974 184.796C128.655 183.273 129.125 181.663 129.37 180.012C130.372 173.249 135.065 167.611 141.534 165.399L177.97 152.94C197.583 146.233 219.015 147.253 237.903 155.791L265.94 168.466C275.876 172.957 283.533 181.329 287.124 191.625L307.218 249.256C307.581 250.294 308.904 250.597 309.682 249.82C309.89 249.611 310.155 249.469 310.444 249.412L316.274 248.246C317.091 248.082 317.895 247.86 318.679 247.579L321.811 246.461C323.549 245.84 325.45 245.845 327.186 246.476C329 247.136 330.511 248.435 331.435 250.13L331.963 251.098C332.648 252.354 333.078 253.733 333.228 255.155L333.579 258.487C333.859 261.148 333.75 263.836 333.257 266.466L332.501 270.5L330.001 283.5L328.26 291.161C327.756 293.379 326.987 295.529 325.969 297.563C324.339 300.824 322.096 303.74 319.362 306.152L315.001 310L307.251 316.934C306.09 317.974 304.795 318.853 303.401 319.55L302.053 320.224C299.74 321.381 297.13 321.804 294.57 321.439L292.779 321.183C291.939 321.063 291.141 320.743 290.45 320.25C288.931 319.165 288.096 317.361 288.251 315.501L288.91 307.596C288.927 307.39 288.642 307.318 288.559 307.507L277.465 332.791C270.912 347.725 260.971 360.927 248.43 371.352L245.158 374.071C234.492 382.936 222.176 389.6 208.921 393.679L198.735 396.813C192.945 398.594 186.921 399.5 180.863 399.5H178.301C173.466 399.5 168.663 398.721 164.076 397.192L161.774 396.425C156.985 394.828 152.609 392.19 148.961 388.701C145.044 384.954 142.074 380.329 140.298 375.208L134.501 358.5L129.001 342L123.001 313.5L121.501 295L119.849 279.855C118.953 271.647 119.029 263.362 120.075 255.172L121.501 244V235.963C121.501 233.34 121.055 230.737 120.182 228.263C119.074 225.125 118.657 221.784 118.958 218.47L119.636 211.019C120.209 204.716 121.82 198.552 124.404 192.776Z" fill="${C.white}"/>
+    <path d="M119.648 210.889C132.152 210.152 150.87 214.139 153.999 235C153.999 236.5 153.399 240.3 150.999 243.5C148.166 247.167 142.199 256.2 140.999 263L130.499 297C128.833 302.667 129.3 314.2 144.499 315C149.299 315.8 153.333 311.334 154.499 309C157.454 306.045 161.682 305.819 164.765 306.306C166.591 306.594 168.01 307.962 169.671 308.772C172.42 310.11 175.82 309.275 177.499 308.5C181.273 307.557 181.585 299.96 181.061 293.92C181.019 293.435 181.624 293.305 181.741 293.779C182.921 298.566 184.004 304.782 184.499 308C185.699 315.6 177.333 315.167 172.999 314C165.799 312.8 159.499 317.5 157.499 320.5C156.405 321.959 154.673 322.42 153.744 322.49C153.582 322.503 153.418 322.48 153.26 322.441L151.951 322.113L148.871 329.428C148.33 330.714 148.499 332.191 149.316 333.322L154.499 340.5L144.499 339L149.394 350.748L178.499 344C182.823 342.559 188.07 342.041 190.692 340.672C190.829 340.6 190.995 340.697 190.979 340.852C190.793 342.607 189.396 346.604 187.999 348L176.499 361C174.099 363.8 170.499 364.167 168.999 364L149.984 360.099L146.953 364.763C146.005 366.223 145.495 367.92 145.587 369.658C145.854 374.667 146.938 385.471 151.328 390.762C150.51 390.112 149.718 389.427 148.96 388.701C145.043 384.955 142.074 380.33 140.297 375.209L134.5 358.5L129 342L123 313.5L121.5 295L119.848 279.856C118.953 271.648 119.029 263.362 120.075 255.172L121.5 244V235.963C121.5 233.341 121.055 230.737 120.182 228.264C119.074 225.125 118.657 221.785 118.958 218.47L119.635 211.019C119.639 210.975 119.644 210.932 119.648 210.889ZM177.97 152.94C197.583 146.233 219.015 147.253 237.903 155.791L265.94 168.466C275.876 172.958 283.533 181.329 287.123 191.625L303.129 237.53L290.999 267.5C294.999 238.3 290.999 228.5 278.999 224.5C279.999 213.5 274.999 210.667 271.999 209C249.999 211.4 235.833 197 231.499 189.5C218.299 203.1 195.666 195.167 185.999 189.5C183.833 194 175.227 201.699 157.999 197C134.171 190.502 125.982 199.392 120.751 203.834C121.589 200.04 122.812 196.334 124.404 192.776L127.973 184.797C128.655 183.273 129.125 181.663 129.369 180.012C130.371 173.249 135.064 167.611 141.534 165.399L177.97 152.94ZM236.691 251.27C237.053 251.149 237.405 251.459 237.301 251.826C236.24 255.556 232.269 262 222.999 262C215.171 262 208.057 259.242 204.297 257.085C203.814 256.807 204.089 256.328 204.613 256.519C221.217 262.596 231.7 258.79 232.945 252.801C232.983 252.618 233.111 252.463 233.288 252.404L236.691 251.27Z" fill="${C.teal}"/>
+    <ellipse data-p="blushL" cx="136" cy="266" rx="13" ry="5.5" fill="#FF8F86" opacity="0"/>
+    <ellipse data-p="blushR" cx="232" cy="276" rx="17" ry="6.5" fill="#FF8F86" opacity="0"/>
+    <g transform="translate(213 245.5) scale(1 1.05) translate(-213 -245.5)">
+      <path data-p="lashR" d="${P.lashR[0]}" fill="${C.black}"/>
+      <path data-p="irisR" d="${P.irisR}" fill="${C.black}"/>
+      <path data-p="lidR" d="${P.lidR[0]}" fill="${C.white}"/>
+      <path data-p="botR" d="${P.botR[0]}" fill="${C.white}"/>
+    </g>
+    <g transform="translate(135 237.5) scale(1 1.08) translate(-135 -237.5)">
+      <path d="M130.002 246C125.602 243.6 125.5 237.5 127.502 235L135.001 233L146.001 235L151.501 239L148.501 246C142.101 250.8 133.5 247.908 130.002 246Z" fill="${C.white}"/>
+      <path data-p="lashL" d="${P.lashL[0]}" fill="${C.black}"/>
+      <path data-p="irisL" d="${P.irisL}" fill="${C.black}"/>
+      <path data-p="lidL" d="${P.lidL[0]}" fill="${C.teal}"/>
+      <path data-p="botL" d="${P.botL[0]}" fill="${C.teal}"/>
+    </g>
+    <g data-p="mouth">
+      <path d="M143.5 333.5C145.422 331.963 146.882 332.763 147.437 333.42C146.823 332.648 146.743 332.469 151 337.5C155.4 342.699 160.167 338.333 162 335.5C162.667 334 164.6 331.5 167 333.5C170.001 336 180.5 340.5 184 341C184.284 341.04 184.547 341.096 184.789 341.162C186.518 341.394 191.97 341.029 193 340C194.325 338.675 194.87 343.202 190.496 343.93C190.497 343.954 190.5 343.977 190.5 344L189.815 344.01C189.539 344.028 189.248 344.033 188.94 344.022L154 344.5L139.899 336.721C139.747 336.636 139.77 336.409 139.934 336.35C142.354 335.494 141.131 335.395 143.5 333.5Z" fill="${C.black}"/>
+      <path d="M160 353C148 351.8 143.333 347.833 142.5 346C142.5 352 148.167 354.167 151 354.5L160.5 356L167.5 357.5C176.3 357.9 180.167 351.667 181 348.5C179 350.5 172 354.2 160 353Z" fill="${C.black}"/>
+      <path d="M148.999 352C140.199 350 141.332 343.167 142.999 338.5C147.398 335.3 151.499 338.5 153 340.5C156.201 343.7 162.334 342.5 165 341.5C171.4 338.7 180.667 342 184.5 344C179.3 358.8 169.333 356.5 165 355L148.999 352Z" fill="${C.white}"/>
+    </g>
+    <path d="M166 308.5C160.179 305.864 154.359 309.954 151.41 311.914C151.226 312.037 151.043 311.825 151.186 311.655C156.416 305.42 161.167 304.542 165 305.5C168.349 306.935 175.36 309.744 179.901 305.165C180.052 305.014 180.298 305.151 180.212 305.346C177.977 310.448 168.376 309.926 166 308.5Z" fill="${C.black}"/>
+    <path d="M141 213C146.833 217.833 162 232.5 148 246.5C154.5 235.5 150 223 141 213Z" fill="${C.black}"/>
+    <path data-p="browL" d="${P.browL}" fill="${C.black}"/>
+    <path data-p="browR" d="${P.browR}" fill="${C.black}"/>
+    <g data-p="hair">
+      <g data-p="lineG">
+        <path data-p="line" d="M24 140V32" stroke="${C.white}" stroke-width="1.5"/>
+        <g data-p="fish" opacity="0">
+          <ellipse cx="0" cy="11" rx="4.5" ry="10" fill="${C.white}"/>
+          <path d="M0 19L-6 28H6Z" fill="${C.white}"/>
+          <circle cx="-1.6" cy="6" r="1.1" fill="${C.black}"/>
+        </g>
+      </g>
+      <path d="M85.9981 112C93.1981 100 98 109.5 104 109.5L316.099 108.003C316.357 108.001 316.606 108.098 316.789 108.279C322.822 114.214 323.977 123.635 322.439 128.409C322.25 128.997 322.542 129.664 323.118 129.888C331.723 133.227 333.147 142.378 333.444 147.318C333.488 148.049 333.915 148.695 334.543 149.072C338.056 151.181 339.216 153.924 339.375 156.136C339.476 157.536 340.509 159 341.912 159H345.187C346.563 159 347.528 160.358 347.076 161.657L344.291 169.663C344.106 170.196 344.154 170.783 344.424 171.278L349.435 180.464C349.784 181.104 349.757 181.882 349.366 182.496L347.011 186.197C346.688 186.705 346.611 187.332 346.801 187.903L349.31 195.43C349.649 196.448 348.891 197.5 347.817 197.5C347.055 197.5 346.402 198.047 346.268 198.797L344.294 209.852C344.124 210.806 343.294 211.5 342.326 211.5H340.35C339.534 211.5 338.8 211.996 338.495 212.752L327.5 240C325.833 243 320.6 249.3 313 250.5C305.779 251.641 299.49 263.103 296.88 269.533C296.666 270.06 296.063 270.313 295.54 270.089L290.199 267.8C289.786 267.623 289.542 267.192 289.602 266.747L292 249C294.681 233.678 286.572 225.386 281.635 222.809C281.258 222.612 281.026 222.21 281.055 221.786C281.97 208.487 275.935 203.122 272.628 202.041C272.542 202.012 272.457 202 272.366 201.998C263.153 201.791 244.694 197.423 243.5 181.5C242.348 166.143 234.963 163.991 230.982 164.874C230.674 164.942 230.437 165.174 230.329 165.47L226.5 176C221.815 185.816 216.705 186.964 212.436 184.787C211.343 184.23 212.57 183.034 213.795 183.091C220.374 183.397 222.5 170.281 222.5 167C222.5 159.8 216.25 159.5 215 162C211.357 169.286 205.326 171.086 199.807 171.076C198.683 171.074 198.601 169.442 199.635 169.001C202.721 167.685 203.144 166.029 198 165C183.57 162.114 170.058 163.707 163.089 170.273C162.447 170.877 162.964 171.903 163.845 171.929C169.33 172.092 177.308 174.502 178 183.5C178.593 191.207 167.692 191.153 157.869 189.32C156.687 189.099 156.931 187.653 158.132 187.714C168.539 188.238 177.742 187.754 166.5 183.5C152.038 178.028 136.079 179.749 129.449 181.386C129.161 181.457 128.927 181.656 128.802 181.925L123.352 193.604C122.937 194.492 121.625 194.316 121.46 193.35L119.136 179.792C119.056 179.33 118.664 178.979 118.195 178.988C112.012 179.1 112.45 184.297 113.976 188.271C114.297 189.108 113.511 190.003 112.699 189.624C104.26 185.689 109.068 178.164 112.913 174.581C112.972 174.526 113.025 174.463 113.069 174.396C118.355 166.285 105.949 163.473 98.5572 163.03C98.2096 163.009 97.8733 163.185 97.6863 163.478C89.1963 176.819 103.686 188.389 114.171 193.679C115.04 194.117 114.878 195.374 113.907 195.45C105.732 196.089 97.5581 192.638 94.0952 190.558C94.0299 190.519 93.9702 190.471 93.9159 190.418C75.7895 172.599 83.5366 160.019 90.8683 155.001C91.5354 154.544 91.5301 153.431 91.0187 152.805C89.2933 150.693 89.1785 147.036 89.5255 144.133C89.6353 143.214 88.6752 142.659 88.1844 143.443C86.7777 145.69 86.4662 148.719 86.2725 151.178C86.2285 151.735 85.612 151.749 85.5299 151.195C82.6055 131.473 88.7233 119.717 92.401 116.096C92.4685 116.03 92.5417 115.979 92.6256 115.935C96.7818 113.768 102.4 110.54 92.5 114.5C84.7179 117.613 82.4865 124.763 82.2719 130.06C82.2299 131.097 81.2439 131.378 81.0606 130.356C80.375 126.534 81.0155 120.305 85.9981 112Z" fill="${C.black}"/>
+      <path data-p="pool" d="M318 110C318 116.627 270.094 122 211 122C151.906 122 104 116.627 104 110C104 103.373 151.906 98 211 98C270.094 98 318 103.373 318 110Z" fill="${C.lgreen}"/>
+      <ellipse data-p="glint" cx="170" cy="106" rx="16" ry="1.6" fill="${C.white}" opacity="0"/>
+      <g clip-path="url(#fc${id})">
+        <g data-p="fisher">
+          <path d="M24.041 32.001C42.1258 32.5034 76.0772 35.6801 107.699 44.4121C123.51 48.7781 138.804 54.5504 151.257 62.1143C163.699 69.6718 173.438 79.1002 177.902 90.832L175.098 91.8994C170.962 81.0315 161.838 72.0522 149.699 64.6787C137.57 57.3115 122.565 51.6292 106.9 47.3037C75.5721 38.6528 41.8723 35.4967 23.957 34.999L24.041 32.001Z" fill="${C.white}"/>
+          <g transform="rotate(2) translate(0 -5)">
+            <path d="M169.365 97.9722C162.038 98.1933 141.886 97.7987 130.528 97.5223C129.184 97.4895 128.363 98.7324 129.311 99.6856C132.602 102.995 140.264 106.411 144.39 107.94C159.032 112.005 186.987 107.835 199.134 105.242C203.542 104.694 207.518 101.749 210.173 99.0834C211.344 97.9078 210.405 96.107 208.747 96.1823L169.365 97.9722Z" fill="${C.black}"/>
+            <path d="M181.866 101.559C165.627 102.915 141.397 100.184 129.574 98.0691C129.337 98.0266 129.373 97.6997 129.614 97.7002C140.017 97.7202 159.272 98.2107 168.204 98.1485L209.493 96.2499C210.011 96.2261 210.168 96.8055 209.684 96.9904C203.485 99.3585 189.161 101.007 181.866 101.559Z" fill="${C.white}"/>
+          </g>
+          <path d="M173.01 77.4609C174.37 74.7406 177.43 75.6473 178.791 76.4407C181.239 78.345 182.078 82.2214 182.191 83.9216L180.831 85.2817C181.103 91.5384 179.584 99.2233 178.791 102.284H175.05C174.234 101.196 173.35 94.5761 173.01 91.4024L171.99 91.7425V85.9618L170.63 86.9819L169.27 86.3019L173.01 77.4609Z" fill="${C.black}"/>
+          <path d="M177.089 73.3803C177.089 74.6949 176.023 75.7605 174.708 75.7605C173.394 75.7605 172.328 74.6949 172.328 73.3803C172.328 72.0657 173.394 71 174.708 71C176.023 71 177.089 72.0657 177.089 73.3803Z" fill="${C.black}"/>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g data-p="fx"></g>
+</g>
+</svg>`;
+
+/* ------------------------------------------------------------------ */
+/* Tiny animation engine (no dependencies)                             */
+/* ------------------------------------------------------------------ */
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = {
+  linear: (t) => t,
+  in: (t) => t * t,
+  out: (t) => 1 - (1 - t) * (1 - t),
+  out3: (t) => 1 - Math.pow(1 - t, 3),
+  inOut: (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2),
+  sine: (t) => -(Math.cos(Math.PI * t) - 1) / 2,
+  back: (t) => { const c = 2.2; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); },
+};
+// cubic-bezier, used for the site's "wave" CustomEase (M0,0 C0.6,0 0.1,1.4 1,1)
+const bezier = (x1, y1, x2, y2) => {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+  const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const sx = (t) => ((ax * t + bx) * t + cx) * t;
+  const sy = (t) => ((ay * t + by) * t + cy) * t;
+  return (x) => {
+    let t = x;
+    for (let i = 0; i < 6; i++) {
+      const d = (3 * ax * t + 2 * bx) * t + cx;
+      if (Math.abs(d) < 1e-6) break;
+      t -= (sx(t) - x) / d;
+    }
+    return sy(clamp(t, 0, 1));
+  };
+};
+ease.wave = bezier(0.6, 0, 0.1, 1.4);
+
+let now = performance.now();
+const tweens = [];
+function to(obj, props, dur, fn = ease.out, delay = 0) {
+  // overwrite the same keys on the same object
+  for (const tw of tweens) if (tw.obj === obj) for (const k in props) delete tw.props[k];
+  return new Promise((resolve) => {
+    tweens.push({ obj, props: { ...props }, from: null, start: now + delay * 1000, dur: Math.max(1, dur * 1000), fn, resolve });
+  });
+}
+const wait = (s) => new Promise((r) => setTimeout(r, s * 1000));
+function stepTweens() {
+  for (let i = tweens.length - 1; i >= 0; i--) {
+    const tw = tweens[i];
+    if (now < tw.start) continue;
+    if (!tw.from) { tw.from = {}; for (const k in tw.props) tw.from[k] = tw.obj[k]; }
+    const p = clamp((now - tw.start) / tw.dur, 0, 1);
+    const e = tw.fn(p);
+    for (const k in tw.props) tw.obj[k] = lerp(tw.from[k], tw.props[k], e);
+    if (p >= 1) { tweens.splice(i, 1); tw.resolve(); }
+  }
+}
+const damp = (cur, target, k, dt) => cur + (target - cur) * (1 - Math.exp(-k * dt));
+
+const NUM = /-?\d*\.?\d+(?:e[-+]?\d+)?/gi;
+function morpher([a, b]) {
+  const na = a.match(NUM).map(Number), nb = b.match(NUM).map(Number), parts = a.split(NUM);
+  return (t) => {
+    let s = parts[0];
+    for (let i = 0; i < na.length; i++) s += (na[i] + (nb[i] - na[i]) * t).toFixed(2) + parts[i + 1];
+    return s;
+  };
+}
+const M = { lidR: morpher(P.lidR), botR: morpher(P.botR), lashR: morpher(P.lashR), lidL: morpher(P.lidL), botL: morpher(P.botL), lashL: morpher(P.lashL) };
+
+/* ------------------------------------------------------------------ */
+/* Rig: one state object per portrait, one render function for all     */
+/* ------------------------------------------------------------------ */
+const GAZE0 = { x: 4, y: 1.5 }; // iris offset that reads as "looking at you"
+const PIVOT = { head: [205, 345], browL: [133, 215], browR: [214, 222], fisherTop: [117, 32], boat: [170, 100], rod: [24, 33] };
+
+function makeRig() {
+  return {
+    gx: GAZE0.x, gy: GAZE0.y, pupil: 1,
+    closeL: 0, closeR: 0, blink: 0, blinkL: 0,
+    bLy: 0, bLr: 0, bRy: 0, bRr: 0,
+    hr: 0, hx: 0, hy: 0,
+    breathe: 0,
+    hairR: 0, hairX: 0, hairY: 0,
+    fishSy: 1.02, boatR: 0,
+    bars: [1, 1, 1, 1], barsX: 0, barsY: 0,
+    bodyX: 0, bodyY: 0,
+    blush: 0, glint: 0, poolSx: 1,
+    lineLen: 108, lineR: 0, fishOn: 0, fishR: 0,
+  };
+}
+
+function bind(svg) {
+  const q = (n) => svg.querySelector(`[data-p="${n}"]`);
+  return {
+    bars: [...svg.querySelectorAll('[data-p="bar"]')], barsG: q("bars"),
+    body: q("body"), head: q("head"), hair: q("hair"), fisher: q("fisher"),
+    irisL: q("irisL"), irisR: q("irisR"), lidL: q("lidL"), lidR: q("lidR"), botL: q("botL"), botR: q("botR"), lashL: q("lashL"), lashR: q("lashR"),
+    browL: q("browL"), browR: q("browR"), blushL: q("blushL"), blushR: q("blushR"),
+    pool: q("pool"), glint: q("glint"), line: q("line"), lineG: q("lineG"), fish: q("fish"), fx: q("fx"),
+  };
+}
+
+const f = (n) => n.toFixed(2);
+function setAttr(el, name, val, cache, key) {
+  if (cache[key] === val) return;
+  cache[key] = val;
+  el.setAttribute(name, val);
+}
+
+function render(r, e, cache) {
+  const eyeClose = (base, b) => base + (1 - base) * b;
+  const cL = eyeClose(r.closeL, Math.max(r.blink, r.blinkL));
+  const cR = eyeClose(r.closeR, r.blink);
+  setAttr(e.lidL, "d", M.lidL(cL), cache, "lidL");
+  setAttr(e.lashL, "d", M.lashL(cL), cache, "lashL");
+  setAttr(e.botL, "d", M.botL(Math.max(0, cL)), cache, "botL");
+  setAttr(e.lidR, "d", M.lidR(cR), cache, "lidR");
+  setAttr(e.lashR, "d", M.lashR(cR), cache, "lashR");
+  setAttr(e.botR, "d", M.botR(Math.max(0, cR)), cache, "botR");
+
+  const iris = (cx, cy, k) => `translate(${f(r.gx * k)} ${f(r.gy * k)}) translate(${cx} ${cy}) scale(${f(r.pupil)}) translate(${-cx} ${-cy})`;
+  setAttr(e.irisL, "transform", iris(135, 237.5, 1), cache, "irisL");
+  setAttr(e.irisR, "transform", iris(213, 245.5, 1), cache, "irisR");
+
+  const brow = (p, y, rot) => `translate(0 ${f(y)}) rotate(${f(rot)} ${p[0]} ${p[1]})`;
+  setAttr(e.browL, "transform", brow(PIVOT.browL, r.bLy, r.bLr), cache, "browL");
+  setAttr(e.browR, "transform", brow(PIVOT.browR, r.bRy, r.bRr), cache, "browR");
+
+  const by = -r.breathe * 2.2;
+  setAttr(e.head, "transform", `translate(${f(r.hx)} ${f(r.hy + by)}) rotate(${f(r.hr)} ${PIVOT.head[0]} ${PIVOT.head[1]})`, cache, "head");
+  setAttr(e.body, "transform", `translate(${f(r.bodyX)} ${f(r.bodyY)}) translate(0 480) scale(1 ${f(1 + r.breathe * 0.012)}) translate(0 -480)`, cache, "body");
+  setAttr(e.hair, "transform", `translate(${f(r.hairX)} ${f(r.hairY)}) rotate(${f(r.hairR)} 215 260)`, cache, "hair");
+  setAttr(e.fisher, "transform", `rotate(${f(r.boatR)} ${PIVOT.boat[0]} ${PIVOT.boat[1]}) translate(${PIVOT.fisherTop[0]} ${PIVOT.fisherTop[1]}) scale(1 ${f(r.fishSy)}) translate(${-PIVOT.fisherTop[0]} ${-PIVOT.fisherTop[1]})`, cache, "fisher");
+
+  setAttr(e.barsG, "transform", `translate(${f(r.barsX)} ${f(r.barsY)})`, cache, "barsG");
+  e.bars.forEach((b, i) => setAttr(b, "transform", `scale(1 ${f(r.bars[i])})`, cache, "bar" + i));
+
+  setAttr(e.blushL, "opacity", f(r.blush), cache, "blushL");
+  setAttr(e.blushR, "opacity", f(r.blush), cache, "blushR");
+  setAttr(e.glint, "opacity", f(r.glint), cache, "glint");
+  setAttr(e.pool, "transform", `translate(211 110) scale(${f(r.poolSx)} 1) translate(-211 -110)`, cache, "pool");
+
+  const end = 32 + r.lineLen;
+  setAttr(e.line, "d", `M24 ${f(end)}V32`, cache, "line");
+  setAttr(e.lineG, "transform", `rotate(${f(r.lineR)} ${PIVOT.rod[0]} ${PIVOT.rod[1]})`, cache, "lineG");
+  setAttr(e.fish, "transform", `translate(24 ${f(end)}) rotate(${f(r.fishR)})`, cache, "fish");
+  setAttr(e.fish, "opacity", f(r.fishOn), cache, "fishO");
+}
+
+/* Shared behaviours ------------------------------------------------- */
+function blinkOnce(r, key = "blink") {
+  return to(r, { [key]: 1 }, 0.1, ease.in).then(() => wait(0.05)).then(() => to(r, { [key]: 0 }, 0.12, ease.out));
+}
+function autoBlink(card, opts = {}) {
+  let prev = "single";
+  const loop = async () => {
+    while (true) {
+      await wait((opts.min ?? 1.6) + Math.random() * (opts.spread ?? 1.6));
+      if (!card.visible || card.noBlink) continue;
+      const x = Math.random();
+      const bias = prev === "triple" ? 0.55 : prev === "double" ? 0.45 : 0.35;
+      const n = x < bias ? 1 : x < bias + (1 - bias) / 2 ? 2 : 3;
+      for (let i = 0; i < n; i++) { blinkOnce(card.rig); await wait(i === 0 ? 0.3 : 0.52); }
+      prev = ["single", "double", "triple"][n - 1];
+    }
+  };
+  loop();
+}
+// the current site: header bars wave (staggered, yoyo) + fisherman bob
+function ambient(r, t, { bars = true, fisher = true } = {}) {
+  if (bars) {
+    const tt = t % 5.5, ft = tt < 2.75 ? tt : 5.5 - tt;
+    for (let i = 0; i < 4; i++) r.bars[i] = 1 + 0.4 * ease.wave(clamp((ft - 0.25 * i) / 2, 0, 1));
+  }
+  if (fisher) r.fishSy = 1.03 - 0.01 * Math.cos((t / 3) * Math.PI * 2);
+}
+// pointer in svg units, or null when outside the card
+function svgPoint(card) {
+  const p = pointer;
+  if (!p) return null;
+  const pt = card.svg.createSVGPoint();
+  pt.x = p.x; pt.y = p.y;
+  return pt.matrixTransform(card.svg.getScreenCTM().inverse());
+}
+function gazeToward(card, sp, range = 1) {
+  // aim from between the eyes
+  const dx = sp.x - 174, dy = sp.y - 241, d = Math.hypot(dx, dy) || 1;
+  const s = Math.min(d, 160) / 160;
+  return { x: GAZE0.x + (dx / d) * s * 5 * range, y: GAZE0.y + (dy / d) * s * 2.6 * range };
+}
+
+/* ------------------------------------------------------------------ */
+/* Variants                                                            */
+/* ------------------------------------------------------------------ */
+const VARIANTS = [
+  {
+    key: "current",
+    title: "Current",
+    desc: "What's on the site now: blinks, eyes follow the cursor and glance right, header bars wave, the fisherman bobs.",
+    tryText: "<b>Move</b> the cursor around.",
+    setup(card) { autoBlink(card); },
+    tick(card, t, dt) {
+      const r = card.rig;
+      ambient(r, t);
+      const sp = svgPoint(card);
+      // site behaviour: settle looking right, small cursor offset
+      let tx = 8, ty = 3;
+      if (sp) { const g = gazeToward(card, sp, 0.25); tx += g.x - GAZE0.x; ty += g.y - GAZE0.y; }
+      r.gx = damp(r.gx, tx, 6, dt); r.gy = damp(r.gy, ty, 6, dt);
+    },
+  },
+  {
+    key: "curious",
+    title: "Curious head tilt",
+    desc: "The whole head turns and tilts toward the cursor, and the brows lift when you come close. Click for a quizzical tilt with one brow raised.",
+    tryText: "<b>Move</b> around the card, <b>click</b> the portrait.",
+    setup(card) {
+      autoBlink(card);
+      card.stage.addEventListener("click", async () => {
+        const r = card.rig;
+        card.quiz = true;
+        to(r, { bRy: -7, bLy: 1.5, bRr: -3 }, 0.35, ease.back);
+        await wait(1.3);
+        card.quiz = false;
+        to(r, { bRr: 0 }, 0.4);
+      });
+    },
+    tick(card, t, dt) {
+      const r = card.rig;
+      ambient(r, t);
+      const sp = svgPoint(card);
+      const inside = sp && sp.x >= 0 && sp.x <= 375 && sp.y >= 0 && sp.y <= 480;
+      let nx = 0, ny = 0, near = 0;
+      if (sp) {
+        nx = clamp((sp.x - 205) / 220, -1, 1);
+        ny = clamp((sp.y - 260) / 260, -1, 1);
+        near = inside ? 1 - clamp(Math.hypot(sp.x - 190, sp.y - 260) / 200, 0, 1) : 0;
+      }
+      const g = sp ? gazeToward(card, sp, 1) : GAZE0;
+      r.gx = damp(r.gx, g.x, 8, dt); r.gy = damp(r.gy, g.y, 8, dt);
+      const quiz = card.quiz ? 1 : 0;
+      r.hr = damp(r.hr, nx * 3 + ny * nx * 1.2 + quiz * 6, 4, dt);
+      r.hx = damp(r.hx, nx * 4, 4, dt);
+      r.hy = damp(r.hy, ny * 2.5, 4, dt);
+      r.hairR = damp(r.hairR, -nx * 0.6, 3, dt); // hair lags a touch
+      if (!card.quiz) {
+        r.bLy = damp(r.bLy, -near * 5, 6, dt);
+        r.bRy = damp(r.bRy, -near * 5, 6, dt);
+      }
+      r.pupil = damp(r.pupil, 1 + near * 0.08, 5, dt);
+    },
+  },
+  {
+    key: "breathe",
+    title: "Breathe & drift",
+    desc: "Ambient life with no input needed: slow breathing lifts the shoulders and head, the hair sways, the pool shimmers and the boat rocks. Click for a deep sigh.",
+    tryText: "<b>Watch</b> it for a few seconds, <b>click</b> for a sigh.",
+    setup(card) {
+      autoBlink(card, { min: 2.4, spread: 2 });
+      card.sigh = 0;
+      card.stage.addEventListener("click", async () => {
+        const r = card.rig;
+        to(card, { sigh: 1 }, 1.1, ease.inOut);
+        to(r, { closeL: 0.55, closeR: 0.55, bLy: -3, bRy: -3 }, 1.1, ease.inOut);
+        await wait(1.4);
+        to(card, { sigh: 0 }, 1.4, ease.inOut);
+        to(r, { closeL: 0, closeR: 0, bLy: 0, bRy: 0 }, 1.2, ease.inOut);
+      });
+    },
+    tick(card, t, dt) {
+      const r = card.rig;
+      ambient(r, t, { fisher: false });
+      const breath = (1 - Math.cos((t / 4.2) * Math.PI * 2)) / 2;
+      r.breathe = breath + card.sigh * 1.6;
+      r.hairR = Math.sin((t / 5.5) * Math.PI * 2) * 0.5;
+      r.hairX = Math.sin((t / 5.5) * Math.PI * 2 - 0.6) * 0.8;
+      r.boatR = Math.sin((t / 3.1) * Math.PI * 2) * 2.2;
+      r.fishSy = 1.03 - 0.01 * Math.cos((t / 3.1) * Math.PI * 2);
+      r.poolSx = 1 + Math.sin((t / 2.3) * Math.PI * 2) * 0.012;
+      const gl = (t % 4.6) / 4.6;
+      r.glint = Math.sin(gl * Math.PI) * 0.75;
+      card.els.glint.setAttribute("cx", f(130 + gl * 140));
+      // a slow wandering gaze
+      r.gx = GAZE0.x + Math.sin(t * 0.37) * 3 + Math.sin(t * 0.91) * 1;
+      r.gy = GAZE0.y + Math.sin(t * 0.53 + 1) * 1.2 + card.sigh * 1.5;
+      r.hy = card.sigh * 2.5;
+    },
+  },
+  {
+    key: "moods",
+    title: "Moods",
+    desc: "Expressions from the brows and eyelids only, no new artwork. Each click switches between neutral, surprised, suspicious, happy and a wink.",
+    tryText: "<b>Click</b> the portrait to change mood.",
+    setup(card) {
+      autoBlink(card);
+      const moods = [
+        ["neutral", { bLy: 0, bLr: 0, bRy: 0, bRr: 0, closeL: 0, closeR: 0, pupil: 1, hr: 0, hy: 0 }],
+        ["surprised", { bLy: -8, bLr: 0, bRy: -8, bRr: 0, closeL: -0.3, closeR: -0.3, pupil: 0.78, hr: 0, hy: -3 }],
+        ["suspicious", { bLy: 3, bLr: 5, bRy: -6, bRr: -3, closeL: 0.5, closeR: 0.42, pupil: 1, hr: -1.5, hy: 0 }],
+        ["happy", { bLy: -3, bLr: 0, bRy: -3, bRr: 0, closeL: 0.62, closeR: 0.62, pupil: 1, hr: 1.5, hy: -1 }],
+        ["wink", { bLy: 3, bLr: 3, bRy: -5, bRr: 0, closeL: 1, closeR: 0, pupil: 1, hr: -3, hy: 0 }],
+      ];
+      card.mood = 0;
+      card.stage.addEventListener("click", () => {
+        card.mood = (card.mood + 1) % moods.length;
+        const [name, s] = moods[card.mood];
+        to(card.rig, s, 0.32, name === "surprised" ? ease.back : ease.out3);
+        card.setChip(name === "neutral" ? "" : name);
+      });
+    },
+    tick(card, t, dt) {
+      const r = card.rig;
+      ambient(r, t);
+      const sp = svgPoint(card);
+      let g = sp ? gazeToward(card, sp, 0.7) : GAZE0;
+      if (card.mood === 2) g = { x: GAZE0.x + Math.sign(Math.sin(t * 0.9)) * 5, y: GAZE0.y + 0.5 }; // side-eye
+      if (card.mood === 3) r.hy = -1 + Math.sin(t * 5) * 0.8; // little bounce
+      r.gx = damp(r.gx, g.x, card.mood === 2 ? 5 : 8, dt);
+      r.gy = damp(r.gy, g.y, 8, dt);
+    },
+  },
+  {
+    key: "sleepy",
+    title: "Dozes off",
+    desc: "Leave the cursor off it and the lids get heavy, the head nods forward, then it falls asleep with floating Zs. Move over it to startle it awake.",
+    tryText: "<b>Wait</b> about 3 seconds, then <b>hover</b> to wake it.",
+    setup(card) {
+      autoBlink(card, { min: 1.4, spread: 1.4 });
+      card.lastActive = now;
+      card.state = "awake";
+      card.nextZ = 0;
+      const wake = async () => {
+        const was = card.state;
+        card.lastActive = now;
+        if (was === "awake" || was === "waking") return;
+        card.state = "waking";
+        card.noBlink = true;
+        const r = card.rig;
+        await to(r, { closeL: -0.3, closeR: -0.3, bLy: -9, bRy: -9, hr: -1.2, hy: -4, pupil: 0.8 }, 0.18, ease.out3);
+        await wait(0.35);
+        to(r, { hr: 0, hy: 0, bLy: 0, bRy: 0, closeL: 0, closeR: 0, pupil: 1 }, 0.6, ease.inOut);
+        await wait(0.3);
+        await blinkOnce(r); await wait(0.15); await blinkOnce(r);
+        card.noBlink = false;
+        card.state = "awake";
+        card.lastActive = now;
+      };
+      card.stage.addEventListener("pointermove", wake);
+      card.stage.addEventListener("pointerdown", wake);
+    },
+    tick(card, t, dt) {
+      const r = card.rig;
+      ambient(r, t);
+      const idle = (now - card.lastActive) / 1000;
+      if (card.state === "waking") return;
+      if (idle > 2.5 && card.state === "awake") card.state = "drowsy";
+      if (idle > 7 && card.state === "drowsy") card.state = "asleep";
+      card.noBlink = card.state !== "awake";
+      if (card.state === "awake") {
+        const sp = svgPoint(card);
+        const g = sp ? gazeToward(card, sp, 0.6) : GAZE0;
+        r.gx = damp(r.gx, g.x, 6, dt); r.gy = damp(r.gy, g.y, 6, dt);
+        r.breathe = (1 - Math.cos((t / 3.6) * Math.PI * 2)) / 2;
+        return;
+      }
+      const asleep = card.state === "asleep";
+      // heavy lids fighting to stay open, then shut
+      const lid = asleep ? 1 : 0.45 + Math.sin(t * 1.3) * 0.15 + clamp((idle - 2.5) / 4, 0, 1) * 0.2;
+      r.closeL = damp(r.closeL, lid, asleep ? 1.5 : 3, dt);
+      r.closeR = damp(r.closeR, lid, asleep ? 1.5 : 3, dt);
+      r.gx = damp(r.gx, GAZE0.x - 1, 1, dt); r.gy = damp(r.gy, GAZE0.y + 2.5, 1, dt);
+      r.bLy = damp(r.bLy, 2, 1, dt); r.bRy = damp(r.bRy, 2, 1, dt);
+      const nod = asleep ? 3.5 + Math.sin(t * 0.8) * 0.6 : clamp((idle - 2.5) / 4, 0, 1) * 2.5;
+      r.hr = damp(r.hr, nod, 1.2, dt);
+      r.hy = damp(r.hy, nod * 1.3, 1.2, dt);
+      r.breathe = (1 - Math.cos((t / (asleep ? 5.5 : 4.2)) * Math.PI * 2)) / 2 * (asleep ? 1.6 : 1);
+      if (asleep && t > card.nextZ) { card.nextZ = t + 1.3; spawnZ(card); }
+    },
+  },
+  {
+    key: "shy",
+    title: "Shy",
+    desc: "Looks at the cursor from a distance. Get close to the face and it looks away, blushes, and the brows go worried.",
+    tryText: "<b>Approach</b> the face slowly.",
+    setup(card) { autoBlink(card); card.shy = 0; },
+    tick(card, t, dt) {
+      const r = card.rig;
+      ambient(r, t);
+      const sp = svgPoint(card);
+      const inside = sp && sp.x >= -20 && sp.x <= 395 && sp.y >= -20 && sp.y <= 500;
+      let target = 0, side = 1;
+      if (inside) {
+        const d = Math.hypot(sp.x - 190, sp.y - 270);
+        target = 1 - clamp((d - 70) / 110, 0, 1);
+        side = Math.sign(sp.x - 190) || 1;
+      }
+      card.shy = damp(card.shy, target, target > card.shy ? 3 : 2, dt);
+      const s = ease.inOut(card.shy);
+      let g = sp && inside ? gazeToward(card, sp, 0.8) : GAZE0;
+      // looking away: opposite side and down
+      const away = { x: GAZE0.x - side * 5, y: GAZE0.y + 2.5 };
+      r.gx = damp(r.gx, lerp(g.x, away.x, s), 7, dt);
+      r.gy = damp(r.gy, lerp(g.y, away.y, s), 7, dt);
+      r.blush = s * 0.5;
+      r.hr = -side * s * 2.5;
+      r.hx = -side * s * 4;
+      r.hy = s * 2;
+      r.bLy = -s * 2; r.bLr = -s * 7;
+      r.bRy = -s * 2; r.bRr = s * 6;
+      r.closeL = s * 0.25; r.closeR = s * 0.25;
+    },
+  },
+  {
+    key: "fishing",
+    title: "Gone fishing",
+    desc: "Brings the fisherman into the story. The line sways, hovering gets a nibble and the eyes glance up at it. Click to reel in a catch.",
+    tryText: "<b>Hover</b> for a nibble, <b>click</b> to reel in.",
+    setup(card) {
+      autoBlink(card);
+      card.hover = false;
+      card.busy = false;
+      card.stage.addEventListener("pointerenter", () => (card.hover = true));
+      card.stage.addEventListener("pointerleave", () => (card.hover = false));
+      card.stage.addEventListener("click", async () => {
+        if (card.busy) return;
+        card.busy = true;
+        const r = card.rig;
+        // tug, reel, admire, release
+        await to(r, { lineLen: 122, fishSy: 1.08 }, 0.15, ease.out);
+        to(r, { fishOn: 1 }, 0.1);
+        to(r, { bLy: -7, bRy: -7, closeL: -0.25, closeR: -0.25 }, 0.25, ease.back);
+        await to(r, { lineLen: 26, fishSy: 1.0 }, 1.0, ease.inOut);
+        card.setChip("caught one");
+        to(r, { closeL: 0.55, closeR: 0.55, bLy: -3, bRy: -3 }, 0.3);
+        await wait(1.3);
+        to(r, { lineLen: 108, fishOn: 0 }, 0.7, ease.in);
+        to(r, { closeL: 0, closeR: 0, bLy: 0, bRy: 0 }, 0.5);
+        card.setChip("");
+        await wait(0.7);
+        card.busy = false;
+      });
+    },
+    tick(card, t, dt) {
+      const r = card.rig;
+      ambient(r, t, { fisher: !card.busy });
+      const watching = card.hover || card.busy;
+      if (!card.busy) {
+        const nib = card.hover ? Math.max(0, Math.sin(t * 9)) * Math.max(0, Math.sin(t * 1.7)) * 9 : 0;
+        r.lineLen = 108 + Math.sin(t * 1.3) * 3 + nib;
+        r.lineR = Math.sin(t * 0.9) * 2.5;
+        if (card.hover) r.fishSy = 1.03 + nib * 0.004;
+      } else {
+        r.lineR = damp(r.lineR, 0, 4, dt);
+      }
+      r.fishR = Math.sin(t * 14) * (card.busy ? 22 : 0);
+      // eyes glance up-left toward the line
+      const g = watching ? { x: GAZE0.x - 4.5, y: GAZE0.y - 2.2 } : (svgPoint(card) ? gazeToward(card, svgPoint(card), 0.6) : GAZE0);
+      r.gx = damp(r.gx, g.x, 6, dt); r.gy = damp(r.gy, g.y, 6, dt);
+      if (!card.busy) {
+        r.bLy = damp(r.bLy, watching ? -3 : 0, 6, dt);
+        r.bRy = damp(r.bRy, watching ? -3 : 0, 6, dt);
+      }
+      r.hr = damp(r.hr, watching ? -1.5 : 0, 3, dt);
+    },
+  },
+  {
+    key: "depth",
+    title: "Depth parallax",
+    desc: "Layers move at different depths with the cursor: the waves are furthest back, then shoulders, face, and hair with the fisherman nearest. Reads as a slight 3D turn.",
+    tryText: "<b>Move</b> across the card.",
+    setup(card) { autoBlink(card); },
+    tick(card, t, dt) {
+      const r = card.rig;
+      ambient(r, t);
+      const sp = svgPoint(card);
+      const inside = sp && sp.x >= 0 && sp.x <= 375 && sp.y >= 0 && sp.y <= 480;
+      const nx = inside ? clamp((sp.x - 187) / 187, -1, 1) : 0;
+      const ny = inside ? clamp((sp.y - 240) / 240, -1, 1) : 0;
+      const k = 5;
+      r.barsX = damp(r.barsX, -nx * 6, k, dt); r.barsY = damp(r.barsY, -ny * 4, k, dt);
+      r.bodyX = damp(r.bodyX, nx * 3, k, dt); r.bodyY = damp(r.bodyY, ny * 2, k, dt);
+      r.hx = damp(r.hx, nx * 7, k, dt); r.hy = damp(r.hy, ny * 4.5, k, dt);
+      r.hr = damp(r.hr, nx * 1.2, k, dt);
+      r.hairX = damp(r.hairX, nx * 4, k, dt); r.hairY = damp(r.hairY, ny * 3, k, dt);
+      const g = inside ? gazeToward(card, sp, 0.9) : GAZE0;
+      r.gx = damp(r.gx, g.x, 8, dt); r.gy = damp(r.gy, g.y, 8, dt);
+    },
+  },
+];
+
+function spawnZ(card) {
+  const ns = "http://www.w3.org/2000/svg";
+  const el = document.createElementNS(ns, "text");
+  el.textContent = "z";
+  el.setAttribute("fill", C.white);
+  el.setAttribute("font-family", "ui-monospace, Menlo, monospace");
+  el.setAttribute("font-weight", "600");
+  el.setAttribute("font-size", "18");
+  card.els.fx.appendChild(el);
+  const z = { x: 300, y: 222, s: 0.5, o: 0 };
+  const apply = () => {
+    el.setAttribute("transform", `translate(${f(z.x)} ${f(z.y)}) scale(${f(z.s)})`);
+    el.setAttribute("opacity", f(z.o));
+  };
+  card.sprites.push(apply);
+  to(z, { o: 1 }, 0.4);
+  to(z, { x: 336 + Math.random() * 10, y: 140, s: 1.3 }, 2.6, ease.out);
+  wait(1.8).then(() => to(z, { o: 0 }, 0.8)).then(() => { el.remove(); card.sprites.splice(card.sprites.indexOf(apply), 1); });
+}
+
+/* ------------------------------------------------------------------ */
+/* Page                                                                */
+/* ------------------------------------------------------------------ */
+let pointer = null;
+window.addEventListener("pointermove", (e) => (pointer = { x: e.clientX, y: e.clientY }), { passive: true });
+document.documentElement.addEventListener("pointerleave", () => (pointer = null));
+
+const grid = document.getElementById("grid");
+const footer = document.getElementById("picked");
+const picked = new Set();
+const updateFooter = () => {
+  const names = VARIANTS.map((v, i) => (picked.has(v.key) ? `${String(i).padStart(2, "0")} ${v.title}` : null)).filter(Boolean);
+  footer.textContent = names.length ? `Picked: ${names.join(", ")}` : "";
+  footer.classList.toggle("on", names.length > 0);
+};
+
+const cards = VARIANTS.map((v, i) => {
+  const el = document.createElement("article");
+  el.className = "card";
+  el.innerHTML = `
+    <div class="stage">${svgMarkup(v.key)}<span class="chip"></span></div>
+    <div class="meta"><span class="num">${String(i).padStart(2, "0")}</span><h2>${v.title}</h2><button class="pick" type="button">Pick</button></div>
+    <p class="desc">${v.desc}</p>
+    <div class="try">${v.tryText}</div>`;
+  grid.appendChild(el);
+  const svg = el.querySelector("svg");
+  const chip = el.querySelector(".chip");
+  const card = {
+    v, el, svg, stage: el.querySelector(".stage"), els: bind(svg), rig: makeRig(), cache: {}, sprites: [], visible: true,
+    setChip(txt) { if (txt) chip.textContent = txt; chip.classList.toggle("on", !!txt); },
+  };
+  el.querySelector(".pick").addEventListener("click", () => {
+    picked.has(v.key) ? picked.delete(v.key) : picked.add(v.key);
+    el.classList.toggle("picked", picked.has(v.key));
+    el.querySelector(".pick").textContent = picked.has(v.key) ? "Picked" : "Pick";
+    updateFooter();
+  });
+  v.setup(card);
+  return card;
+});
+
+const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+  const c = cards.find((c) => c.el === en.target);
+  if (c) c.visible = en.isIntersecting;
+}));
+cards.forEach((c) => io.observe(c.el));
+
+let last = performance.now();
+const t0 = last;
+function frame(ts) {
+  now = ts;
+  const dt = Math.min(0.05, (ts - last) / 1000);
+  last = ts;
+  stepTweens();
+  const t = (ts - t0) / 1000;
+  for (const c of cards) {
+    if (!c.visible) continue;
+    c.v.tick(c, t, dt);
+    c.sprites.forEach((s) => s());
+    render(c.rig, c.els, c.cache);
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
