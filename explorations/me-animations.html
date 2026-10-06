@@ -166,27 +166,21 @@ const svgMarkup = (id) => `
     <path data-p="browL" d="${P.browL}" fill="${C.black}"/>
     <path data-p="browR" d="${P.browR}" fill="${C.black}"/>
     <g data-p="hair">
-      <g data-p="lineG">
-        <path data-p="line" d="M24 140V32" stroke="${C.white}" stroke-width="1.5"/>
-        <g data-p="fish" opacity="0">
-          <ellipse cx="0" cy="11" rx="4.5" ry="10" fill="${C.white}"/>
-          <path d="M0 19L-6 28H6Z" fill="${C.white}"/>
-          <circle cx="-1.6" cy="6" r="1.1" fill="${C.black}"/>
-        </g>
-      </g>
       <path d="M85.9981 112C93.1981 100 98 109.5 104 109.5L316.099 108.003C316.357 108.001 316.606 108.098 316.789 108.279C322.822 114.214 323.977 123.635 322.439 128.409C322.25 128.997 322.542 129.664 323.118 129.888C331.723 133.227 333.147 142.378 333.444 147.318C333.488 148.049 333.915 148.695 334.543 149.072C338.056 151.181 339.216 153.924 339.375 156.136C339.476 157.536 340.509 159 341.912 159H345.187C346.563 159 347.528 160.358 347.076 161.657L344.291 169.663C344.106 170.196 344.154 170.783 344.424 171.278L349.435 180.464C349.784 181.104 349.757 181.882 349.366 182.496L347.011 186.197C346.688 186.705 346.611 187.332 346.801 187.903L349.31 195.43C349.649 196.448 348.891 197.5 347.817 197.5C347.055 197.5 346.402 198.047 346.268 198.797L344.294 209.852C344.124 210.806 343.294 211.5 342.326 211.5H340.35C339.534 211.5 338.8 211.996 338.495 212.752L327.5 240C325.833 243 320.6 249.3 313 250.5C305.779 251.641 299.49 263.103 296.88 269.533C296.666 270.06 296.063 270.313 295.54 270.089L290.199 267.8C289.786 267.623 289.542 267.192 289.602 266.747L292 249C294.681 233.678 286.572 225.386 281.635 222.809C281.258 222.612 281.026 222.21 281.055 221.786C281.97 208.487 275.935 203.122 272.628 202.041C272.542 202.012 272.457 202 272.366 201.998C263.153 201.791 244.694 197.423 243.5 181.5C242.348 166.143 234.963 163.991 230.982 164.874C230.674 164.942 230.437 165.174 230.329 165.47L226.5 176C221.815 185.816 216.705 186.964 212.436 184.787C211.343 184.23 212.57 183.034 213.795 183.091C220.374 183.397 222.5 170.281 222.5 167C222.5 159.8 216.25 159.5 215 162C211.357 169.286 205.326 171.086 199.807 171.076C198.683 171.074 198.601 169.442 199.635 169.001C202.721 167.685 203.144 166.029 198 165C183.57 162.114 170.058 163.707 163.089 170.273C162.447 170.877 162.964 171.903 163.845 171.929C169.33 172.092 177.308 174.502 178 183.5C178.593 191.207 167.692 191.153 157.869 189.32C156.687 189.099 156.931 187.653 158.132 187.714C168.539 188.238 177.742 187.754 166.5 183.5C152.038 178.028 136.079 179.749 129.449 181.386C129.161 181.457 128.927 181.656 128.802 181.925L123.352 193.604C122.937 194.492 121.625 194.316 121.46 193.35L119.136 179.792C119.056 179.33 118.664 178.979 118.195 178.988C112.012 179.1 112.45 184.297 113.976 188.271C114.297 189.108 113.511 190.003 112.699 189.624C104.26 185.689 109.068 178.164 112.913 174.581C112.972 174.526 113.025 174.463 113.069 174.396C118.355 166.285 105.949 163.473 98.5572 163.03C98.2096 163.009 97.8733 163.185 97.6863 163.478C89.1963 176.819 103.686 188.389 114.171 193.679C115.04 194.117 114.878 195.374 113.907 195.45C105.732 196.089 97.5581 192.638 94.0952 190.558C94.0299 190.519 93.9702 190.471 93.9159 190.418C75.7895 172.599 83.5366 160.019 90.8683 155.001C91.5354 154.544 91.5301 153.431 91.0187 152.805C89.2933 150.693 89.1785 147.036 89.5255 144.133C89.6353 143.214 88.6752 142.659 88.1844 143.443C86.7777 145.69 86.4662 148.719 86.2725 151.178C86.2285 151.735 85.612 151.749 85.5299 151.195C82.6055 131.473 88.7233 119.717 92.401 116.096C92.4685 116.03 92.5417 115.979 92.6256 115.935C96.7818 113.768 102.4 110.54 92.5 114.5C84.7179 117.613 82.4865 124.763 82.2719 130.06C82.2299 131.097 81.2439 131.378 81.0606 130.356C80.375 126.534 81.0155 120.305 85.9981 112Z" fill="${C.black}"/>
-      <path data-p="pool" d="M318 110C318 116.627 270.094 122 211 122C151.906 122 104 116.627 104 110C104 103.373 151.906 98 211 98C270.094 98 318 103.373 318 110Z" fill="${C.lgreen}"/>
-      <ellipse data-p="glint" cx="170" cy="106" rx="16" ry="1.6" fill="${C.white}" opacity="0"/>
-      <g clip-path="url(#fc${id})">
-        <g data-p="fisher">
-          <path d="M24.041 32.001C42.1258 32.5034 76.0772 35.6801 107.699 44.4121C123.51 48.7781 138.804 54.5504 151.257 62.1143C163.699 69.6718 173.438 79.1002 177.902 90.832L175.098 91.8994C170.962 81.0315 161.838 72.0522 149.699 64.6787C137.57 57.3115 122.565 51.6292 106.9 47.3037C75.5721 38.6528 41.8723 35.4967 23.957 34.999L24.041 32.001Z" fill="${C.white}"/>
-          <g transform="rotate(2) translate(0 -5)">
-            <path d="M169.365 97.9722C162.038 98.1933 141.886 97.7987 130.528 97.5223C129.184 97.4895 128.363 98.7324 129.311 99.6856C132.602 102.995 140.264 106.411 144.39 107.94C159.032 112.005 186.987 107.835 199.134 105.242C203.542 104.694 207.518 101.749 210.173 99.0834C211.344 97.9078 210.405 96.107 208.747 96.1823L169.365 97.9722Z" fill="${C.black}"/>
-            <path d="M181.866 101.559C165.627 102.915 141.397 100.184 129.574 98.0691C129.337 98.0266 129.373 97.6997 129.614 97.7002C140.017 97.7202 159.272 98.2107 168.204 98.1485L209.493 96.2499C210.011 96.2261 210.168 96.8055 209.684 96.9904C203.485 99.3585 189.161 101.007 181.866 101.559Z" fill="${C.white}"/>
-          </g>
-          <path d="M173.01 77.4609C174.37 74.7406 177.43 75.6473 178.791 76.4407C181.239 78.345 182.078 82.2214 182.191 83.9216L180.831 85.2817C181.103 91.5384 179.584 99.2233 178.791 102.284H175.05C174.234 101.196 173.35 94.5761 173.01 91.4024L171.99 91.7425V85.9618L170.63 86.9819L169.27 86.3019L173.01 77.4609Z" fill="${C.black}"/>
-          <path d="M177.089 73.3803C177.089 74.6949 176.023 75.7605 174.708 75.7605C173.394 75.7605 172.328 74.6949 172.328 73.3803C172.328 72.0657 173.394 71 174.708 71C176.023 71 177.089 72.0657 177.089 73.3803Z" fill="${C.black}"/>
+    </g>
+  </g>
+  <g data-p="fixed"><!-- pool, boat, fisherman and line: original bob only -->
+    <path d="M318 110C318 116.627 270.094 122 211 122C151.906 122 104 116.627 104 110C104 103.373 151.906 98 211 98C270.094 98 318 103.373 318 110Z" fill="${C.lgreen}"/>
+    <path d="M24 140V32" stroke="${C.white}" stroke-width="1.5"/>
+    <g clip-path="url(#fc${id})">
+      <g data-p="fisher">
+        <path d="M24.041 32.001C42.1258 32.5034 76.0772 35.6801 107.699 44.4121C123.51 48.7781 138.804 54.5504 151.257 62.1143C163.699 69.6718 173.438 79.1002 177.902 90.832L175.098 91.8994C170.962 81.0315 161.838 72.0522 149.699 64.6787C137.57 57.3115 122.565 51.6292 106.9 47.3037C75.5721 38.6528 41.8723 35.4967 23.957 34.999L24.041 32.001Z" fill="${C.white}"/>
+        <g transform="rotate(2) translate(0 -5)">
+          <path d="M169.365 97.9722C162.038 98.1933 141.886 97.7987 130.528 97.5223C129.184 97.4895 128.363 98.7324 129.311 99.6856C132.602 102.995 140.264 106.411 144.39 107.94C159.032 112.005 186.987 107.835 199.134 105.242C203.542 104.694 207.518 101.749 210.173 99.0834C211.344 97.9078 210.405 96.107 208.747 96.1823L169.365 97.9722Z" fill="${C.black}"/>
+          <path d="M181.866 101.559C165.627 102.915 141.397 100.184 129.574 98.0691C129.337 98.0266 129.373 97.6997 129.614 97.7002C140.017 97.7202 159.272 98.2107 168.204 98.1485L209.493 96.2499C210.011 96.2261 210.168 96.8055 209.684 96.9904C203.485 99.3585 189.161 101.007 181.866 101.559Z" fill="${C.white}"/>
         </g>
+        <path d="M173.01 77.4609C174.37 74.7406 177.43 75.6473 178.791 76.4407C181.239 78.345 182.078 82.2214 182.191 83.9216L180.831 85.2817C181.103 91.5384 179.584 99.2233 178.791 102.284H175.05C174.234 101.196 173.35 94.5761 173.01 91.4024L171.99 91.7425V85.9618L170.63 86.9819L169.27 86.3019L173.01 77.4609Z" fill="${C.black}"/>
+        <path d="M177.089 73.3803C177.089 74.6949 176.023 75.7605 174.708 75.7605C173.394 75.7605 172.328 74.6949 172.328 73.3803C172.328 72.0657 173.394 71 174.708 71C176.023 71 177.089 72.0657 177.089 73.3803Z" fill="${C.black}"/>
       </g>
     </g>
   </g>
@@ -264,7 +258,7 @@ const M = { lidR: morpher(P.lidR), botR: morpher(P.botR), lashR: morpher(P.lashR
 /* Rig: one state object per portrait, one render function for all     */
 /* ------------------------------------------------------------------ */
 const GAZE0 = { x: 4, y: 1.5 }; // iris offset that reads as "looking at you"
-const PIVOT = { head: [205, 345], browL: [133, 215], browR: [214, 222], fisherTop: [117, 32], boat: [170, 100], rod: [24, 33] };
+const PIVOT = { head: [205, 345], browL: [133, 215], browR: [214, 222], fisherTop: [117, 32] };
 
 function makeRig() {
   return {
@@ -274,11 +268,10 @@ function makeRig() {
     hr: 0, hx: 0, hy: 0,
     breathe: 0,
     hairR: 0, hairX: 0, hairY: 0,
-    fishSy: 1.02, boatR: 0,
+    fishSy: 1.02,
     bars: [1, 1, 1, 1], barsX: 0, barsY: 0,
     bodyX: 0, bodyY: 0,
-    blush: 0, glint: 0, poolSx: 1,
-    lineLen: 108, lineR: 0, fishOn: 0, fishR: 0,
+    blush: 0,
   };
 }
 
@@ -289,7 +282,7 @@ function bind(svg) {
     body: q("body"), head: q("head"), hair: q("hair"), fisher: q("fisher"),
     irisL: q("irisL"), irisR: q("irisR"), lidL: q("lidL"), lidR: q("lidR"), botL: q("botL"), botR: q("botR"), lashL: q("lashL"), lashR: q("lashR"),
     browL: q("browL"), browR: q("browR"), blushL: q("blushL"), blushR: q("blushR"),
-    pool: q("pool"), glint: q("glint"), line: q("line"), lineG: q("lineG"), fish: q("fish"), fx: q("fx"),
+    fx: q("fx"),
   };
 }
 
@@ -323,21 +316,14 @@ function render(r, e, cache) {
   setAttr(e.head, "transform", `translate(${f(r.hx)} ${f(r.hy + by)}) rotate(${f(r.hr)} ${PIVOT.head[0]} ${PIVOT.head[1]})`, cache, "head");
   setAttr(e.body, "transform", `translate(${f(r.bodyX)} ${f(r.bodyY)}) translate(0 480) scale(1 ${f(1 + r.breathe * 0.012)}) translate(0 -480)`, cache, "body");
   setAttr(e.hair, "transform", `translate(${f(r.hairX)} ${f(r.hairY)}) rotate(${f(r.hairR)} 215 260)`, cache, "hair");
-  setAttr(e.fisher, "transform", `rotate(${f(r.boatR)} ${PIVOT.boat[0]} ${PIVOT.boat[1]}) translate(${PIVOT.fisherTop[0]} ${PIVOT.fisherTop[1]}) scale(1 ${f(r.fishSy)}) translate(${-PIVOT.fisherTop[0]} ${-PIVOT.fisherTop[1]})`, cache, "fisher");
+  // fisherman, boat and line live outside the head: only the site's original bob, nothing else
+  setAttr(e.fisher, "transform", `translate(${PIVOT.fisherTop[0]} ${PIVOT.fisherTop[1]}) scale(1 ${f(r.fishSy)}) translate(${-PIVOT.fisherTop[0]} ${-PIVOT.fisherTop[1]})`, cache, "fisher");
 
   setAttr(e.barsG, "transform", `translate(${f(r.barsX)} ${f(r.barsY)})`, cache, "barsG");
   e.bars.forEach((b, i) => setAttr(b, "transform", `scale(1 ${f(r.bars[i])})`, cache, "bar" + i));
 
   setAttr(e.blushL, "opacity", f(r.blush), cache, "blushL");
   setAttr(e.blushR, "opacity", f(r.blush), cache, "blushR");
-  setAttr(e.glint, "opacity", f(r.glint), cache, "glint");
-  setAttr(e.pool, "transform", `translate(211 110) scale(${f(r.poolSx)} 1) translate(-211 -110)`, cache, "pool");
-
-  const end = 32 + r.lineLen;
-  setAttr(e.line, "d", `M24 ${f(end)}V32`, cache, "line");
-  setAttr(e.lineG, "transform", `rotate(${f(r.lineR)} ${PIVOT.rod[0]} ${PIVOT.rod[1]})`, cache, "lineG");
-  setAttr(e.fish, "transform", `translate(24 ${f(end)}) rotate(${f(r.fishR)})`, cache, "fish");
-  setAttr(e.fish, "opacity", f(r.fishOn), cache, "fishO");
 }
 
 /* Shared behaviours ------------------------------------------------- */
@@ -360,12 +346,10 @@ function autoBlink(card, opts = {}) {
   loop();
 }
 // the current site: header bars wave (staggered, yoyo) + fisherman bob
-function ambient(r, t, { bars = true, fisher = true } = {}) {
-  if (bars) {
-    const tt = t % 5.5, ft = tt < 2.75 ? tt : 5.5 - tt;
-    for (let i = 0; i < 4; i++) r.bars[i] = 1 + 0.4 * ease.wave(clamp((ft - 0.25 * i) / 2, 0, 1));
-  }
-  if (fisher) r.fishSy = 1.03 - 0.01 * Math.cos((t / 3) * Math.PI * 2);
+function ambient(r, t) {
+  const tt = t % 5.5, ft = tt < 2.75 ? tt : 5.5 - tt;
+  for (let i = 0; i < 4; i++) r.bars[i] = 1 + 0.4 * ease.wave(clamp((ft - 0.25 * i) / 2, 0, 1));
+  r.fishSy = 1.03 - 0.01 * Math.cos((t / 3) * Math.PI * 2);
 }
 // pointer in svg units, or null when outside the card
 function svgPoint(card) {
@@ -446,7 +430,7 @@ const VARIANTS = [
   {
     key: "breathe",
     title: "Breathe & drift",
-    desc: "Ambient life with no input needed: slow breathing lifts the shoulders and head, the hair sways, the pool shimmers and the boat rocks. Click for a deep sigh.",
+    desc: "Ambient life with no input needed: slow breathing lifts the shoulders and head, the hair sways and the eyes wander. Click for a deep sigh.",
     tryText: "<b>Watch</b> it for a few seconds, <b>click</b> for a sigh.",
     setup(card) {
       autoBlink(card, { min: 2.4, spread: 2 });
@@ -462,17 +446,11 @@ const VARIANTS = [
     },
     tick(card, t, dt) {
       const r = card.rig;
-      ambient(r, t, { fisher: false });
+      ambient(r, t);
       const breath = (1 - Math.cos((t / 4.2) * Math.PI * 2)) / 2;
       r.breathe = breath + card.sigh * 1.6;
       r.hairR = Math.sin((t / 5.5) * Math.PI * 2) * 0.5;
       r.hairX = Math.sin((t / 5.5) * Math.PI * 2 - 0.6) * 0.8;
-      r.boatR = Math.sin((t / 3.1) * Math.PI * 2) * 2.2;
-      r.fishSy = 1.03 - 0.01 * Math.cos((t / 3.1) * Math.PI * 2);
-      r.poolSx = 1 + Math.sin((t / 2.3) * Math.PI * 2) * 0.012;
-      const gl = (t % 4.6) / 4.6;
-      r.glint = Math.sin(gl * Math.PI) * 0.75;
-      card.els.glint.setAttribute("cx", f(130 + gl * 140));
       // a slow wandering gaze
       r.gx = GAZE0.x + Math.sin(t * 0.37) * 3 + Math.sin(t * 0.91) * 1;
       r.gy = GAZE0.y + Math.sin(t * 0.53 + 1) * 1.2 + card.sigh * 1.5;
@@ -604,62 +582,57 @@ const VARIANTS = [
     },
   },
   {
-    key: "fishing",
-    title: "Gone fishing",
-    desc: "Brings the fisherman into the story. The line sways, hovering gets a nibble and the eyes glance up at it. Click to reel in a catch.",
-    tryText: "<b>Hover</b> for a nibble, <b>click</b> to reel in.",
+    key: "hello",
+    title: "Says hello",
+    desc: "A greeting when you arrive: a quick eyebrow flash, a small nod and a smiling squint. Click and it nods yes.",
+    tryText: "<b>Hover</b> onto the card, <b>click</b> for a nod.",
     setup(card) {
       autoBlink(card);
-      card.hover = false;
       card.busy = false;
-      card.stage.addEventListener("pointerenter", () => (card.hover = true));
-      card.stage.addEventListener("pointerleave", () => (card.hover = false));
+      const r = card.rig;
+      const nod = async (times, depth) => {
+        for (let i = 0; i < times; i++) {
+          await to(r, { hr: depth * 0.7, hy: depth }, 0.16, ease.out);
+          await to(r, { hr: 0, hy: 0 }, 0.22, ease.inOut);
+        }
+      };
+      card.stage.addEventListener("pointerenter", async () => {
+        if (card.busy) return;
+        card.busy = true;
+        card.setChip("hey");
+        // eyebrow flash: up fast, hold a beat, settle
+        await to(r, { bLy: -8, bRy: -8, closeL: -0.2, closeR: -0.2 }, 0.14, ease.out3);
+        await wait(0.18);
+        to(r, { bLy: 0, bRy: 0, closeL: 0.5, closeR: 0.5 }, 0.3, ease.inOut);
+        await nod(1, 4);
+        await wait(0.6);
+        to(r, { closeL: 0, closeR: 0 }, 0.4, ease.inOut);
+        card.setChip("");
+        card.busy = false;
+      });
       card.stage.addEventListener("click", async () => {
         if (card.busy) return;
         card.busy = true;
-        const r = card.rig;
-        // tug, reel, admire, release
-        await to(r, { lineLen: 122, fishSy: 1.08 }, 0.15, ease.out);
-        to(r, { fishOn: 1 }, 0.1);
-        to(r, { bLy: -7, bRy: -7, closeL: -0.25, closeR: -0.25 }, 0.25, ease.back);
-        await to(r, { lineLen: 26, fishSy: 1.0 }, 1.0, ease.inOut);
-        card.setChip("caught one");
-        to(r, { closeL: 0.55, closeR: 0.55, bLy: -3, bRy: -3 }, 0.3);
-        await wait(1.3);
-        to(r, { lineLen: 108, fishOn: 0 }, 0.7, ease.in);
-        to(r, { closeL: 0, closeR: 0, bLy: 0, bRy: 0 }, 0.5);
+        card.setChip("yes");
+        to(r, { bLy: -3, bRy: -3, closeL: 0.3, closeR: 0.3 }, 0.2);
+        await nod(2, 5);
+        to(r, { bLy: 0, bRy: 0, closeL: 0, closeR: 0 }, 0.35);
         card.setChip("");
-        await wait(0.7);
         card.busy = false;
       });
     },
     tick(card, t, dt) {
       const r = card.rig;
-      ambient(r, t, { fisher: !card.busy });
-      const watching = card.hover || card.busy;
-      if (!card.busy) {
-        const nib = card.hover ? Math.max(0, Math.sin(t * 9)) * Math.max(0, Math.sin(t * 1.7)) * 9 : 0;
-        r.lineLen = 108 + Math.sin(t * 1.3) * 3 + nib;
-        r.lineR = Math.sin(t * 0.9) * 2.5;
-        if (card.hover) r.fishSy = 1.03 + nib * 0.004;
-      } else {
-        r.lineR = damp(r.lineR, 0, 4, dt);
-      }
-      r.fishR = Math.sin(t * 14) * (card.busy ? 22 : 0);
-      // eyes glance up-left toward the line
-      const g = watching ? { x: GAZE0.x - 4.5, y: GAZE0.y - 2.2 } : (svgPoint(card) ? gazeToward(card, svgPoint(card), 0.6) : GAZE0);
-      r.gx = damp(r.gx, g.x, 6, dt); r.gy = damp(r.gy, g.y, 6, dt);
-      if (!card.busy) {
-        r.bLy = damp(r.bLy, watching ? -3 : 0, 6, dt);
-        r.bRy = damp(r.bRy, watching ? -3 : 0, 6, dt);
-      }
-      r.hr = damp(r.hr, watching ? -1.5 : 0, 3, dt);
+      ambient(r, t);
+      const sp = svgPoint(card);
+      const g = sp ? gazeToward(card, sp, 0.7) : GAZE0;
+      r.gx = damp(r.gx, g.x, 7, dt); r.gy = damp(r.gy, g.y, 7, dt);
     },
   },
   {
     key: "depth",
     title: "Depth parallax",
-    desc: "Layers move at different depths with the cursor: the waves are furthest back, then shoulders, face, and hair with the fisherman nearest. Reads as a slight 3D turn.",
+    desc: "Layers move at different depths with the cursor: the waves are furthest back, then shoulders, face, and hair nearest. Reads as a slight 3D turn.",
     tryText: "<b>Move</b> across the card.",
     setup(card) { autoBlink(card); },
     tick(card, t, dt) {
