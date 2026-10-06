@@ -121,7 +121,7 @@ const svgMarkup = (id) => `
 <defs>
   <linearGradient id="g0${id}" x1="145" y1="394.5" x2="271.002" y2="425.583" gradientUnits="userSpaceOnUse"><stop stop-color="${C.teal}"/><stop offset="1" stop-color="${C.lteal}"/></linearGradient>
   <linearGradient id="g1${id}" x1="150" y1="394" x2="172.836" y2="493.766" gradientUnits="userSpaceOnUse"><stop stop-color="${C.teal}"/><stop offset="1" stop-color="${C.lteal}"/></linearGradient>
-  <clipPath id="fc${id}"><rect x="0" y="0" width="215" height="112"/></clipPath>
+  <clipPath id="fc${id}"><rect data-p="water" x="-120" y="-120" width="520" height="232"/></clipPath>
 </defs>
 <rect width="375" height="480" fill="${C.green}"/>
 <g data-p="bars">
@@ -279,7 +279,7 @@ function bind(svg) {
   const q = (n) => svg.querySelector(`[data-p="${n}"]`);
   return {
     bars: [...svg.querySelectorAll('[data-p="bar"]')], barsG: q("bars"),
-    body: q("body"), head: q("head"), hair: q("hair"), fisher: q("fisher"),
+    body: q("body"), head: q("head"), hair: q("hair"), fisher: q("fisher"), water: q("water"),
     irisL: q("irisL"), irisR: q("irisR"), lidL: q("lidL"), lidR: q("lidR"), botL: q("botL"), botR: q("botR"), lashL: q("lashL"), lashR: q("lashR"),
     browL: q("browL"), browR: q("browR"), blushL: q("blushL"), blushR: q("blushR"),
     fx: q("fx"),
@@ -313,9 +313,14 @@ function render(r, e, cache) {
   setAttr(e.browR, "transform", brow(PIVOT.browR, r.bRy, r.bRr), cache, "browR");
 
   const by = -r.breathe * 2.2;
-  setAttr(e.head, "transform", `translate(${f(r.hx)} ${f(r.hy + by)}) rotate(${f(r.hr)} ${PIVOT.head[0]} ${PIVOT.head[1]})`, cache, "head");
+  const headT = `translate(${f(r.hx)} ${f(r.hy + by)}) rotate(${f(r.hr)} ${PIVOT.head[0]} ${PIVOT.head[1]})`;
+  const hairT = `translate(${f(r.hairX)} ${f(r.hairY)}) rotate(${f(r.hairR)} 215 260)`;
+  setAttr(e.head, "transform", headT, cache, "head");
   setAttr(e.body, "transform", `translate(${f(r.bodyX)} ${f(r.bodyY)}) translate(0 480) scale(1 ${f(1 + r.breathe * 0.012)}) translate(0 -480)`, cache, "body");
-  setAttr(e.hair, "transform", `translate(${f(r.hairX)} ${f(r.hairY)}) rotate(${f(r.hairR)} 215 260)`, cache, "hair");
+  setAttr(e.hair, "transform", hairT, cache, "hair");
+  // the boat stays put, but its waterline mask belongs to the pool: it rides with head + hair,
+  // so a rising or tilting pool swallows more of the hull
+  setAttr(e.water, "transform", `${headT} ${hairT}`, cache, "water");
   // fisherman, boat and line live outside the head: only the site's original bob, nothing else
   setAttr(e.fisher, "transform", `translate(${PIVOT.fisherTop[0]} ${PIVOT.fisherTop[1]}) scale(1 ${f(r.fishSy)}) translate(${-PIVOT.fisherTop[0]} ${-PIVOT.fisherTop[1]})`, cache, "fisher");
 
