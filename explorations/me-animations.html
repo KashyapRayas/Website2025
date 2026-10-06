@@ -139,6 +139,8 @@ const P = {
   lidL: ["M124 235C138.5 229.5 148.5 236.5 152.5 239.5C153.3 235.1 152.167 231 151.5 229.5L124 225V235Z", "M124 236.5C138.5 235 148.5 237.5 152.5 240.5C153.3 236.1 152.167 231 151.5 229.5L124 225V236.5Z"],
   botL: ["M149.5 243C148.417 256 129.5 249.396 121.5 240C125.1 251.2 137.333 252.333 143 251.5C149 248.5 149.333 245 149.5 243Z", "M149.5 243C143.1 239 128.5 239 121.5 240C125.1 251.2 137.333 252.333 143 251.5C148.6 248.7 149.333 245 149.5 243Z"],
   lashL: ["M119.965 237.201C132.666 229.219 147.56 234.067 152.5 239.5V240.5C142.95 234.399 133.118 234.631 127.135 236.5C124.922 237.399 123.604 238.422 121.5 240L119.843 237.929C119.659 237.699 119.715 237.358 119.965 237.201Z", "M119.965 237.201C133.5 234.5 147 237 152.5 239.5V240.5C141.5 241.5 133.5 239.5 127.135 239.5C124.922 240.399 123.604 238.422 121.5 240L119.843 237.929C119.659 237.699 119.715 237.358 119.965 237.201Z"],
+  // shaded side of the face (far cheek, nose shadow, hairline, cheek crease)
+  shade: "M119.648 210.889C132.152 210.152 150.87 214.139 153.999 235C153.999 236.5 153.399 240.3 150.999 243.5C148.166 247.167 142.199 256.2 140.999 263L130.499 297C128.833 302.667 129.3 314.2 144.499 315C149.299 315.8 153.333 311.334 154.499 309C157.454 306.045 161.682 305.819 164.765 306.306C166.591 306.594 168.01 307.962 169.671 308.772C172.42 310.11 175.82 309.275 177.499 308.5C181.273 307.557 181.585 299.96 181.061 293.92C181.019 293.435 181.624 293.305 181.741 293.779C182.921 298.566 184.004 304.782 184.499 308C185.699 315.6 177.333 315.167 172.999 314C165.799 312.8 159.499 317.5 157.499 320.5C156.405 321.959 154.673 322.42 153.744 322.49C153.582 322.503 153.418 322.48 153.26 322.441L151.951 322.113L148.871 329.428C148.33 330.714 148.499 332.191 149.316 333.322L154.499 340.5L144.499 339L149.394 350.748L178.499 344C182.823 342.559 188.07 342.041 190.692 340.672C190.829 340.6 190.995 340.697 190.979 340.852C190.793 342.607 189.396 346.604 187.999 348L176.499 361C174.099 363.8 170.499 364.167 168.999 364L149.984 360.099L146.953 364.763C146.005 366.223 145.495 367.92 145.587 369.658C145.854 374.667 146.938 385.471 151.328 390.762C150.51 390.112 149.718 389.427 148.96 388.701C145.043 384.955 142.074 380.33 140.297 375.209L134.5 358.5L129 342L123 313.5L121.5 295L119.848 279.856C118.953 271.648 119.029 263.362 120.075 255.172L121.5 244V235.963C121.5 233.341 121.055 230.737 120.182 228.264C119.074 225.125 118.657 221.785 118.958 218.47L119.635 211.019C119.639 210.975 119.644 210.932 119.648 210.889ZM177.97 152.94C197.583 146.233 219.015 147.253 237.903 155.791L265.94 168.466C275.876 172.958 283.533 181.329 287.123 191.625L303.129 237.53L290.999 267.5C294.999 238.3 290.999 228.5 278.999 224.5C279.999 213.5 274.999 210.667 271.999 209C249.999 211.4 235.833 197 231.499 189.5C218.299 203.1 195.666 195.167 185.999 189.5C183.833 194 175.227 201.699 157.999 197C134.171 190.502 125.982 199.392 120.751 203.834C121.589 200.04 122.812 196.334 124.404 192.776L127.973 184.797C128.655 183.273 129.125 181.663 129.369 180.012C130.371 173.249 135.064 167.611 141.534 165.399L177.97 152.94ZM236.691 251.27C237.053 251.149 237.405 251.459 237.301 251.826C236.24 255.556 232.269 262 222.999 262C215.171 262 208.057 259.242 204.297 257.085C203.814 256.807 204.089 256.328 204.613 256.519C221.217 262.596 231.7 258.79 232.945 252.801C232.983 252.618 233.111 252.463 233.288 252.404L236.691 251.27Z",
   browL: "M120.499 210.5C119.791 212.622 118.902 214.379 117.899 215.218C117.69 215.393 117.603 215.691 117.733 215.93L120.135 220.334C120.307 220.649 120.75 220.687 121.016 220.446C126.065 215.893 141.624 222.482 149.499 226.5C140.999 208.5 129.999 206.167 126.499 207C125.332 207.167 121.299 208.1 120.499 210.5Z",
   browR: "M192.47 210.449C182.438 210.374 180.054 216.557 180.009 220.903C179.731 224.07 183.469 226.697 185.514 226.412C185.539 226.409 185.564 226.4 185.586 226.386C203.001 215.783 234.438 227.735 248.962 235.516C249.16 235.622 249.341 235.36 249.191 235.194C227.517 211.04 204.864 210.541 192.47 210.449Z",
 };
@@ -148,6 +150,7 @@ const svgMarkup = (id) => `
 <defs>
   <linearGradient id="g0${id}" x1="145" y1="394.5" x2="271.002" y2="425.583" gradientUnits="userSpaceOnUse"><stop stop-color="${C.teal}"/><stop offset="1" stop-color="${C.lteal}"/></linearGradient>
   <linearGradient id="g1${id}" x1="150" y1="394" x2="172.836" y2="493.766" gradientUnits="userSpaceOnUse"><stop stop-color="${C.teal}"/><stop offset="1" stop-color="${C.lteal}"/></linearGradient>
+  <clipPath id="bc${id}"><path d="${P.shade}"/></clipPath>
   <clipPath id="fc${id}"><rect data-p="water" x="-120" y="-120" width="520" height="232"/></clipPath>
 </defs>
 <rect width="375" height="480" fill="${C.green}"/>
@@ -167,9 +170,9 @@ const svgMarkup = (id) => `
   </g>
   <g data-p="head">
     <path d="M124.404 192.776L127.974 184.796C128.655 183.273 129.125 181.663 129.37 180.012C130.372 173.249 135.065 167.611 141.534 165.399L177.97 152.94C197.583 146.233 219.015 147.253 237.903 155.791L265.94 168.466C275.876 172.957 283.533 181.329 287.124 191.625L307.218 249.256C307.581 250.294 308.904 250.597 309.682 249.82C309.89 249.611 310.155 249.469 310.444 249.412L316.274 248.246C317.091 248.082 317.895 247.86 318.679 247.579L321.811 246.461C323.549 245.84 325.45 245.845 327.186 246.476C329 247.136 330.511 248.435 331.435 250.13L331.963 251.098C332.648 252.354 333.078 253.733 333.228 255.155L333.579 258.487C333.859 261.148 333.75 263.836 333.257 266.466L332.501 270.5L330.001 283.5L328.26 291.161C327.756 293.379 326.987 295.529 325.969 297.563C324.339 300.824 322.096 303.74 319.362 306.152L315.001 310L307.251 316.934C306.09 317.974 304.795 318.853 303.401 319.55L302.053 320.224C299.74 321.381 297.13 321.804 294.57 321.439L292.779 321.183C291.939 321.063 291.141 320.743 290.45 320.25C288.931 319.165 288.096 317.361 288.251 315.501L288.91 307.596C288.927 307.39 288.642 307.318 288.559 307.507L277.465 332.791C270.912 347.725 260.971 360.927 248.43 371.352L245.158 374.071C234.492 382.936 222.176 389.6 208.921 393.679L198.735 396.813C192.945 398.594 186.921 399.5 180.863 399.5H178.301C173.466 399.5 168.663 398.721 164.076 397.192L161.774 396.425C156.985 394.828 152.609 392.19 148.961 388.701C145.044 384.954 142.074 380.329 140.298 375.208L134.501 358.5L129.001 342L123.001 313.5L121.501 295L119.849 279.855C118.953 271.647 119.029 263.362 120.075 255.172L121.501 244V235.963C121.501 233.34 121.055 230.737 120.182 228.263C119.074 225.125 118.657 221.784 118.958 218.47L119.636 211.019C120.209 204.716 121.82 198.552 124.404 192.776Z" fill="${C.white}"/>
-    <path d="M119.648 210.889C132.152 210.152 150.87 214.139 153.999 235C153.999 236.5 153.399 240.3 150.999 243.5C148.166 247.167 142.199 256.2 140.999 263L130.499 297C128.833 302.667 129.3 314.2 144.499 315C149.299 315.8 153.333 311.334 154.499 309C157.454 306.045 161.682 305.819 164.765 306.306C166.591 306.594 168.01 307.962 169.671 308.772C172.42 310.11 175.82 309.275 177.499 308.5C181.273 307.557 181.585 299.96 181.061 293.92C181.019 293.435 181.624 293.305 181.741 293.779C182.921 298.566 184.004 304.782 184.499 308C185.699 315.6 177.333 315.167 172.999 314C165.799 312.8 159.499 317.5 157.499 320.5C156.405 321.959 154.673 322.42 153.744 322.49C153.582 322.503 153.418 322.48 153.26 322.441L151.951 322.113L148.871 329.428C148.33 330.714 148.499 332.191 149.316 333.322L154.499 340.5L144.499 339L149.394 350.748L178.499 344C182.823 342.559 188.07 342.041 190.692 340.672C190.829 340.6 190.995 340.697 190.979 340.852C190.793 342.607 189.396 346.604 187.999 348L176.499 361C174.099 363.8 170.499 364.167 168.999 364L149.984 360.099L146.953 364.763C146.005 366.223 145.495 367.92 145.587 369.658C145.854 374.667 146.938 385.471 151.328 390.762C150.51 390.112 149.718 389.427 148.96 388.701C145.043 384.955 142.074 380.33 140.297 375.209L134.5 358.5L129 342L123 313.5L121.5 295L119.848 279.856C118.953 271.648 119.029 263.362 120.075 255.172L121.5 244V235.963C121.5 233.341 121.055 230.737 120.182 228.264C119.074 225.125 118.657 221.785 118.958 218.47L119.635 211.019C119.639 210.975 119.644 210.932 119.648 210.889ZM177.97 152.94C197.583 146.233 219.015 147.253 237.903 155.791L265.94 168.466C275.876 172.958 283.533 181.329 287.123 191.625L303.129 237.53L290.999 267.5C294.999 238.3 290.999 228.5 278.999 224.5C279.999 213.5 274.999 210.667 271.999 209C249.999 211.4 235.833 197 231.499 189.5C218.299 203.1 195.666 195.167 185.999 189.5C183.833 194 175.227 201.699 157.999 197C134.171 190.502 125.982 199.392 120.751 203.834C121.589 200.04 122.812 196.334 124.404 192.776L127.973 184.797C128.655 183.273 129.125 181.663 129.369 180.012C130.371 173.249 135.064 167.611 141.534 165.399L177.97 152.94ZM236.691 251.27C237.053 251.149 237.405 251.459 237.301 251.826C236.24 255.556 232.269 262 222.999 262C215.171 262 208.057 259.242 204.297 257.085C203.814 256.807 204.089 256.328 204.613 256.519C221.217 262.596 231.7 258.79 232.945 252.801C232.983 252.618 233.111 252.463 233.288 252.404L236.691 251.27Z" fill="${C.teal}"/>
-    <ellipse data-p="blushL" cx="136" cy="266" rx="13" ry="5.5" fill="#FF8F86" opacity="0"/>
-    <ellipse data-p="blushR" cx="232" cy="276" rx="17" ry="6.5" fill="#FF8F86" opacity="0"/>
+    <path d="${P.shade}" fill="${C.teal}"/>
+    <ellipse data-p="blushL" cx="131" cy="259" rx="12" ry="5" fill="#FF8F86" opacity="0" clip-path="url(#bc${id})"/>
+    <ellipse data-p="blushR" cx="212" cy="269" rx="15" ry="5.5" fill="#FF8F86" opacity="0"/>
     <g transform="translate(213 245.5) scale(1 1.05) translate(-213 -245.5)">
       <path data-p="lashR" d="${P.lashR[0]}" fill="${C.black}"/>
       <path data-p="irisR" d="${P.irisR}" fill="${C.black}"/>
@@ -540,7 +543,7 @@ const VARIANTS = [
         card.state = "waking";
         card.noBlink = true;
         const r = card.rig;
-        await to(r, { closeL: -0.3, closeR: -0.3, bLy: -9, bRy: -9, hr: -1.2, hy: -4, pupil: 0.8 }, 0.18, ease.out3);
+        await to(r, { closeL: -0.3, closeR: -0.3, bLy: -9, bRy: -9, hr: -1.2, hy: -4, pupil: 0.9 }, 0.18, ease.out3);
         await wait(0.35);
         to(r, { hr: 0, hy: 0, bLy: 0, bRy: 0, closeL: 0, closeR: 0, pupil: 1 }, 0.6, ease.inOut);
         await wait(0.3);
@@ -699,7 +702,8 @@ const TIERS = {
 const LATE_NIGHT = (() => { const h = new Date().getHours(); return h >= 23 || h < 5; })();
 const NEUTRAL = { bLy: 0, bLr: 0, bRy: 0, bRr: 0, closeL: 0, closeR: 0, pupil: 1, hr: 0, hx: 0, hy: 0, blush: 0, cross: 0, bodyX: 0, bodyY: 0 };
 const G = GAZE0;
-const PRIO = { idle: 1, react: 2, peek: 2.5, burst: 3, annoyed: 3.5, manual: 4 };
+// doze sits above the reactions, so only a hover or click (burst level) wakes him
+const PRIO = { idle: 1, react: 2, peek: 2.5, doze: 2.6, burst: 3, annoyed: 3.5, manual: 4 };
 
 const MOMENTS = [
   /* -- when left alone ----------------------------------------------- */
@@ -757,18 +761,25 @@ const MOMENTS = [
       await c.to({ closeL: 0, closeR: 0 }, 0.3);
       await c.blink();
     } },
-  { key: "nap", name: "Quick nap", group: "idle", tier: "uncommon", trigger: "Idle, random (3× likelier late at night)",
-    async run(c) {
+  { key: "doze", name: "Dozes off", group: "idle", tier: "rare", timed: true,
+    trigger: "After 5 min on the site (2.5 min late at night) while you're away from him; hover or click to wake him",
+    async run(c, card) {
+      card.dozing = true;
       c.noBlink();
-      await c.to({ closeL: 0.5, closeR: 0.5, gy: G.y + 1.5 }, 1.2, ease.inOut);
-      await c.to({ closeL: 1, closeR: 1, hr: 3, hy: 4, bLy: 2, bRy: 2 }, 1.4, ease.inOut);
-      c.mark("z", MARK.z()); await c.wait(1.1);
-      c.mark("z", MARK.z()); await c.wait(1.2);
-      await c.to({ closeL: -0.3, closeR: -0.3, bLy: -9, bRy: -9, hr: -1, hy: -4, pupil: 0.8 }, 0.16, ease.out3);
-      c.mark("!", MARK.bang); await c.wait(0.4);
-      c.noBlink(false);
-      await c.to({ closeL: 0, closeR: 0, bLy: 0, bRy: 0, hr: 0, hy: 0, pupil: 1, gy: G.y }, 0.5);
-      await c.blink(); await c.wait(0.12); await c.blink();
+      await c.to({ closeL: 0.45, closeR: 0.45, gy: G.y + 1.5, bLy: 1, bRy: 1 }, 1.6, ease.inOut);
+      // heavy lids fight a couple of times before giving in
+      for (let i = 0; i < 2; i++) {
+        await c.to({ closeL: 0.25, closeR: 0.25, hy: 0 }, 0.5, ease.out);
+        await c.to({ closeL: 0.6, closeR: 0.6, hr: 1.5, hy: 2 }, 1.1, ease.inOut);
+      }
+      await c.to({ closeL: 1, closeR: 1, hr: 3.5, hy: 4.5, bLy: 2, bRy: 2 }, 1.4, ease.inOut);
+      card.asleep = true;
+      c.label("asleep · hover to wake");
+      let nextZ = 0;
+      while (true) {
+        if (now > nextZ) { c.mark("z", MARK.z()); nextZ = now + 1300; }
+        await c.wait(0.1);
+      }
     } },
   { key: "sneeze", name: "Almost-sneeze", group: "idle", tier: "rare", trigger: "Idle, random (sometimes it fizzles)",
     async run(c) {
@@ -817,7 +828,7 @@ const MOMENTS = [
       await c.to({ hx: 0, cross: 0 }, 0.15);
       await c.blink();
     } },
-  { key: "dizzy", name: "Dizzy", group: "cursor", tier: "rare", trigger: "Circle the cursor around the face quickly",
+  { key: "dizzy", name: "Dizzy", group: "page", tier: "rare", trigger: "Scroll quickly back up to home (the top of this page)",
     async run(c) {
       c.noBlink();
       for (let i = 0; i < 28; i++) {
@@ -856,6 +867,20 @@ const MOMENTS = [
       c.noBlink();
       await c.to({ closeL: 1, closeR: 1, bLy: -1, bRy: -1 }, 0.7, ease.inOut); await c.wait(0.45);
       await c.to({ closeL: 0.3, closeR: 0.3 }, 0.8, ease.inOut); await c.wait(0.8);
+    } },
+  { key: "shy", name: "Shy", group: "cursor", tier: "uncommon", trigger: "Keep the cursor on him for ~10s",
+    async run(c, card) {
+      await c.to({ gx: -0.5, gy: G.y + 2.5, blush: 0.5, bLy: -2, bLr: -7, bRy: -2, bRr: 6, closeL: 0.25, closeR: 0.25, hr: -2.5, hx: -4, hy: 2 }, 0.7, ease.inOut);
+      // stays bashful while you hover, sneaking the odd glance back at you
+      const start = now;
+      while (card.hovering && now - start < 9000) {
+        await c.wait(1.6);
+        if (!card.hovering) break;
+        await c.to({ gx: G.x + 2, gy: G.y + 1 }, 0.25);
+        await c.wait(0.45);
+        await c.to({ gx: -0.5, gy: G.y + 2.5 }, 0.3);
+      }
+      await c.to({ blush: 0 }, 0.8, ease.inOut);
     } },
   { key: "looksUp", name: "Looks up", group: "cursor", tier: "uncommon", trigger: "Hover over the hair or pool for ~1s",
     async run(c) {
@@ -969,7 +994,15 @@ const MOMENTS = [
       await c.wait(0.5);
     } },
 ];
-const MOMENT = Object.fromEntries(MOMENTS.map((m) => [m.key, m]));
+const WAKE = { key: "wake", name: "Woken up", group: "hidden", tier: "rare", noReset: true,
+  async run(c, card) {
+    await c.to({ closeL: -0.3, closeR: -0.3, bLy: -9, bRy: -9, hr: -1, hy: -4, pupil: 0.9 }, 0.16, ease.out3);
+    c.mark("!", MARK.bang); await c.wait(0.4);
+    await c.to({ closeL: 0, closeR: 0, bLy: 0, bRy: 0, hr: 0, hy: 0, pupil: 1, gy: G.y }, 0.5);
+    await c.blink(); await c.wait(0.12); await c.blink();
+    card.lastWake = now;
+  } };
+const MOMENT = Object.fromEntries([...MOMENTS, WAKE].map((m) => [m.key, m]));
 const GROUPS = [["idle", "When left alone"], ["cursor", "Cursor"], ["click", "Clicks"], ["page", "Page"]];
 
 class Cancel extends Error {}
@@ -992,16 +1025,16 @@ function makeDirector(card) {
       label: (txt) => card.setChip(txt),
     };
   };
-  // higher priority interrupts; equal or lower is dropped (manual plays always win)
-  D.play = async (m, prio, arg) => {
-    if (D.cur && prio <= D.prio && prio !== PRIO.manual) return false;
+  // higher priority interrupts; equal or lower is dropped (forced manual plays always win)
+  D.play = async (m, prio, arg, force = false) => {
+    if (D.cur && prio <= D.prio && !force) return false;
     const id = ++D.id;
     const interrupted = !!D.cur;
     D.cur = m; D.prio = prio;
-    card.gazeLock = false; card.noBlink = false;
+    card.gazeLock = false; card.noBlink = false; card.dozing = false; card.asleep = false;
     card.onMoment(m);
     try {
-      if (interrupted) { to(r, NEUTRAL, 0.15); await wait(0.15); if (D.id !== id) return true; }
+      if (interrupted && !m.noReset) { to(r, NEUTRAL, 0.15); await wait(0.15); if (D.id !== id) return true; }
       await m.run(ctx(id), arg ?? card);
     } catch (e) {
       if (!(e instanceof Cancel)) console.error(e);
@@ -1020,18 +1053,18 @@ function pickWeighted(card, pool) {
   pool = pool.filter((m) => m.key !== card.D.lastKey);
   if (card.preview) return pool[Math.floor(Math.random() * pool.length)];
   const count = (tier) => pool.filter((m) => m.tier === tier).length;
-  const weight = (m) => (TIERS[m.tier].p / count(m.tier)) * (m.key === "nap" && LATE_NIGHT ? 3 : 1);
+  const weight = (m) => TIERS[m.tier].p / count(m.tier);
   let x = Math.random() * pool.reduce((s, m) => s + weight(m), 0);
   for (const m of pool) { x -= weight(m); if (x <= 0) return m; }
   return pool[pool.length - 1];
 }
 const unlocked = (card, m) => card.preview || (now - card.bornAt) / 1000 >= TIERS[m.tier].unlock;
 
-VARIANTS.push({
+VARIANTS.unshift({
   key: "rare",
   title: "Rare moments",
   wide: true,
-  desc: "A library of small acts on top of the blink. Left alone, it plays a random moment every 6–12s, weighted by rarity: rare ones unlock after 30s and ultra-rare after 60s. It also reacts to where your cursor goes, clicks, typing, scrolling and tab switches. User actions always interrupt idle ones, and nothing repeats twice in a row.",
+  desc: "This card stands in for the hero, so the top of this page is home. Left alone, it plays a random moment every 6–12s, weighted by rarity (rare unlocks after 30s, ultra-rare after 60s). After 5 min on the site it dozes off until you hover over it. It also reacts to the cursor, clicks, typing, scrolling and tab switches; your actions interrupt idle moments, and nothing repeats twice in a row.",
   tryText: "<b>Leave it</b>, <b>poke around</b> the face, <b>click</b> a few times, or play any moment from the list.",
   setup(card) {
     autoBlink(card);
@@ -1042,8 +1075,13 @@ VARIANTS.push({
     card.lastMove = 0; card.leftAt = -1e9; card.hovering = false; card.vel = 0;
     card.dwell = { nose: 0, hair: 0, edge: 0 };
     card.cool = {};
-    card.spin = 0; card.prevA = null;
     card.clicks = []; card.lastTickle = -1e9;
+    card.hoverStart = 0; card.lastWake = -1e9; card.dozing = false; card.asleep = false;
+    const wake = () => {
+      if (!card.dozing) return false;
+      D.play(MOMENT.wake, PRIO.burst);
+      return true;
+    };
     card.typingUntil = 0; card.lastScroll = -1e9;
     const ready = (key, secs) => {
       if ((card.cool[key] ?? -1e9) > now) return false;
@@ -1056,7 +1094,7 @@ VARIANTS.push({
     const extra = card.el.querySelector(".extra");
     extra.innerHTML = `
       <div class="controls">
-        <label><input type="checkbox" class="pv"> Fast preview (all tiers unlocked, a moment every 3–5s)</label>
+        <label><input type="checkbox" class="pv"> Fast preview (all tiers unlocked, a moment every 3–5s, dozes off after 20s)</label>
         <span class="legend">${Object.entries(TIERS).map(([k, t]) => `<span><i class="dot t-${k}"></i>${t.label}</span>`).join("")}</span>
       </div>
       <p class="status"></p>
@@ -1079,7 +1117,8 @@ VARIANTS.push({
         // simulate the trigger so moments that wait on it have something to wait for
         if (m.key === "typing") card.typingUntil = now + 2000;
         if (m.key === "holdOn") card.lastScroll = now + 1200;
-        D.play(m, PRIO.manual, m.key === "sideEye" || m.key === "lostYou" ? 1 : undefined);
+        // a manual doze keeps doze priority so hovering the portrait can still wake him
+        D.play(m, m.timed ? PRIO.doze : PRIO.manual, m.key === "sideEye" || m.key === "lostYou" ? 1 : undefined, true);
       });
       b.addEventListener("pointerenter", () => (hint.textContent = `${m.name}: ${m.trigger}`));
       b.addEventListener("pointerleave", () => (hint.textContent = ""));
@@ -1087,7 +1126,7 @@ VARIANTS.push({
     card.onMoment = (m) => {
       Object.values(btns).forEach((b) => b.classList.remove("on"));
       if (m) {
-        btns[m.key].classList.add("on");
+        btns[m.key]?.classList.add("on"); // the wake-up has no button
         card.setChip(`${m.name} · ${TIERS[m.tier].label}`);
       } else {
         card.setChip("");
@@ -1100,6 +1139,8 @@ VARIANTS.push({
     let lastEv = null;
     st.addEventListener("pointerenter", () => {
       card.hovering = true;
+      card.hoverStart = now;
+      if (wake()) return;
       if (now - card.leftAt < 2000) D.play(MOMENT.peekaboo, PRIO.peek);
     });
     st.addEventListener("pointermove", (e) => {
@@ -1109,6 +1150,7 @@ VARIANTS.push({
       }
       lastEv = { x: e.clientX, y: e.clientY, t: e.timeStamp };
       card.lastMove = now;
+      wake();
     });
     st.addEventListener("pointerleave", (e) => {
       card.hovering = false;
@@ -1120,6 +1162,7 @@ VARIANTS.push({
     });
     // clicks: a burst of 4 tickles, a second burst soon after annoys
     st.addEventListener("click", () => {
+      if (wake()) return;
       card.clicks = card.clicks.filter((t) => now - t < 1200);
       card.clicks.push(now);
       if (card.clicks.length >= 4) {
@@ -1144,17 +1187,33 @@ VARIANTS.push({
       if (D.cur?.key !== "typing") D.play(MOMENT.typing, PRIO.react);
     });
     let lastY = window.scrollY, lastT = performance.now();
+    const trail = [];
     window.addEventListener("scroll", () => {
-      const t = performance.now(), v = Math.abs(window.scrollY - lastY) / Math.max(1, t - lastT);
-      lastY = window.scrollY; lastT = t;
+      const t = performance.now(), y = window.scrollY;
+      const v = Math.abs(y - lastY) / Math.max(1, t - lastT);
+      const wasAway = lastY > 40;
+      lastY = y; lastT = t;
+      trail.push({ t, y });
+      while (t - trail[0].t > 900) trail.shift();
       card.lastScroll = now;
+      // rushed back home: reached the top after climbing about a screen in under a second
+      if (y <= 40 && wasAway) {
+        const climb = Math.max(...trail.map((q) => q.y)) - y;
+        if (climb > window.innerHeight * 0.9 && card.ready("dizzy", 6)) { D.play(MOMENT.dizzy, PRIO.peek); return; }
+      }
       if (v > 2.5 && card.visible && D.cur?.key !== "holdOn") D.play(MOMENT.holdOn, PRIO.react);
     }, { passive: true });
   },
   tick(card, t, dt) {
     const r = card.rig, D = card.D;
     ambient(r, t);
-    r.breathe = (1 - Math.cos((t / 3.8) * Math.PI * 2)) / 2;
+    if (card.asleep) {
+      // slow, deep breathing and a drifting head while asleep
+      r.breathe = ((1 - Math.cos((t / 5.5) * Math.PI * 2)) / 2) * 1.6;
+      r.hr = 3.5 + Math.sin(t * 0.8) * 0.6;
+    } else {
+      r.breathe = (1 - Math.cos((t / 3.8) * Math.PI * 2)) / 2;
+    }
     const sp = svgPoint(card);
     if (!card.gazeLock) {
       const g = sp ? gazeToward(card, sp, card.hovering ? 0.75 : 0.45) : GAZE0;
@@ -1172,27 +1231,25 @@ VARIANTS.push({
       else if (dw.hair > 1.0 && card.ready("looksUp", 10)) D.play(MOMENT.looksUp, PRIO.react);
       else if (dw.edge > 1.2 && card.ready("sideEye", 8)) D.play(MOMENT.sideEye, PRIO.react, sp.x > 187 ? 1 : -1);
       else if (still && card.ready("catBlink", 20)) D.play(MOMENT.catBlink, PRIO.react);
-
-      // circling the face fast makes it dizzy
-      const a = Math.atan2(sp.y - 270, sp.x - 190), d = Math.hypot(sp.x - 190, sp.y - 270);
-      if (card.prevA != null && d > 40 && d < 230) {
-        let da = a - card.prevA;
-        while (da > Math.PI) da -= 2 * Math.PI;
-        while (da < -Math.PI) da += 2 * Math.PI;
-        card.spin += da;
-      }
-      card.prevA = a;
-      if (Math.abs(card.spin) > Math.PI * 2 * 1.4) { card.spin = 0; if (card.ready("dizzy", 6)) D.play(MOMENT.dizzy, PRIO.react); }
-    } else {
-      card.prevA = null;
     }
-    card.spin *= Math.exp(-dt * 0.7);
+
+    // a long hover (~10s) makes him shy
+    if (card.hovering && now - card.hoverStart > 10000 && D.prio < PRIO.peek && card.ready("shy", 25)) D.play(MOMENT.shy, PRIO.peek);
+
+    // dozing off: only after 5 min on the site, and only once you've left him alone for a bit
+    const el = Math.max(0, (now - card.bornAt) / 1000);
+    const dozeAt = card.preview ? 20 : LATE_NIGHT ? 150 : 300;
+    const awayFor = card.preview ? 4000 : 15000;
+    const dozeAgain = card.preview ? 15000 : 120000;
+    if (!card.dozing && el >= dozeAt && !card.hovering && now - card.lastMove > awayFor && now - card.lastWake > dozeAgain && D.prio <= PRIO.idle) {
+      D.play(MOMENT.doze, PRIO.doze);
+    }
 
     // idle scheduler
     // idle waits longer while the cursor rests on the card, so dwell reactions get their turn
     const resting = card.preview || now - card.lastMove > (card.hovering ? 5000 : 2000);
     if (!D.cur && now > card.nextIdle && resting) {
-      const pool = MOMENTS.filter((m) => m.group === "idle" && unlocked(card, m));
+      const pool = MOMENTS.filter((m) => m.group === "idle" && !m.timed && unlocked(card, m));
       D.play(pickWeighted(card, pool), PRIO.idle);
       const [lo, hi] = card.preview ? [3, 5] : [6, 12];
       card.nextIdle = now + (lo + Math.random() * (hi - lo)) * 1000;
@@ -1201,14 +1258,18 @@ VARIANTS.push({
     // status line, twice a second
     if (!card.statusAt || now - card.statusAt > 500) {
       card.statusAt = now;
-      const el = (now - card.bornAt) / 1000;
       const parts = [];
-      if (card.preview) parts.push("All tiers unlocked");
+      const mmss = (secs) => { const t = Math.ceil(secs); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`; };
+      if (card.dozing) parts.push("Dozing: hover or click to wake him");
+      else if (el < dozeAt) parts.push(`Dozes off in ${mmss(dozeAt - el)} (if left alone)`);
+      else if (now - card.lastWake < dozeAgain) parts.push(`Can doze again in ${Math.ceil((dozeAgain - (now - card.lastWake)) / 1000)}s`);
+      else parts.push(`Dozes off once left alone for ${awayFor / 1000}s`);
+      if (card.preview) parts.push("all tiers unlocked");
       else {
         parts.push(el < 30 ? `Rare unlocks in ${Math.ceil(30 - el)}s` : "Rare unlocked");
         parts.push(el < 60 ? `ultra-rare in ${Math.ceil(60 - el)}s` : "ultra-rare unlocked");
       }
-      if (LATE_NIGHT) parts.push("late night: naps are 3× likelier");
+      if (LATE_NIGHT) parts.push("late night: dozes off after 2.5 min");
       card.status.textContent = parts.join(" · ");
     }
   },
