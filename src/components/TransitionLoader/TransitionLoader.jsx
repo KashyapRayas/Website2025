@@ -160,14 +160,13 @@ const TransitionLoader = ({ direction = "in", onComplete, onMidway }) => {
 
     tl.fromTo(
       ".green-box",
-      { width: "0%", height: "0%", borderRadius: "9px", rotate: "-6deg" },
+      { width: "0%", height: "0%", borderRadius: "9px" },
       {
         width: "100%",
         height: "100%",
         duration: 2,
         ease: "expo.inOut",
         borderRadius: "9px",
-        rotate: "0deg"
       }
     ).to(".green-box", {
       duration: 0.1,

@@ -59,7 +59,7 @@ function extractRowWithDefs(svgText, rowId) {
 // The static center row (Row 3) additionally gets a look-away overlay:
 // no_stare.svg's Row 3 is transplanted in on top of it, shown by default
 // (and while hovered) and hard-cut to hidden once the figure is "revealed".
-const ParallaxFigure = memo(function ParallaxFigure({ src, hoverSrc, sectionRef, revealed, nearViewport }) {
+const ParallaxFigure = memo(function ParallaxFigure({ src, hoverSrc, revealed, nearViewport }) {
     const markup = useInlineSvg(src, nearViewport);
     const hoverMarkup = useInlineSvg(hoverSrc, nearViewport);
     const containerRef = useRef(null);
@@ -77,8 +77,15 @@ const ParallaxFigure = memo(function ParallaxFigure({ src, hoverSrc, sectionRef,
     const htmlProp = useMemo(() => (markup ? { __html: markup } : undefined), [markup]);
 
     useGSAP(() => {
-        if (!markup || !containerRef.current || !sectionRef.current) return;
+        if (!markup || !containerRef.current) return;
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        // Resolve the section from our own DOM rather than a parent ref: child
+        // layout effects run before the parent's ref is (re)attached, so a
+        // parent ref reads null here whenever markup is already cached on mount
+        // (e.g. returning to the landing page), and the parallax never starts.
+        const section = containerRef.current.closest("section");
+        if (!section) return;
 
         const svgEl = containerRef.current.querySelector("svg");
         if (svgEl) svgEl.setAttribute("preserveAspectRatio", "xMidYMid slice");
@@ -93,7 +100,7 @@ const ParallaxFigure = memo(function ParallaxFigure({ src, hoverSrc, sectionRef,
                 y: offset,
                 ease: "none",
                 scrollTrigger: {
-                    trigger: sectionRef.current,
+                    trigger: section,
                     start: "top bottom",
                     end: "bottom top",
                     scrub: 0.6,
@@ -102,7 +109,7 @@ const ParallaxFigure = memo(function ParallaxFigure({ src, hoverSrc, sectionRef,
         });
 
         return () => tweens.forEach((t) => t && t.kill());
-    }, [markup, sectionRef.current]);
+    }, [markup]);
 
     // Transplant no_stare's Row 3 (+ the gradient defs it relies on) into this
     // svg, stacked on top of the base Row 3, starting fully transparent.
@@ -240,7 +247,6 @@ const TimeSpentCounter = memo(function TimeSpentCounter() {
 const REVEAL_DELAY_MS = 1500;
 
 const Cicada = forwardRef(({}, ref) => {
-    const sectionRef = useRef(null);
     const figureRef = useRef(null);
     const [revealed, setRevealed] = useState(false);
     const [nearViewport, setNearViewport] = useState(false);
@@ -294,11 +300,7 @@ const Cicada = forwardRef(({}, ref) => {
         id="CICADA"
         className={styles.cicada}
         aria-label="Cicada"
-        ref={(el) => {
-            sectionRef.current = el;
-            if (typeof ref === "function") ref(el);
-            else if (ref) ref.current = el;
-        }}
+        ref={ref}
       >
         <div className="extremes-wrapper-left">
           <div className="extremes"></div>
@@ -350,7 +352,6 @@ const Cicada = forwardRef(({}, ref) => {
               <ParallaxFigure
                 src="/stare.svg"
                 hoverSrc="/no_stare.svg"
-                sectionRef={sectionRef}
                 revealed={revealed}
                 nearViewport={nearViewport}
               />
